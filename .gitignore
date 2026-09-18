@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+build/
+dist/
+*.apk
+*.aab
+*.ipa
+*.keystore
+*.jks
+
+# Environment and secrets
+.env
+.env.*
+*.p12
+*.mobileprovision
+secrets.properties
+google-services.json
+GoogleService-Info.plist
+*.pem
+*.key
+
+# IDE and editor
+.idea/
+*.iml
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Platform build folders
+android/.gradle/
+android/app/build/
+ios/Pods/
+ios/build/
