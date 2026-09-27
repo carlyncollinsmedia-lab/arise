@@ -38,7 +38,7 @@ Target core morning duration: two minutes or less, not counting optional note wr
 
 ## 3. Platform
 
-Version 1 ships on one platform: the phone the builder carries every day. The second platform follows once the alarm has proven itself for 14 days (see `ROADMAP.md`). Which phone is confirmed at the architecture step.
+Version 1 ships on one platform: iPhone, the phone the builder carries every day (decided 23 September 2026, see `DECISIONS.md`). The second platform follows once the alarm has proven itself for 14 days (see `ROADMAP.md`).
 
 Reason: in this category the product lives or dies on whether the alarm rings when the phone is locked and the app has been closed for a week. One alarm proven on a real phone beats two half-tested ones.
 

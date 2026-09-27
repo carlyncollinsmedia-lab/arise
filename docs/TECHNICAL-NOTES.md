@@ -12,7 +12,7 @@ Everything under "Inputs" is a constraint or a proposal to weigh, not a decision
 
 - Backend and accounts: Supabase. All keys and secrets live in Supabase Secrets or the device's secure store, never in code or chat.
 - No Next.js. No framework conversion at any point.
-- One platform for version 1: the owner's own phone. Second platform after the 14-day test passes.
+- One platform for version 1: iPhone, the owner's own phone (decided 2026-09-23). Second platform after the 14-day test passes.
 - Built with Claude Code from this repo. Assets made by the owner with Higgsfield and Adobe. Voice via the owner's ElevenLabs account.
 
 ### The alarm (the decision that shapes everything else)
@@ -70,7 +70,8 @@ Everything under "Inputs" is a constraint or a proposal to weigh, not a decision
 
 ## Decisions
 
-_None yet. First entries will be: platform for version 1; framework; alarm approach; weather provider; asset dimensions._
+_Still to decide: framework; alarm approach; weather provider; asset dimensions._
 
 | Date | Decision | Why | Recorded by |
 | --- | --- | --- | --- |
+| 2026-09-23 | Version 1 platform is iPhone. | It is the phone the owner carries; the PRD says version 1 ships on that one. The alarm will use Apple AlarmKit (iOS 26+). | Owner, recorded by Claude 2026-09-26 |
