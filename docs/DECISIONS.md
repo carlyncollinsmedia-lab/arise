@@ -23,3 +23,5 @@ One line per decision, newest at the bottom. Product decisions also update `PRD.
 | 2026-09-26 | Claude Code builds the whole codebase, frontend and backend. No second AI edits the repository. | On a phone app the alarm, local storage and sync cut across front and back; one builder with full context avoids breakage. Owner: "you will build the whole thing." |
 | 2026-09-26 | Front end follows the owner's two-screen mockup (docs/design/reference-mockup.png). | Owner's design direction. |
 | 2026-09-26 | PRD.md lives at the repo root; supporting docs in docs/. | The QAF grader reads PRD.md from the repo root. |
+| 2026-09-26 | The first build (Phase 1 prototype) follows the survey: wake gently, mood check-in, varied affirmation, then weather/outfit/umbrella before intention and next reminder. | 17 survey responses: mornings "depend on the day", outfit and to-do list are top concerns, repetition is a top reason routines stop. |
+| 2026-09-26 | Devotional mode stays parked for version 1, flagged for review after the 14-day test. | 14 of 17 respondents pray or meditate before leaving, but the PRD parks devotional mode; the owner decides. |

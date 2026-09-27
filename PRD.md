@@ -30,7 +30,18 @@ Target core morning duration: two minutes or less, not counting optional note wr
 
 **Next users: people like him.** Working adults, anywhere in the world, who wake early, check their phone before they are fully up, and would rather that time did something for them. First outside testers come from the builder's own audiences.
 
-**Evidence today.** The behaviour is confirmed by the builder's own routine. There are no interviews or surveys yet; the 14-day self-test in section 9 is the first real evidence, and the audience pilot in `ROADMAP.md` is the second.
+**Evidence today.** The behaviour is confirmed by the builder's own routine and by the "Your Mornings" survey (11 questions, live since 22 September 2026, 17 responses by 26 September; the survey does not name Arise). Headline findings:
+
+- Most respondents wake between 5:00 and 6:30am, the window Arise is built for.
+- 7 of 17 say how they wake up "depends on the day", so a daily mood check-in fits how people actually feel.
+- 9 of 17 say their first thought is their to-do list, and "planning my day" is the most common thing people want to improve (4 of 17). This supports the daily intention and reminders.
+- 10 of 17 choose an outfit before leaving and 6 check the weather. This supports the outfit and umbrella lines in the day brief.
+- 10 of 17 have tried affirmations or positive self-talk, and 9 have tried a new alarm or sleep app. Arise sits where people already look.
+- 14 of 17 pray or meditate before leaving. Devotional mode is parked in section 8; this result is flagged for the owner to reconsider after version 1.
+- Where a routine stopped, the reasons were "it got repetitive" (3), "I kept forgetting" (2) and "I lost motivation" (2). The affirmation must vary day to day, and the alarm is what makes the routine impossible to forget.
+- Several "bad morning" stories were about oversleeping, and one was "the alarm didn't ring". An alarm that fails once loses the user, which is why the alarm is tested before anything else.
+
+The 14-day self-test in section 9 is the next evidence, and the audience pilot in `ROADMAP.md` is the third. Raw responses stay private in the owner's database; they are not published here because some contain email addresses.
 
 **Who it is not for.** Anyone looking for mental-health support, treatment, or a substitute for talking to a person. Arise says this plainly at sign-up.
 
@@ -272,6 +283,17 @@ Written 26 September 2026 by Claude Code (Claude Opus 5.5) from this PRD, under 
 | AI | **Anthropic Claude** called from a Supabase Edge Function; the key lives in Supabase Secrets. | The key never touches the phone, and every answer is checked in code before it is shown. |
 | Running locally for now | Phase 1 opens `index.html` straight from disk in a browser. From Phase 2, the app runs through the Expo development server on the owner's iPhone, and Supabase runs locally through the Supabase CLI until it is deployed. | Nothing is published or deployed during development. |
 
+### What the research changes in the first build
+
+The Phase 1 prototype (`index.html`) shows the morning in the order the survey says matters most, using test data only:
+
+1. **Wake gently.** Greeting, avatar, next alarm time, "Begin my morning" and "Just show my day" (the check-in is never a gate).
+2. **Mood check-in.** One tap from five moods plus an optional note, because mornings "depend on the day".
+3. **Affirmation.** Written for the chosen mood, with a different sample line each time so it does not feel repetitive, and a clearly generic fallback.
+4. **Day at a glance.** Weather, outfit and umbrella first (outfit is chosen by 10 of 17), then today's intention and the next reminder, because the to-do list is the most common first thought.
+
+Nothing parked in section 8 is added. The devotional finding is recorded for the owner, not built.
+
 ### Design reference
 
 The owner supplied a two-screen mockup, saved as `docs/design/reference-mockup.png`: "01 Wake gently" (greeting, avatar at sunrise, next alarm, "Begin my morning" and "Just show my day") and "02 Your day, at a glance" (weather card, outfit and umbrella tiles, today's intention, the next reminder, evening check-in time, and a three-tab bar: Today, Reminders, History). The front end follows it: deep navy night-to-dawn background, a warm sunrise-gold main button, soft blue weather card, rounded cards with thin light borders, and a bold rounded heading font.
@@ -286,4 +308,6 @@ A dated record of every instruction the owner gave the AI builder (Claude Code) 
 | --- | --- | --- |
 | 2026-09-26 | **Tool choice steering: who builds the code.** The owner had proposed that Claude build the backend and ChatGPT build the frontend. The AI recommended one builder owning the whole codebase, because on a phone the alarm, on-device storage and syncing cut across "frontend" and "backend", and two AIs editing the same project without shared context would break it. The owner decided: "you will build the whole thing." | Recorded the decision in `docs/DECISIONS.md`. Claude Code builds all code; no second AI edits the repository. |
 | 2026-09-26 | **Design direction.** The owner supplied a two-screen mockup and asked for the front end to look like it. | Saved it as `docs/design/reference-mockup.png`; set the colours, type and components in the Design reference above; `design.html` and `index.html` follow it. |
+| 2026-09-26 | **Use the research.** The owner asked whether the AI had read the validation survey before planning the first build. It had not; the plan had been written from the PRD and handoff only. | Read all 17 "Your Mornings" responses, added the findings to section 2, and added "What the research changes in the first build" to section 12. The devotional result is flagged for the owner, not built. No personal data from the survey was committed. |
+| 2026-09-26 | **Colours approved.** The owner reviewed `design.html` and said the colours are exactly what he wants. | Kept the palette unchanged as the base for `index.html`. |
 | 2026-09-26 | **Repository layout.** The owner asked that every step be documented and versioned on GitHub, where the course grader reads it. | Moved the supporting documents into `docs/`, kept `PRD.md` at the root for the grader, and committed each change separately with a plain-language message. |
