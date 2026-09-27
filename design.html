@@ -141,10 +141,12 @@
     .moods { display: flex; gap: 10px; flex-wrap: wrap; }
     .mood {
       font-family: var(--font); cursor: pointer; border: 1.5px solid var(--line); background: var(--night-800);
-      color: var(--ink-100); border-radius: var(--radius-md); padding: 12px 16px; min-width: 88px;
+      color: var(--ink-100); border-radius: var(--radius-md); padding: 14px 16px; min-width: 92px;
       display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 700;
     }
-    .mood .dot { width: 28px; height: 28px; border-radius: 50%; }
+    .mood .face { width: 40px; height: 40px; display: block; transition: transform .15s ease; }
+    .mood:hover .face { transform: scale(1.06); }
+    .mood[aria-pressed="true"] .face { transform: scale(1.12); }
     .mood[aria-pressed="true"] { border-color: var(--sun-500); background: var(--night-700); box-shadow: 0 0 0 3px rgba(249,196,90,.18); }
     .mood:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
@@ -270,16 +272,16 @@
     <!-- 4. INPUTS -->
     <section aria-labelledby="inputs">
       <h2 class="section-title" id="inputs">Inputs</h2>
-      <p class="note">Mood is one tap. The note and intention are optional, short, and never required to continue.</p>
+      <p class="note">Mood is one tap on a smiley, from a frown for Rough to a big smile for Great. The note and intention are optional, short, and never required to continue.</p>
       <div style="display:grid; gap:26px;">
         <div>
           <div class="field"><label>How are you this morning?</label></div>
           <div class="moods" role="group" aria-label="Mood">
-            <button class="mood" type="button" aria-pressed="false"><span class="dot" style="background:#6B7FA8"></span>Rough</button>
-            <button class="mood" type="button" aria-pressed="false"><span class="dot" style="background:#7FA8E0"></span>Low</button>
-            <button class="mood" type="button" aria-pressed="true"><span class="dot" style="background:#B9C6E4"></span>Okay</button>
-            <button class="mood" type="button" aria-pressed="false"><span class="dot" style="background:#F2D27A"></span>Good</button>
-            <button class="mood" type="button" aria-pressed="false"><span class="dot" style="background:#F9C45A"></span>Great</button>
+            <button class="mood" type="button" aria-pressed="false"><svg class="face" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#6B7FA8"/><circle cx="14" cy="16.5" r="2.2" fill="#1A2340"/><circle cx="26" cy="16.5" r="2.2" fill="#1A2340"/><path d="M10.5 13.8l6-1.8M29.5 13.8l-6-1.8" fill="none" stroke="#1A2340" stroke-width="2.4" stroke-linecap="round"/><path d="M13 29c3.5-4.5 10.5-4.5 14 0" fill="none" stroke="#1A2340" stroke-width="2.4" stroke-linecap="round"/></svg>Rough</button>
+            <button class="mood" type="button" aria-pressed="false"><svg class="face" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#7FA8E0"/><circle cx="14" cy="16.5" r="2.2" fill="#1A2340"/><circle cx="26" cy="16.5" r="2.2" fill="#1A2340"/><path d="M14 28c3-2.5 9-2.5 12 0" fill="none" stroke="#1A2340" stroke-width="2.4" stroke-linecap="round"/></svg>Low</button>
+            <button class="mood" type="button" aria-pressed="true"><svg class="face" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#B9C6E4"/><circle cx="14" cy="16.5" r="2.2" fill="#1A2340"/><circle cx="26" cy="16.5" r="2.2" fill="#1A2340"/><path d="M14 26.5h12" fill="none" stroke="#1A2340" stroke-width="2.4" stroke-linecap="round"/></svg>Okay</button>
+            <button class="mood" type="button" aria-pressed="false"><svg class="face" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#F2D27A"/><circle cx="14" cy="16.5" r="2.2" fill="#1A2340"/><circle cx="26" cy="16.5" r="2.2" fill="#1A2340"/><path d="M13.5 24.5c3.5 3.5 9.5 3.5 13 0" fill="none" stroke="#1A2340" stroke-width="2.4" stroke-linecap="round"/></svg>Good</button>
+            <button class="mood" type="button" aria-pressed="false"><svg class="face" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#F9C45A"/><circle cx="14" cy="16.5" r="2.2" fill="#1A2340"/><circle cx="26" cy="16.5" r="2.2" fill="#1A2340"/><path d="M12 23h16c0 5-3.6 8-8 8s-8-3-8-8z" fill="#1A2340"/><path d="M15.5 27.5c2.8 2 6.2 2 9 0" fill="none" stroke="#E86B5A" stroke-width="2.2" stroke-linecap="round"/></svg>Great</button>
           </div>
         </div>
         <div class="field">
