@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Arise — Morning Prototype</title>
+  <meta name="description" content="Arise Phase 1 prototype: the morning routine with test data only. Opens locally in a browser." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Design tokens: same as design.html (approved by the owner 26 Sept 2026). */
+    :root {
+      --night-900:#0B1530; --night-800:#13224A; --night-700:#1C2F5E; --dawn-600:#3A5A8C;
+      --sun-500:#F9C45A; --sun-600:#E9A93A; --sky-400:#7FA8E0; --sky-500:#5A86C8;
+      --ink-100:#F5F7FC; --ink-300:#C3CCE0; --ink-500:#8C98B8; --ink-on-sun:#1A2340;
+      --line:rgba(255,255,255,.16); --line-strong:rgba(255,255,255,.32);
+      --radius-lg:22px; --radius-md:16px; --radius-pill:999px;
+      --font:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+    }
+    * { box-sizing:border-box; }
+    html,body { margin:0; height:100%; }
+    body { font-family:var(--font); color:var(--ink-100); background:#4a6a9e; -webkit-font-smoothing:antialiased;
+      display:flex; justify-content:center; align-items:flex-start; min-height:100vh; }
+    button { font-family:var(--font); }
+    button:focus-visible, input:focus-visible, textarea:focus-visible { outline:3px solid var(--sun-500); outline-offset:3px; }
+
+    /* Phone frame */
+    .phone { width:100%; max-width:430px; min-height:100vh; position:relative; overflow:hidden;
+      background:linear-gradient(180deg,var(--dawn-600) 0%,var(--night-800) 42%,var(--night-900) 100%); display:flex; flex-direction:column; }
+    @media (min-width:520px){ body{ padding:28px 0; } .phone{ min-height:880px; border-radius:44px; box-shadow:0 30px 80px rgba(0,0,0,.45), 0 0 0 10px #0d1326; } }
+
+    .test-banner { background:rgba(11,21,48,.7); color:var(--ink-300); font-size:12px; font-weight:700; text-align:center; padding:6px 10px; letter-spacing:.04em; }
+    header.top { display:flex; align-items:center; justify-content:center; position:relative; padding:14px 20px 4px; }
+    .logo { display:flex; flex-direction:column; align-items:center; }
+    .logo svg { width:46px; height:28px; }
+    .logo span { font-weight:800; font-size:22px; letter-spacing:.18em; margin-top:-2px; }
+    .icon-btn { position:absolute; right:18px; top:18px; background:none; border:0; color:var(--ink-100); cursor:pointer; padding:6px; }
+    .icon-btn.left { left:18px; right:auto; }
+
+    main { flex:1; display:flex; flex-direction:column; padding:0 20px 20px; }
+    .screen { display:none; flex:1; flex-direction:column; animation:fade .25s ease; }
+    .screen.active { display:flex; }
+    @keyframes fade { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+    @media (prefers-reduced-motion:reduce){ .screen{animation:none;} * {transition:none !important;} }
+
+    h1.hello { font-size:36px; font-weight:900; line-height:1.1; text-align:center; margin:18px 0 6px; }
+    p.sub { text-align:center; color:var(--ink-300); font-size:17px; margin:0; }
+    h1.title { font-size:30px; font-weight:800; line-height:1.15; margin:16px 0 4px; }
+    p.date { color:var(--ink-300); font-size:16px; margin:0 0 16px; }
+
+    /* Sunrise scene + avatar (placeholder art until the owner's Higgsfield set is ready) */
+    .scene { position:relative; margin:14px -20px 0; height:360px; }
+    .scene img { width:100%; height:100%; object-fit:cover; object-position:50% 30%; display:block;
+      -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 82%,transparent 100%); mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 82%,transparent 100%); }
+    .scene img { animation:rise .9s ease-out 1; }
+    @keyframes rise { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+    @media (prefers-reduced-motion:reduce){ .scene img{animation:none;} }
+
+    .pill { align-self:center; display:inline-flex; align-items:center; gap:10px; background:rgba(11,21,48,.6); border:1px solid var(--line);
+      color:var(--ink-300); border-radius:var(--radius-pill); padding:10px 20px; font-size:15px; font-weight:600; margin:14px 0 16px; }
+    .pill strong { color:var(--ink-100); }
+
+    .btn { border:0; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left;
+      transition:transform .12s ease, box-shadow .12s ease, background .12s ease; }
+    .btn .chev { width:22px; height:22px; flex:none; }
+    .btn-primary { background:linear-gradient(180deg,var(--sun-500),var(--sun-600)); color:var(--ink-on-sun); border-radius:var(--radius-lg); padding:15px 22px; box-shadow:0 10px 28px rgba(249,196,90,.28); }
+    .btn-primary:hover { transform:translateY(-1px); }
+    .btn-primary .main { display:block; font-size:21px; font-weight:800; }
+    .btn-primary .sub2 { display:block; font-size:14px; font-weight:600; opacity:.85; }
+    .btn-primary[disabled] { opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
+    .btn-secondary { background:transparent; color:var(--ink-100); border:1.5px solid var(--line-strong); border-radius:var(--radius-lg); padding:15px 22px; font-size:18px; font-weight:600; margin-top:12px; }
+    .btn-secondary:hover { background:rgba(255,255,255,.06); }
+    .btn-text { background:none; border:0; color:var(--ink-300); font-size:15px; font-weight:700; cursor:pointer; padding:10px; align-self:center; }
+    .spacer { flex:1; }
+
+    /* Mood check-in */
+    .q { font-size:26px; font-weight:800; margin:22px 0 14px; }
+    .moods { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+    .mood { cursor:pointer; border:1.5px solid var(--line); background:var(--night-800); color:var(--ink-100); border-radius:var(--radius-md);
+      padding:12px 4px 10px; display:flex; flex-direction:column; align-items:center; gap:6px; font-size:14px; font-weight:700; }
+    .mood .face { width:40px; height:40px; transition:transform .15s ease; }
+    .mood[aria-pressed="true"] { border-color:var(--sun-500); background:var(--night-700); box-shadow:0 0 0 3px rgba(249,196,90,.18); }
+    .mood[aria-pressed="true"] .face { transform:scale(1.12); }
+    .saved { color:var(--ink-500); font-size:13px; font-weight:700; min-height:18px; margin:8px 2px 0; }
+    .field { margin-top:18px; }
+    .field label { display:block; font-size:15px; font-weight:700; margin-bottom:8px; }
+    .field label em { font-style:normal; color:var(--ink-500); font-weight:600; }
+    textarea, input[type=text], input[type=time], input[type=date] { width:100%; font-family:var(--font); font-size:17px; color:var(--ink-100);
+      background:rgba(19,34,74,.85); border:1.5px solid var(--line); border-radius:var(--radius-md); padding:13px 15px; }
+    textarea { resize:none; min-height:84px; }
+    textarea::placeholder, input::placeholder { color:var(--ink-500); }
+    .hint { display:flex; justify-content:space-between; font-size:13px; color:var(--ink-500); margin-top:6px; }
+
+    /* Affirmation */
+    .aff-wrap { display:flex; gap:14px; align-items:flex-start; margin-top:18px; }
+    .mini-avatar { width:64px; height:64px; flex:none; border-radius:50%; overflow:hidden; border:2px solid var(--sun-500); }
+    .mini-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+    .bubble { background:var(--night-800); border:1px solid var(--line); border-radius:var(--radius-lg); border-top-left-radius:6px; padding:18px 20px; }
+    .bubble p { margin:0; font-size:20px; font-weight:600; line-height:1.45; }
+    .tag { display:inline-block; margin-top:12px; font-size:12px; font-weight:700; color:var(--ink-500); letter-spacing:.03em; }
+    .crisis { background:#23305a; border:1.5px solid var(--sun-500); }
+    .crisis p { font-size:18px; }
+    .crisis .line { margin-top:12px; font-size:19px; font-weight:800; color:var(--sun-500); }
+
+    /* Day at a glance */
+    .day-hero { display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin:0 -20px 12px 0; }
+    .day-hero .title { margin-top:26px; }
+    .day-hero img { width:150px; height:240px; object-fit:cover; object-position:50% 0; border-radius:0 0 0 28px;
+      -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22%); mask-image:linear-gradient(90deg,transparent 0,#000 22%); }
+    .weather-card { background:linear-gradient(160deg,var(--sky-400),var(--sky-500)); border-radius:var(--radius-lg); padding:18px 20px; display:flex; align-items:center; gap:18px; box-shadow:0 14px 34px rgba(20,40,90,.35); }
+    .weather-card svg { width:78px; height:78px; flex:none; }
+    .weather-card .city { font-size:17px; font-weight:700; }
+    .weather-card .temp { font-size:48px; font-weight:900; line-height:1; }
+    .weather-card .desc { font-size:16px; font-weight:600; }
+    .weather-card .src { font-size:12px; opacity:.85; }
+    .tiles { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+    .tile { background:var(--night-800); border:1px solid var(--line); border-radius:var(--radius-lg); padding:14px; display:flex; align-items:center; gap:10px; font-size:16px; font-weight:700; line-height:1.2; }
+    .tile svg.icon { width:40px; height:40px; flex:none; }
+    .card { background:var(--night-800); border:1px solid var(--line); border-radius:var(--radius-lg); padding:16px 18px; margin-top:12px; }
+    .card .top { display:flex; align-items:center; gap:10px; color:var(--ink-300); font-size:15px; font-weight:700; }
+    .card .top button { margin-left:auto; background:none; border:1px solid var(--line); color:var(--ink-100); border-radius:10px; padding:6px 8px; cursor:pointer; }
+    .intention-text { font-size:21px; font-weight:700; margin-top:6px; }
+    .row { display:flex; align-items:center; gap:14px; font-size:16px; font-weight:600; }
+    .row .time { color:var(--ink-300); min-width:72px; }
+    .evening { display:flex; align-items:center; justify-content:center; gap:8px; color:var(--ink-300); font-size:14px; margin:14px 0 4px; }
+    .support-link { align-self:center; margin-top:6px; background:none; border:0; color:var(--ink-300); font-size:14px; font-weight:700; text-decoration:underline; cursor:pointer; }
+
+    /* Lists */
+    .list { display:grid; gap:10px; margin-top:14px; }
+    .item { background:var(--night-800); border:1px solid var(--line); border-radius:var(--radius-md); padding:14px 16px; }
+    .item .meta { color:var(--ink-500); font-size:13px; font-weight:700; }
+    .item .main { font-size:17px; font-weight:700; margin-top:2px; }
+    .item .aff { color:var(--ink-300); font-size:14px; margin-top:6px; }
+    .item .actions { display:flex; gap:10px; margin-top:10px; }
+    .item .actions button { background:none; border:1px solid var(--line); color:var(--ink-300); border-radius:10px; padding:6px 12px; font-weight:700; cursor:pointer; }
+    .week { background:rgba(249,196,90,.1); border:1px solid rgba(249,196,90,.35); color:var(--ink-100); border-radius:var(--radius-md); padding:12px 14px; font-size:15px; font-weight:600; margin-top:12px; }
+    .empty { color:var(--ink-500); text-align:center; padding:24px 0; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+
+    /* Tab bar */
+    nav.tabbar { background:var(--night-900); border-top:1px solid var(--line); display:grid; grid-template-columns:repeat(3,1fr); padding:10px 0 14px; }
+    .tab { background:none; border:0; color:var(--ink-300); display:flex; flex-direction:column; align-items:center; gap:4px; font-size:13px; font-weight:700; cursor:pointer; }
+    .tab svg { width:26px; height:26px; }
+    .tab[aria-current="page"] { color:var(--sun-500); }
+    .tab[aria-current="page"]::after { content:""; width:38px; height:3px; border-radius:2px; background:var(--sun-500); }
+
+    /* Support sheet */
+    .sheet-bg { position:absolute; inset:0; background:rgba(5,10,25,.6); display:none; align-items:flex-end; z-index:20; }
+    .sheet-bg.open { display:flex; }
+    .sheet { background:var(--night-800); border-top-left-radius:24px; border-top-right-radius:24px; padding:22px 22px 28px; width:100%; border-top:1px solid var(--line); }
+    .sheet h2 { margin:0 0 8px; font-size:22px; }
+    .sheet p { color:var(--ink-300); margin:0 0 10px; line-height:1.5; }
+    .sheet .line { color:var(--sun-500); font-weight:800; font-size:20px; }
+  </style>
+</head>
+<body>
+<div class="phone">
+  <div class="test-banner">PROTOTYPE · TEST DATA ONLY · NOTHING IS SENT ANYWHERE</div>
+  <header class="top">
+    <button class="icon-btn left" id="back-btn" aria-label="Back" hidden>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
+    </button>
+    <div class="logo" aria-label="arise">
+      <svg viewBox="0 0 56 34" fill="none" aria-hidden="true"><path d="M14 30a14 14 0 0 1 28 0" fill="#F9C45A"/><g stroke="#F9C45A" stroke-width="3" stroke-linecap="round"><line x1="28" y1="3" x2="28" y2="10"/><line x1="12" y1="10" x2="16" y2="14"/><line x1="44" y1="10" x2="40" y2="14"/><line x1="4" y1="24" x2="9" y2="24"/><line x1="47" y1="24" x2="52" y2="24"/></g><line x1="2" y1="31" x2="54" y2="31" stroke="#F5F7FC" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>arise</span>
+    </div>
+    <button class="icon-btn" id="support-btn" aria-label="Get support">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-9.3-9A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.3 12C19 16.6 12 21 12 21z"/></svg>
+    </button>
+  </header>
+
+  <main>
+    <!-- 1. WAKE GENTLY -->
+    <section class="screen active" id="screen-home" aria-label="Home">
+      <h1 class="hello" id="hello">A fresh start, Uche.</h1>
+      <p class="sub">Take this morning one step at a time.</p>
+      <div class="scene"><img src="assets/morning-scene.jpg" alt="Your Arise companion waving good morning at sunrise" /></div>
+      <div class="pill"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M5 3 2 6M19 3l3 3"/></svg>Next alarm · <strong>Tomorrow, 6:00 AM</strong></div>
+      <button class="btn btn-primary" id="begin-btn">
+        <span><span class="main" id="begin-main">Begin my morning</span><span class="sub2" id="begin-sub">A two-minute check-in</span></span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+      <button class="btn btn-secondary" id="justday-btn"><span>Just show my day</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+    </section>
+
+    <!-- 2. MOOD CHECK-IN -->
+    <section class="screen" id="screen-mood" aria-label="Mood check-in">
+      <div class="q">How are you this morning?</div>
+      <div class="moods" role="group" aria-label="Mood" id="moods"></div>
+      <div class="saved" id="saved-msg" aria-live="polite"></div>
+      <div class="field">
+        <label for="note">Anything on your mind? <em>(optional)</em></label>
+        <textarea id="note" maxlength="280" placeholder="e.g. Big meeting at 10"></textarea>
+        <div class="hint"><span>Only you can see this.</span><span id="note-count">0 / 280</span></div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" id="continue-btn" disabled>
+        <span><span class="main">Continue</span><span class="sub2">Hear today's words</span></span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+    </section>
+
+    <!-- 3. AFFIRMATION -->
+    <section class="screen" id="screen-aff" aria-label="Affirmation">
+      <h1 class="title">For this morning</h1>
+      <p class="date" id="aff-mood-line"></p>
+      <div class="aff-wrap">
+        <div class="mini-avatar"><img src="assets/avatar-face.jpg" alt="" /></div>
+        <div class="bubble" id="aff-bubble" aria-live="polite">
+          <p id="aff-text"></p>
+          <span class="tag" id="aff-tag"></span>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" id="today-btn">
+        <span><span class="main">See my day</span><span class="sub2">Weather, outfit and plans</span></span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+    </section>
+
+    <!-- 4. YOUR DAY, AT A GLANCE -->
+    <section class="screen" id="screen-day" aria-label="Your day">
+      <div class="day-hero">
+        <div><h1 class="title">Ready for your day.</h1><p class="date" id="today-date"></p></div>
+        <img src="assets/day-avatar.jpg" alt="Your companion dressed for rain, holding an umbrella" />
+      </div>
+      <div class="weather-card">
+        <svg viewBox="0 0 84 84" fill="none" aria-hidden="true"><path d="M24 50a14 14 0 0 1 2-27.8A18 18 0 0 1 60 26a12 12 0 0 1 0 24H24z" fill="#fff"/><g stroke="#2F5EA8" stroke-width="3.5" stroke-linecap="round"><line x1="30" y1="60" x2="26" y2="70"/><line x1="42" y1="60" x2="38" y2="70"/><line x1="54" y1="60" x2="50" y2="70"/></g></svg>
+        <div><div class="city">Edmonton</div><div class="temp">12°</div><div class="desc">Rain later today</div><div class="src">Sample forecast · updated 6:02 AM</div></div>
+      </div>
+      <div class="tiles">
+        <div class="tile"><svg class="icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M14 8l8 4 8-4 8 8-5 5v17H11V21l-5-5z" fill="#7FA8E0" stroke="#C3D6F2" stroke-width="1.5" stroke-linejoin="round"/><path d="M22 12v26" stroke="#3A5A8C" stroke-width="2"/></svg><span>Wear<br/>layers</span></div>
+        <div class="tile"><svg class="icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M4 22a18 18 0 0 1 36 0z" fill="#7FA8E0"/><path d="M22 22v14a4 4 0 0 1-8 0" stroke="#C3D6F2" stroke-width="2.5" stroke-linecap="round"/></svg><span>Take an<br/>umbrella</span></div>
+      </div>
+      <div class="card">
+        <div class="top"><svg viewBox="0 0 24 24" width="20" height="20" fill="#9DB8E6" aria-hidden="true"><path d="M12 21c-5-3-8-7-8-12 4 0 7 2 8 5 1-3 4-5 8-5 0 5-3 9-8 12z"/></svg>Today's intention
+          <button id="edit-intention" aria-label="Edit intention"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></button>
+        </div>
+        <div class="intention-text" id="intention-text"></div>
+        <div id="intention-edit" hidden style="margin-top:8px">
+          <input type="text" id="intention-input" maxlength="120" placeholder="One line for today" />
+          <div class="hint"><span>Up to 120 characters.</span><button class="btn-text" id="save-intention" style="padding:4px 0">Save</button></div>
+        </div>
+      </div>
+      <div class="card" id="next-reminder-card"><div class="row"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C3CCE0" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="time" id="next-rem-time"></span><span id="next-rem-text"></span></div></div>
+      <div class="evening"><svg width="18" height="18" viewBox="0 0 24 24" fill="#C3CCE0"><path d="M20 15A8 8 0 1 1 9 4a7 7 0 0 0 11 11z"/></svg>Your evening check-in is at 8:00 PM.</div>
+      <button class="support-link" id="support-link">Get support</button>
+    </section>
+
+    <!-- REMINDERS -->
+    <section class="screen" id="screen-reminders" aria-label="Reminders">
+      <h1 class="title">Reminders</h1>
+      <p class="date">Plain notifications. The morning alarm is the special one.</p>
+      <div class="field" style="margin-top:4px">
+        <label for="rem-text">New reminder</label>
+        <input type="text" id="rem-text" maxlength="80" placeholder="e.g. Call the bank" />
+        <div class="form-row"><input type="date" id="rem-date" aria-label="Date" /><input type="time" id="rem-time" aria-label="Time" /></div>
+        <button class="btn btn-primary" id="add-rem" style="margin-top:12px; justify-content:center"><span class="main" style="font-size:18px">Add reminder</span></button>
+      </div>
+      <div class="list" id="rem-list"></div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="screen" id="screen-history" aria-label="History">
+      <h1 class="title">History</h1>
+      <p class="date">Newest first. Only you can see this.</p>
+      <div class="week" id="week-line"></div>
+      <div class="list" id="history-list"></div>
+      <button class="btn-text" id="reset-demo" style="margin-top:14px">Reset test data</button>
+    </section>
+  </main>
+
+  <nav class="tabbar" aria-label="Main">
+    <button class="tab" data-tab="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</button>
+    <button class="tab" data-tab="reminders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 0 0 4 0"/></svg>Reminders</button>
+    <button class="tab" data-tab="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 20V10M12 20V4M18 20v-7"/></svg>History</button>
+  </nav>
+
+  <div class="sheet-bg" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet">
+      <h2 id="sheet-title">Get support</h2>
+      <p>Arise is for motivation and a morning routine. It is not a health, counselling or crisis service, and entries are not monitored.</p>
+      <p>If you are in Canada and need to talk to someone now, call or text:</p>
+      <p class="line">9-8-8 Suicide Crisis Helpline</p>
+      <p style="font-size:13px">Support country: Canada (test setting). If you are in danger, call your local emergency number.</p>
+      <button class="btn btn-secondary" id="close-sheet" style="justify-content:center">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Arise Phase 1 prototype. Test data only.
+   Saves in this browser (localStorage) so a mood survives a
+   refresh, like the real app saves on the phone first.
+   The affirmations below are reviewed sample lines standing in
+   for the AI step, which comes in Phase 4.
+   ============================================================ */
+(function () {
+  var MOODS = [
+    { key:'rough', label:'Rough', fill:'#6B7FA8' },
+    { key:'low',   label:'Low',   fill:'#7FA8E0' },
+    { key:'okay',  label:'Okay',  fill:'#B9C6E4' },
+    { key:'good',  label:'Good',  fill:'#F2D27A' },
+    { key:'great', label:'Great', fill:'#F9C45A' }
+  ];
+  var M = 'fill="none" stroke="#1A2340" stroke-width="2.4" stroke-linecap="round"';
+  var MOUTH = {
+    rough:'<path d="M10.5 13.8l6-1.8M29.5 13.8l-6-1.8" '+M+'/><path d="M13 29c3.5-4.5 10.5-4.5 14 0" '+M+'/>',
+    low:'<path d="M14 28c3-2.5 9-2.5 12 0" '+M+'/>',
+    okay:'<path d="M14 26.5h12" '+M+'/>',
+    good:'<path d="M13.5 24.5c3.5 3.5 9.5 3.5 13 0" '+M+'/>',
+    great:'<path d="M12 23h16c0 5-3.6 8-8 8s-8-3-8-8z" fill="#1A2340"/><path d="M15.5 27.5c2.8 2 6.2 2 9 0" fill="none" stroke="#E86B5A" stroke-width="2.2" stroke-linecap="round"/>'
+  };
+  function face(m) {
+    return '<svg class="face" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="'+m.fill+'"/>' +
+      '<circle cx="14" cy="16.5" r="2.2" fill="#1A2340"/><circle cx="26" cy="16.5" r="2.2" fill="#1A2340"/>' + MOUTH[m.key] + '</svg>';
+  }
+
+  // Reviewed sample affirmations: 3 to 4 sentences, second person, no clinical words, no scripture.
+  var AFF = {
+    rough: [
+      "This morning feels heavy, and that is allowed. You do not have to fix the whole day before breakfast. Take the next small step, then the one after it.",
+      "Rough mornings do not decide the rest of the day. You have made it through harder starts than this one. Go gently, and let one good moment be enough for now.",
+      "It is okay to start slowly today. Breathe, drink some water, and give yourself the patience you would give a friend. The day can get lighter as it goes."
+    ],
+    low: [
+      "Low mornings still count as mornings. You showed up, and that is the first win of the day. Pick one thing that matters and let the rest wait its turn.",
+      "Some days start quietly, and that is fine. You do not need big energy to do small things well. Be kind to yourself while the day warms up.",
+      "Your pace today can be your own. Start with something simple you can finish. Small progress is still progress."
+    ],
+    okay: [
+      "Okay is a steady place to start from. You have what you need for this day. Choose what matters most and give it your best hour.",
+      "A calm, ordinary morning is a gift. Use it to set a clear direction for today. You will be glad you started on purpose.",
+      "You are ready enough, and ready enough is plenty. Take the day one piece at a time. Notice the good things when they show up."
+    ],
+    good: [
+      "You woke up with good energy, so put it somewhere useful. Start with the task you have been putting off. Momentum will carry you from there.",
+      "A good morning is worth protecting. Keep the phone scroll short and the plan simple. Let this feeling set the tone for the day.",
+      "You are starting on the front foot today. Share some of that energy with someone who needs it. Good days grow when they are shared."
+    ],
+    great: [
+      "What a way to start the day. Aim that energy at what matters most to you. Make today count, and enjoy it while you do.",
+      "You are bright and ready, so go after something bold today. Trust yourself; you have prepared for this. Let your good mood lift the people around you.",
+      "Great mornings open doors. Walk through one you have been curious about. Today is yours to shape."
+    ]
+  };
+  var FALLBACK = "Good morning. Whatever today brings, you can take it one step at a time. Start with something small and kind to yourself.";
+  // Test crisis phrases route to fixed reviewed copy; the note is never used as instructions.
+  var CRISIS = /(kill myself|end my life|suicid|self[- ]?harm|hurt myself|don'?t want to (live|be here)|want to die)/i;
+
+  var STORE = 'arise-prototype-v1';
+  function load() { try { return JSON.parse(localStorage.getItem(STORE)) || null; } catch (e) { return null; } }
+  function save(d) { try { localStorage.setItem(STORE, JSON.stringify(d)); } catch (e) {} }
+  // Device-local date (PRD: the entry date is the phone's local date, never UTC).
+  function iso(d) { var m = d.getMonth() + 1, day = d.getDate(); return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day; }
+  var today = iso(new Date());
+  function seed() {
+    var d = new Date(), days = [];
+    var sample = [['good','okay','Finish the budget'],['low','good',''],['okay',null,'Call Mum'],['rough','okay','Take a walk at lunch']];
+    for (var i = 1; i <= 4; i++) {
+      var dt = new Date(d); dt.setDate(d.getDate() - i);
+      var s = sample[i-1];
+      days.push({ date: iso(dt), morning: s[0], evening: s[1], note: '', intention: s[2], affirmation: AFF[s[0]][0], status: 'sample' });
+    }
+    var tmr = new Date(d); tmr.setDate(d.getDate() + 1);
+    return {
+      entries: days,
+      reminders: [
+        { id: 1, text: 'School pick-up', date: today, time: '15:30' },
+        { id: 2, text: 'Pay the hydro bill', date: iso(tmr), time: '09:00' }
+      ],
+      lastAff: {}
+    };
+  }
+  var data = load() || seed();
+  function entryToday() { return data.entries.find(function (e) { return e.date === today; }); }
+  function ensureToday() {
+    var e = entryToday();
+    if (!e) { e = { date: today, morning: null, evening: null, note: '', intention: '', affirmation: '', status: '' }; data.entries.unshift(e); }
+    return e;
+  }
+
+  // ---------- Navigation ----------
+  var screens = { home:'screen-home', mood:'screen-mood', aff:'screen-aff', day:'screen-day', reminders:'screen-reminders', history:'screen-history' };
+  var trail = [];
+  function show(name, push) {
+    Object.keys(screens).forEach(function (k) { document.getElementById(screens[k]).classList.toggle('active', k === name); });
+    var tab = (name === 'reminders' || name === 'history') ? name : 'home';
+    document.querySelectorAll('.tab').forEach(function (t) { t.toggleAttribute('aria-current', false); if (t.dataset.tab === tab) t.setAttribute('aria-current', 'page'); });
+    if (push !== false) trail.push(name);
+    document.getElementById('back-btn').hidden = (name === 'home' || name === 'reminders' || name === 'history');
+    if (name === 'day') renderDay();
+    if (name === 'reminders') renderReminders();
+    if (name === 'history') renderHistory();
+    if (name === 'home') renderHome();
+    window.scrollTo(0, 0);
+  }
+  document.getElementById('back-btn').onclick = function () { trail.pop(); show(trail.pop() || 'home'); };
+  document.querySelectorAll('.tab').forEach(function (t) { t.onclick = function () { trail = []; show(t.dataset.tab); }; });
+
+  // ---------- Home ----------
+  function renderHome() {
+    var e = entryToday();
+    document.getElementById('hello').textContent = 'A fresh start, Uche.';
+    var done = e && e.morning && e.affirmation;
+    document.getElementById('begin-main').textContent = done ? 'Continue my morning' : 'Begin my morning';
+    document.getElementById('begin-sub').textContent = done ? "Today's check-in is saved" : 'A two-minute check-in';
+  }
+  document.getElementById('begin-btn').onclick = function () {
+    var e = entryToday();
+    if (e && e.morning && e.affirmation) { showAff(e); show('aff'); } else { renderMoods(); show('mood'); }
+  };
+  document.getElementById('justday-btn').onclick = function () { show('day'); };
+
+  // ---------- Mood ----------
+  var moodsEl = document.getElementById('moods');
+  function renderMoods() {
+    var e = entryToday();
+    moodsEl.innerHTML = MOODS.map(function (m) {
+      return '<button class="mood" data-mood="'+m.key+'" aria-pressed="'+(e && e.morning === m.key)+'">'+face(m)+m.label+'</button>';
+    }).join('');
+    document.getElementById('continue-btn').disabled = !(e && e.morning);
+    document.getElementById('note').value = (e && e.note) || '';
+    updateCount();
+    document.getElementById('saved-msg').textContent = (e && e.morning) ? 'Saved.' : '';
+    moodsEl.querySelectorAll('.mood').forEach(function (b) {
+      b.onclick = function () {
+        var en = ensureToday();
+        en.morning = b.dataset.mood; en.affirmation = ''; // saves the instant it is tapped
+        save(data);
+        moodsEl.querySelectorAll('.mood').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        document.getElementById('continue-btn').disabled = false;
+        document.getElementById('saved-msg').textContent = 'Saved.';
+      };
+    });
+  }
+  var note = document.getElementById('note');
+  function updateCount() { document.getElementById('note-count').textContent = note.value.length + ' / 280'; }
+  note.addEventListener('input', function () { updateCount(); var en = ensureToday(); en.note = note.value; save(data); });
+
+  document.getElementById('continue-btn').onclick = function () {
+    var e = ensureToday();
+    if (!e.affirmation) generate(e);
+    showAff(e); show('aff');
+  };
+
+  function generate(e) {
+    if (e.note && CRISIS.test(e.note)) { e.status = 'crisis'; e.affirmation = ''; save(data); return; }
+    var pool = AFF[e.morning] || [];
+    if (!pool.length) { e.affirmation = FALLBACK; e.status = 'fallback'; save(data); return; }
+    var last = data.lastAff[e.morning];
+    var choices = pool.map(function (_, i) { return i; }).filter(function (i) { return i !== last; });
+    var pick = choices[Math.floor(Math.random() * choices.length)];
+    data.lastAff[e.morning] = pick;
+    e.affirmation = pool[pick]; e.status = 'sample';
+    save(data);
+  }
+  function showAff(e) {
+    var m = MOODS.find(function (x) { return x.key === e.morning; });
+    document.getElementById('aff-mood-line').textContent = 'You said: ' + (m ? m.label : '') + (e.note ? ' · "' + e.note + '"' : '');
+    var bubble = document.getElementById('aff-bubble');
+    if (e.status === 'crisis') {
+      bubble.classList.add('crisis');
+      bubble.innerHTML = '<p>Thank you for telling Arise how you are. It sounds like things are really hard right now, and you deserve support from a person.</p>' +
+        '<p class="line">Call or text 9-8-8 (Canada)</p><span class="tag">Fixed reviewed message · the rest of the app stays open</span>';
+    } else {
+      bubble.classList.remove('crisis');
+      bubble.innerHTML = '<p id="aff-text"></p><span class="tag" id="aff-tag"></span>';
+      document.getElementById('aff-text').textContent = e.affirmation;
+      document.getElementById('aff-tag').textContent = e.status === 'fallback' ? 'General message' : 'Sample affirmation · the AI version arrives in Phase 4';
+    }
+  }
+  document.getElementById('today-btn').onclick = function () { show('day'); };
+
+  // ---------- Day ----------
+  function fmtTime(t) { var p = t.split(':'), h = +p[0], m = p[1]; return ((h % 12) || 12) + ':' + m + ' ' + (h < 12 ? 'AM' : 'PM'); }
+  function renderDay() {
+    document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-CA', { weekday:'long', day:'numeric', month:'long' });
+    var e = entryToday();
+    document.getElementById('intention-text').textContent = (e && e.intention) || 'Tap the pencil to set one line for today.';
+    var now = new Date(), upcoming = data.reminders
+      .map(function (r) { return { r: r, at: new Date(r.date + 'T' + r.time) }; })
+      .filter(function (x) { return x.at >= now; })
+      .sort(function (a, b) { return a.at - b.at; })[0];
+    var card = document.getElementById('next-reminder-card');
+    if (upcoming) {
+      card.hidden = false;
+      document.getElementById('next-rem-time').textContent = (upcoming.r.date === today ? '' : 'Tomorrow ') + fmtTime(upcoming.r.time);
+      document.getElementById('next-rem-text').textContent = upcoming.r.text;
+    } else card.hidden = true;
+  }
+  document.getElementById('edit-intention').onclick = function () {
+    var box = document.getElementById('intention-edit'); box.hidden = !box.hidden;
+    document.getElementById('intention-input').value = (entryToday() || {}).intention || '';
+    if (!box.hidden) document.getElementById('intention-input').focus();
+  };
+  document.getElementById('save-intention').onclick = function () {
+    var e = ensureToday(); e.intention = document.getElementById('intention-input').value.trim(); save(data);
+    document.getElementById('intention-edit').hidden = true; renderDay();
+  };
+
+  // ---------- Reminders ----------
+  function renderReminders() {
+    var el = document.getElementById('rem-list');
+    var list = data.reminders.slice().sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
+    el.innerHTML = list.length ? list.map(function (r) {
+      return '<div class="item"><div class="meta">' + new Date(r.date + 'T00:00').toLocaleDateString('en-CA', { weekday:'short', month:'short', day:'numeric' }) + ' · ' + fmtTime(r.time) + '</div>' +
+        '<div class="main"></div><div class="actions"><button data-del="' + r.id + '">Cancel</button></div></div>';
+    }).join('') : '<div class="empty">No reminders yet.</div>';
+    el.querySelectorAll('.item .main').forEach(function (n, i) { n.textContent = list[i].text; });
+    el.querySelectorAll('[data-del]').forEach(function (b) {
+      b.onclick = function () { data.reminders = data.reminders.filter(function (r) { return String(r.id) !== b.dataset.del; }); save(data); renderReminders(); };
+    });
+    document.getElementById('rem-date').value = document.getElementById('rem-date').value || today;
+  }
+  document.getElementById('add-rem').onclick = function () {
+    var t = document.getElementById('rem-text').value.trim(), d = document.getElementById('rem-date').value, tm = document.getElementById('rem-time').value;
+    if (!t || !d || !tm) { document.getElementById('rem-text').focus(); return; }
+    data.reminders.push({ id: Date.now(), text: t, date: d, time: tm }); save(data);
+    document.getElementById('rem-text').value = ''; document.getElementById('rem-time').value = '';
+    renderReminders();
+  };
+
+  // ---------- History ----------
+  function label(k) { var m = MOODS.find(function (x) { return x.key === k; }); return m ? m.label : '—'; }
+  function rank(k) { return MOODS.findIndex(function (x) { return x.key === k; }); }
+  function renderHistory() {
+    var week = data.entries.filter(function (e) { return (new Date(today + 'T00:00') - new Date(e.date + 'T00:00')) / 864e5 < 7; });
+    var mornings = week.filter(function (e) { return e.morning; }).length;
+    var evenings = week.filter(function (e) { return e.evening; }).length;
+    var both = week.filter(function (e) { return e.morning && e.evening; });
+    var higher = both.filter(function (e) { return rank(e.evening) > rank(e.morning); }).length;
+    document.getElementById('week-line').textContent = 'This week: ' + mornings + ' mornings checked in, ' + evenings + ' evenings. Ended higher than you started on ' + higher + ' of the ' + both.length + ' days with both.';
+    var el = document.getElementById('history-list');
+    var list = data.entries.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
+    el.innerHTML = list.length ? list.map(function (e) {
+      return '<div class="item"><div class="meta">' + new Date(e.date + 'T00:00').toLocaleDateString('en-CA', { weekday:'long', month:'short', day:'numeric' }) + '</div>' +
+        '<div class="main">Morning: ' + label(e.morning) + ' · Evening: ' + label(e.evening) + '</div>' +
+        '<div class="aff"></div><div class="actions"><button data-deldate="' + e.date + '">Delete</button></div></div>';
+    }).join('') : '<div class="empty">No mornings yet.</div>';
+    el.querySelectorAll('.item .aff').forEach(function (n, i) {
+      var e = list[i]; n.textContent = (e.intention ? 'Intention: ' + e.intention + '. ' : '') + (e.affirmation || (e.status === 'crisis' ? 'Support message shown.' : ''));
+    });
+    el.querySelectorAll('[data-deldate]').forEach(function (b) {
+      b.onclick = function () { data.entries = data.entries.filter(function (e) { return e.date !== b.dataset.deldate; }); save(data); renderHistory(); };
+    });
+  }
+  document.getElementById('reset-demo').onclick = function () { data = seed(); save(data); renderHistory(); };
+
+  // ---------- Support ----------
+  var sheet = document.getElementById('sheet');
+  function openSheet() { sheet.classList.add('open'); document.getElementById('close-sheet').focus(); }
+  document.getElementById('support-btn').onclick = openSheet;
+  document.getElementById('support-link').onclick = openSheet;
+  document.getElementById('close-sheet').onclick = function () { sheet.classList.remove('open'); };
+  sheet.addEventListener('click', function (ev) { if (ev.target === sheet) sheet.classList.remove('open'); });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') sheet.classList.remove('open'); });
+
+  save(data);
+  show('home');
+})();
+</script>
+</body>
+</html>
