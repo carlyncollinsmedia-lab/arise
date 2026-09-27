@@ -1,6 +1,6 @@
 # CLAUDE.md — Rules for building Arise
 
-Read this file at the start of every session. Then read `docs/PRD.md`. Do not start work until both are read.
+Read this file at the start of every session. Then read `PRD.md`. Do not start work until both are read.
 
 ## What this project is
 
@@ -8,7 +8,7 @@ Arise is a mobile alarm app. When the alarm rings, an avatar greets the user, as
 
 ## The documents, and which one wins
 
-- `docs/PRD.md` — the product bible. What we are building now. If code and this document disagree, the document wins; if the document is wrong, we change the document first, then the code.
+- `PRD.md` (repo root, where the course's automated grader reads it) — the product bible. What we are building now. If code and this document disagree, the document wins; if the document is wrong, we change the document first, then the code.
 - `docs/ROADMAP.md` — what comes after version 1, in order. Nothing from later versions is built now.
 - `docs/PRD-full.md` — the release-grade specification. Reference only. Use it when a detail in PRD.md needs more depth; do not treat it as the build list.
 - `docs/TECHNICAL-NOTES.md` — inputs to the architecture and the technical decisions once made. Update it when a technical decision is taken.
@@ -32,7 +32,7 @@ Arise is a mobile alarm app. When the alarm rings, an avatar greets the user, as
 
 ## Session start checklist
 
-- Read this file and `docs/PRD.md`.
+- Read this file and `PRD.md`.
 - Read the last five lines of `docs/DECISIONS.md`.
 - Run `git log --oneline -10` and state which build step is current.
 - State what you plan to do this session in three lines, then wait for a go-ahead.

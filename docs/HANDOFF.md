@@ -68,7 +68,7 @@ There is **no Supabase project for Arise yet.** Creating one (`arise`, free tier
 
 ## 4. Problems in the repo to fix first (small, do them in the first session)
 
-1. **Path mismatch.** `CLAUDE.md` says `docs/PRD.md`, `docs/ROADMAP.md`, etc. The files are at the root. Fix: create `docs/`, `git mv` every doc except `CLAUDE.md` and `README.md` into it, update the links in `README.md`, commit as "Move product documents into docs/ to match CLAUDE.md". Also move this file to `docs/HANDOFF.md`.
+1. **Path mismatch.** `CLAUDE.md` says `PRD.md`, `docs/ROADMAP.md`, etc. The files are at the root. Fix: create `docs/`, `git mv` every doc except `CLAUDE.md` and `README.md` into it, update the links in `README.md`, commit as "Move product documents into docs/ to match CLAUDE.md". Also move this file to `docs/HANDOFF.md`.
 2. **Stale platform language.** PRD section 3 and TECHNICAL-NOTES say the v1 phone is "confirmed at the architecture step". It is now known (iPhone, see below). Update both and log it.
 3. **DECISIONS.md is behind.** Add the rows in section 5.
 
@@ -190,7 +190,7 @@ Things that cost real time outside code, flag them early:
 
 ## 9. How to work each session
 
-- `git pull`. Read `CLAUDE.md`, `docs/PRD.md`, last five lines of `docs/DECISIONS.md`. `git log --oneline -10`. State the current build step and a three-line plan. Wait for a go-ahead.
+- `git pull`. Read `CLAUDE.md`, `PRD.md`, last five lines of `docs/DECISIONS.md`. `git log --oneline -10`. State the current build step and a three-line plan. Wait for a go-ahead.
 - Work on a branch per step (`step-01-account`, …), merge to `main` when the step's section 6 checks pass. Small commits, plain-language messages; the commit history is graded.
 - After every step: list the checks only his phone can do (lock screen, restart, airplane mode) as numbered click-by-click instructions, and wait for his result before moving on.
 - Anything you'd log (errors, analytics) must never include moods, notes, or affirmations.

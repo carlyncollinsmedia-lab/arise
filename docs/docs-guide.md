@@ -25,7 +25,7 @@ Everything Claude Code needs to build Arise from start to finish. Keep this fold
 
 Paste this as the first message:
 
-> Read CLAUDE.md, then docs/PRD.md, docs/ROADMAP.md and docs/TECHNICAL-NOTES.md. Do not write any code yet. First, tell me in plain language which phone platform you recommend for version 1 and why, then propose the application architecture: the framework, how the alarm will be made to ring with the phone locked and the app closed, how accounts and history will be stored, and how the affirmation, voice, and weather services will be connected. For each choice give me the reason and one alternative you rejected. Ask me one question at a time if anything in the documents is unclear. When I approve, record the decisions in docs/TECHNICAL-NOTES.md and docs/DECISIONS.md, commit, and then start build step 1 from PRD.md section 10.
+> Read CLAUDE.md, then PRD.md, docs/ROADMAP.md and docs/TECHNICAL-NOTES.md. Do not write any code yet. First, tell me in plain language which phone platform you recommend for version 1 and why, then propose the application architecture: the framework, how the alarm will be made to ring with the phone locked and the app closed, how accounts and history will be stored, and how the affirmation, voice, and weather services will be connected. For each choice give me the reason and one alternative you rejected. Ask me one question at a time if anything in the documents is unclear. When I approve, record the decisions in docs/TECHNICAL-NOTES.md and docs/DECISIONS.md, commit, and then start build step 1 from PRD.md section 10.
 
 ## The working loop
 

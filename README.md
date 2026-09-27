@@ -11,7 +11,7 @@ When the alarm stops, a personal avatar greets you, asks how you feel, and speak
 | `CLAUDE.md` | Rules read at the start of every build session; the project's working rules and document hierarchy. |
 | `docs/HANDOFF.md` | Bridge from planning to the first build session: what changed, what exists, what to do first. |
 | `docs/docs-guide.md` | How the docs folder is used and how the repository was set up. |
-| `docs/PRD.md` | The product bible — what Arise version 1 is and must do. |
+| `PRD.md` | The product bible (kept at the repo root for the QAF grader) — what Arise version 1 is and must do. |
 | `docs/PRD-full.md` | The release-grade specification. Reference only. |
 | `docs/ROADMAP.md` | How Arise grows beyond version 1 — pilot, second platform, paid tier. |
 | `docs/TECHNICAL-NOTES.md` | Architecture inputs and technical decisions once made. |
