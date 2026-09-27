@@ -15,3 +15,8 @@ One line per decision, newest at the bottom. Product decisions also update `PRD.
 | 2026-09-17 | Weather, animations, and voice are "must have, build last". | The app must be submittable without them. |
 | 2026-09-17 | Success gate: owner checks in on 10 of 14 mornings without forcing himself, starting when alarm + check-in + affirmation work. | Retention by the first user is the only real test of version 1. |
 | 2026-09-17 | Assets made by the owner with Higgsfield and Adobe; not hiring an illustrator for version 1. | Subscriptions already owned; consistency proven before paying for polish. |
+| 2026-09-14 | Arise (working name) is the QAF product, not the remittance app. Submitted on the QAF ideation form, bucket Everyday Solutions. | Owner's choice. |
+| 2026-09-18 | Repo created at github.com/carlyncollinsmedia-lab/arise (public). Mac = real build with Claude Code; Windows = class work with OpenCode. Push before switching machines, pull when sitting down. | One repo, two working copies. |
+| 2026-09-22 | Validation survey "Your Mornings" is live at mornings-survey.vercel.app; results in survey_responses in the nezeville-media-os Supabase project. | Evidence for PRD section 2 and the QAF submission. |
+| 2026-09-23 | Version 1 platform is iPhone (the owner's own phone). Supersedes the earlier Android-first leaning. | It is the phone he carries; the PRD says version 1 ships on that one. |
+| 2026-09-23 | Proposed split: Claude builds the backend, ChatGPT builds the frontend. Still open. | Owner's idea while brainstorming; to be settled in the first build session. |
