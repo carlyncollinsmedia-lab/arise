@@ -40,3 +40,7 @@ ios/build/
 web-build/
 expo-env.d.ts
 *.orig.*
+
+# Full-size companion and background sources (kept on the Hdrive; web versions in assets/companions/web are committed)
+assets/companions/*.png
+assets/companions/cutout/

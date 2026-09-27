@@ -37,6 +37,7 @@
     .logo span { font-weight:800; font-size:22px; letter-spacing:.18em; margin-top:-2px; }
     .icon-btn { position:absolute; right:18px; top:18px; background:none; border:0; color:var(--ink-100); cursor:pointer; padding:6px; }
     .icon-btn.left { left:18px; right:auto; }
+    .icon-btn.gear { right:58px; }
 
     main { flex:1; display:flex; flex-direction:column; padding:0 20px 20px; }
     .screen { display:none; flex:1; flex-direction:column; animation:fade .25s ease; }
@@ -50,12 +51,12 @@
     p.date { color:var(--ink-300); font-size:16px; margin:0 0 16px; }
 
     /* Sunrise scene + avatar (placeholder art until the owner's Higgsfield set is ready) */
-    .scene { position:relative; margin:14px -20px 0; height:360px; }
-    .scene img { width:100%; height:100%; object-fit:cover; object-position:50% 30%; display:block;
-      -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 82%,transparent 100%); mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 82%,transparent 100%); }
-    .scene img { animation:rise .9s ease-out 1; }
+    .scene { position:relative; margin:14px -20px 0; height:380px; overflow:hidden;
+      -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 86%,transparent 100%); mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 86%,transparent 100%); }
+    .scene .bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 58%; }
+    .scene .companion { position:absolute; left:50%; bottom:6px; height:92%; translate:-50% 0; animation:rise .9s ease-out 1; }
     @keyframes rise { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
-    @media (prefers-reduced-motion:reduce){ .scene img{animation:none;} }
+    @media (prefers-reduced-motion:reduce){ .scene .companion{animation:none;} }
 
     .pill { align-self:center; display:inline-flex; align-items:center; gap:10px; background:rgba(11,21,48,.6); border:1px solid var(--line);
       color:var(--ink-300); border-radius:var(--radius-pill); padding:10px 20px; font-size:15px; font-weight:600; margin:14px 0 16px; }
@@ -95,7 +96,8 @@
     /* Affirmation */
     .aff-wrap { display:flex; gap:14px; align-items:flex-start; margin-top:18px; }
     .mini-avatar { width:64px; height:64px; flex:none; border-radius:50%; overflow:hidden; border:2px solid var(--sun-500); }
-    .mini-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+    .mini-avatar img { width:100%; height:100%; object-fit:cover; object-position:50% 6%; transform:scale(2.6); transform-origin:50% 8%; display:block; }
+    .mini-avatar.none { background:linear-gradient(180deg,#F9C45A,#E9A93A); }
     .bubble { background:var(--night-800); border:1px solid var(--line); border-radius:var(--radius-lg); border-top-left-radius:6px; padding:18px 20px; }
     .bubble p { margin:0; font-size:20px; font-weight:600; line-height:1.45; }
     .tag { display:inline-block; margin-top:12px; font-size:12px; font-weight:700; color:var(--ink-500); letter-spacing:.03em; }
@@ -106,8 +108,10 @@
     /* Day at a glance */
     .day-hero { display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin:0 -20px 12px 0; }
     .day-hero .title { margin-top:26px; }
-    .day-hero img { width:150px; height:240px; object-fit:cover; object-position:50% 0; border-radius:0 0 0 28px;
-      -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22%); mask-image:linear-gradient(90deg,transparent 0,#000 22%); }
+    .day-scene { position:relative; width:150px; height:230px; flex:none; overflow:hidden; border-radius:24px 0 0 24px;
+      -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18%); mask-image:linear-gradient(90deg,transparent 0,#000 18%); }
+    .day-scene .bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 55%; }
+    .day-scene .companion { position:absolute; left:50%; bottom:0; height:96%; translate:-50% 0; }
     .weather-card { background:linear-gradient(160deg,var(--sky-400),var(--sky-500)); border-radius:var(--radius-lg); padding:18px 20px; display:flex; align-items:center; gap:18px; box-shadow:0 14px 34px rgba(20,40,90,.35); }
     .weather-card svg { width:78px; height:78px; flex:none; }
     .weather-card .city { font-size:17px; font-weight:700; }
@@ -152,6 +156,13 @@
     .sheet h2 { margin:0 0 8px; font-size:22px; }
     .sheet p { color:var(--ink-300); margin:0 0 10px; line-height:1.5; }
     .sheet .line { color:var(--sun-500); font-weight:800; font-size:20px; }
+    .choice-label { font-size:13px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--sun-500); margin:16px 0 8px; }
+    .choices { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .choices.five { grid-template-columns:repeat(5,1fr); }
+    .choice { cursor:pointer; background:var(--night-900); border:1.5px solid var(--line); color:var(--ink-100); border-radius:14px; padding:8px 4px; font-size:13px; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .choice img { width:54px; height:70px; object-fit:cover; object-position:50% 0; border-radius:10px; background:#2a3a66; }
+    .choice .noimg { width:54px; height:70px; border-radius:10px; background:linear-gradient(180deg,#E7A35A,#3D3A5E); }
+    .choice[aria-pressed="true"] { border-color:var(--sun-500); box-shadow:0 0 0 3px rgba(249,196,90,.18); }
   </style>
 </head>
 <body>
@@ -165,6 +176,9 @@
       <svg viewBox="0 0 56 34" fill="none" aria-hidden="true"><path d="M14 30a14 14 0 0 1 28 0" fill="#F9C45A"/><g stroke="#F9C45A" stroke-width="3" stroke-linecap="round"><line x1="28" y1="3" x2="28" y2="10"/><line x1="12" y1="10" x2="16" y2="14"/><line x1="44" y1="10" x2="40" y2="14"/><line x1="4" y1="24" x2="9" y2="24"/><line x1="47" y1="24" x2="52" y2="24"/></g><line x1="2" y1="31" x2="54" y2="31" stroke="#F5F7FC" stroke-width="2" stroke-linecap="round"/></svg>
       <span>arise</span>
     </div>
+    <button class="icon-btn gear" id="settings-btn" aria-label="Settings">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
     <button class="icon-btn" id="support-btn" aria-label="Get support">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-9.3-9A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.3 12C19 16.6 12 21 12 21z"/></svg>
     </button>
@@ -175,7 +189,7 @@
     <section class="screen active" id="screen-home" aria-label="Home">
       <h1 class="hello" id="hello">A fresh start, Uche.</h1>
       <p class="sub">Take this morning one step at a time.</p>
-      <div class="scene"><img src="assets/morning-scene.jpg" alt="Your Arise companion waving good morning at sunrise" /></div>
+      <div class="scene"><img class="bg" id="home-bg" src="assets/companions/web/bg-sunrise.jpg" alt="" /><img class="companion" id="home-companion" src="assets/companions/web/woman-light.webp" alt="Your Arise companion saying good morning" /></div>
       <div class="pill"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M5 3 2 6M19 3l3 3"/></svg>Next alarm · <strong>Tomorrow, 6:00 AM</strong></div>
       <button class="btn btn-primary" id="begin-btn">
         <span><span class="main" id="begin-main">Begin my morning</span><span class="sub2" id="begin-sub">A two-minute check-in</span></span>
@@ -208,7 +222,7 @@
       <h1 class="title">For this morning</h1>
       <p class="date" id="aff-mood-line"></p>
       <div class="aff-wrap">
-        <div class="mini-avatar"><img src="assets/avatar-face.jpg" alt="" /></div>
+        <div class="mini-avatar" id="mini-avatar"><img id="mini-avatar-img" src="assets/companions/web/woman-light.webp" alt="" /></div>
         <div class="bubble" id="aff-bubble" aria-live="polite">
           <p id="aff-text"></p>
           <span class="tag" id="aff-tag"></span>
@@ -225,15 +239,15 @@
     <section class="screen" id="screen-day" aria-label="Your day">
       <div class="day-hero">
         <div><h1 class="title">Ready for your day.</h1><p class="date" id="today-date"></p></div>
-        <img src="assets/day-avatar.jpg" alt="Your companion dressed for rain, holding an umbrella" />
+        <div class="day-scene"><img class="bg" id="day-bg" src="assets/companions/web/bg-rain.jpg" alt="" /><img class="companion" id="day-companion" src="assets/companions/web/woman-waterproof.webp" alt="Your companion dressed for today's weather" /></div>
       </div>
       <div class="weather-card">
-        <svg viewBox="0 0 84 84" fill="none" aria-hidden="true"><path d="M24 50a14 14 0 0 1 2-27.8A18 18 0 0 1 60 26a12 12 0 0 1 0 24H24z" fill="#fff"/><g stroke="#2F5EA8" stroke-width="3.5" stroke-linecap="round"><line x1="30" y1="60" x2="26" y2="70"/><line x1="42" y1="60" x2="38" y2="70"/><line x1="54" y1="60" x2="50" y2="70"/></g></svg>
-        <div><div class="city">Edmonton</div><div class="temp">12°</div><div class="desc">Rain later today</div><div class="src">Sample forecast · updated 6:02 AM</div></div>
+        <span id="w-icon"></span>
+        <div><div class="city">Edmonton</div><div class="temp" id="w-temp">12°</div><div class="desc" id="w-desc">Rain later today</div><div class="src">Sample forecast · updated 6:02 AM</div></div>
       </div>
       <div class="tiles">
-        <div class="tile"><svg class="icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M14 8l8 4 8-4 8 8-5 5v17H11V21l-5-5z" fill="#7FA8E0" stroke="#C3D6F2" stroke-width="1.5" stroke-linejoin="round"/><path d="M22 12v26" stroke="#3A5A8C" stroke-width="2"/></svg><span>Wear<br/>layers</span></div>
-        <div class="tile"><svg class="icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M4 22a18 18 0 0 1 36 0z" fill="#7FA8E0"/><path d="M22 22v14a4 4 0 0 1-8 0" stroke="#C3D6F2" stroke-width="2.5" stroke-linecap="round"/></svg><span>Take an<br/>umbrella</span></div>
+        <div class="tile"><svg class="icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M14 8l8 4 8-4 8 8-5 5v17H11V21l-5-5z" fill="#7FA8E0" stroke="#C3D6F2" stroke-width="1.5" stroke-linejoin="round"/><path d="M22 12v26" stroke="#3A5A8C" stroke-width="2"/></svg><span id="w-outfit">Wear<br/>layers</span></div>
+        <div class="tile"><svg class="icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M4 22a18 18 0 0 1 36 0z" fill="#7FA8E0"/><path d="M22 22v14a4 4 0 0 1-8 0" stroke="#C3D6F2" stroke-width="2.5" stroke-linecap="round"/></svg><span id="w-umbrella">Take an<br/>umbrella</span></div>
       </div>
       <div class="card">
         <div class="top"><svg viewBox="0 0 24 24" width="20" height="20" fill="#9DB8E6" aria-hidden="true"><path d="M12 21c-5-3-8-7-8-12 4 0 7 2 8 5 1-3 4-5 8-5 0 5-3 9-8 12z"/></svg>Today's intention
@@ -278,6 +292,28 @@
     <button class="tab" data-tab="reminders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 0 0 4 0"/></svg>Reminders</button>
     <button class="tab" data-tab="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 20V10M12 20V4M18 20v-7"/></svg>History</button>
   </nav>
+
+  <div class="sheet-bg" id="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="sheet">
+      <h2 id="settings-title">Settings</h2>
+      <p>Choose who greets you each morning. You can change this any time.</p>
+      <div class="choice-label">Your companion</div>
+      <div class="choices" id="companion-choices">
+        <button class="choice" data-companion="woman"><img src="assets/companions/web/woman-light.webp" alt="" />Woman</button>
+        <button class="choice" data-companion="man"><img src="assets/companions/web/man-light.webp" alt="" />Man</button>
+        <button class="choice" data-companion="none"><span class="noimg"></span>No companion</button>
+      </div>
+      <div class="choice-label">Sample weather (prototype only)</div>
+      <div class="choices five" id="weather-choices">
+        <button class="choice" data-weather="clear">Sunrise</button>
+        <button class="choice" data-weather="summer">Summer</button>
+        <button class="choice" data-weather="fall">Fall</button>
+        <button class="choice" data-weather="winter">Winter</button>
+        <button class="choice" data-weather="rain">Rain</button>
+      </div>
+      <button class="btn btn-secondary" id="close-settings" style="justify-content:center">Done</button>
+    </div>
+  </div>
 
   <div class="sheet-bg" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
     <div class="sheet">
@@ -549,7 +585,7 @@
       b.onclick = function () { data.entries = data.entries.filter(function (e) { return e.date !== b.dataset.deldate; }); save(data); renderHistory(); };
     });
   }
-  document.getElementById('reset-demo').onclick = function () { data = seed(); save(data); renderHistory(); };
+  document.getElementById('reset-demo').onclick = function () { var st = data.settings; data = seed(); data.settings = st; save(data); renderHistory(); };
 
   // ---------- Support ----------
   var sheet = document.getElementById('sheet');
@@ -559,6 +595,49 @@
   document.getElementById('close-sheet').onclick = function () { sheet.classList.remove('open'); };
   sheet.addEventListener('click', function (ev) { if (ev.target === sheet) sheet.classList.remove('open'); });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') sheet.classList.remove('open'); });
+
+  // ---------- Companion and weather ----------
+  // The same weather state drives the scene, the companion's outfit and the day brief (PRD F09/F10).
+  var ICON = {
+    sun:'<svg viewBox="0 0 84 84" width="78" height="78" aria-hidden="true"><circle cx="42" cy="42" r="16" fill="#FFE08A"/><g stroke="#FFE08A" stroke-width="4" stroke-linecap="round"><line x1="42" y1="10" x2="42" y2="18"/><line x1="42" y1="66" x2="42" y2="74"/><line x1="10" y1="42" x2="18" y2="42"/><line x1="66" y1="42" x2="74" y2="42"/><line x1="19" y1="19" x2="25" y2="25"/><line x1="59" y1="59" x2="65" y2="65"/><line x1="19" y1="65" x2="25" y2="59"/><line x1="59" y1="25" x2="65" y2="19"/></g></svg>',
+    partly:'<svg viewBox="0 0 84 84" width="78" height="78" aria-hidden="true"><circle cx="32" cy="32" r="13" fill="#FFE08A"/><path d="M28 58a12 12 0 0 1 2-23.8A15 15 0 0 1 58 38a10 10 0 0 1 0 20H28z" fill="#fff"/></svg>',
+    snow:'<svg viewBox="0 0 84 84" width="78" height="78" aria-hidden="true"><path d="M24 48a14 14 0 0 1 2-27.8A18 18 0 0 1 60 24a12 12 0 0 1 0 24H24z" fill="#fff"/><g fill="#fff"><circle cx="30" cy="62" r="3.5"/><circle cx="44" cy="68" r="3.5"/><circle cx="56" cy="60" r="3.5"/></g></svg>',
+    rain:'<svg viewBox="0 0 84 84" width="78" height="78" aria-hidden="true"><path d="M24 50a14 14 0 0 1 2-27.8A18 18 0 0 1 60 26a12 12 0 0 1 0 24H24z" fill="#fff"/><g stroke="#2F5EA8" stroke-width="3.5" stroke-linecap="round"><line x1="30" y1="60" x2="26" y2="70"/><line x1="42" y1="60" x2="38" y2="70"/><line x1="54" y1="60" x2="50" y2="70"/></g></svg>'
+  };
+  var WEATHER = {
+    clear:  { bg:'bg-sunrise', outfit:'light',      temp:'18°', desc:'Clear, bright morning', icon:'sun',    wear:'Dress<br/>light',     umb:'No umbrella<br/>needed' },
+    summer: { bg:'bg-summer',  outfit:'light',      temp:'27°', desc:'Sunny and warm',        icon:'sun',    wear:'Dress<br/>light',     umb:'No umbrella<br/>needed' },
+    fall:   { bg:'bg-fall',    outfit:'layers',     temp:'10°', desc:'Cool and crisp',        icon:'partly', wear:'Wear<br/>layers',     umb:'No umbrella<br/>needed' },
+    winter: { bg:'bg-winter',  outfit:'winter',     temp:'-9°', desc:'Snow this morning',     icon:'snow',   wear:'Dress for<br/>winter', umb:'No umbrella<br/>needed' },
+    rain:   { bg:'bg-rain',    outfit:'waterproof', temp:'11°', desc:'Rain later today',      icon:'rain',   wear:'Waterproof<br/>jacket', umb:'Take an<br/>umbrella' }
+  };
+  data.settings = data.settings || { companion:'woman', weather:'clear' };
+  var A = 'assets/companions/web/';
+  function applyLook() {
+    var st = data.settings, w = WEATHER[st.weather] || WEATHER.rain, who = st.companion;
+    ['home-bg','day-bg'].forEach(function (id) { document.getElementById(id).src = A + w.bg + '.jpg'; });
+    var show = who !== 'none';
+    var hc = document.getElementById('home-companion'), dc = document.getElementById('day-companion');
+    hc.hidden = dc.hidden = !show;
+    if (show) { hc.src = A + who + '-' + w.outfit + '.webp'; dc.src = A + who + '-' + w.outfit + '.webp'; }
+    var mini = document.getElementById('mini-avatar'), mimg = document.getElementById('mini-avatar-img');
+    mini.classList.toggle('none', !show); mimg.hidden = !show; if (show) mimg.src = A + who + '-light.webp';
+    document.getElementById('w-icon').innerHTML = ICON[w.icon];
+    document.getElementById('w-temp').textContent = w.temp;
+    document.getElementById('w-desc').textContent = w.desc;
+    document.getElementById('w-outfit').innerHTML = w.wear;
+    document.getElementById('w-umbrella').innerHTML = w.umb;
+    document.querySelectorAll('[data-companion]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.companion === who); });
+    document.querySelectorAll('[data-weather]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.weather === st.weather); });
+  }
+  document.querySelectorAll('[data-companion]').forEach(function (b) { b.onclick = function () { data.settings.companion = b.dataset.companion; save(data); applyLook(); }; });
+  document.querySelectorAll('[data-weather]').forEach(function (b) { b.onclick = function () { data.settings.weather = b.dataset.weather; save(data); applyLook(); }; });
+  var settings = document.getElementById('settings-sheet');
+  document.getElementById('settings-btn').onclick = function () { settings.classList.add('open'); document.getElementById('close-settings').focus(); };
+  document.getElementById('close-settings').onclick = function () { settings.classList.remove('open'); };
+  settings.addEventListener('click', function (ev) { if (ev.target === settings) settings.classList.remove('open'); });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') settings.classList.remove('open'); });
+  applyLook();
 
   save(data);
   show('home');
