@@ -4,6 +4,10 @@ Arise is a mobile alarm app that turns the first five minutes after waking into 
 
 When the alarm stops, a personal avatar greets you, asks how you feel, and speaks a short affirmation written for that mood. It then shows the day's weather with outfit and umbrella guidance. Arise also includes daytime reminders, an evening check-out, and a history of past mornings.
 
+## Try the prototype
+
+Open `index.html` in a browser (test data only). Design system: `design.html`. Prototype demo video: https://youtube.com/shorts/NobdEwUlwlQ
+
 ## Documents
 
 | File | What it is |
