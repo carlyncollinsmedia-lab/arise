@@ -240,3 +240,50 @@ Version 2 planning starts only after the 14-day test is passed.
 | A user in real distress gets a cheerful message. | Reputational and human harm. | Section 7 is hard requirements; crisis response ships with the note box, not after. |
 | The builder stops using it after a few days. | Then no feature will save it. | The 10-of-14 test is the gate; failing it sends us to the brainstorm, not to more features. |
 | Feature creep from the full spec. | The full spec is a release document, not a build list. | `PRD-full.md` is the roadmap; this document is the build. Changes to this document are deliberate scope decisions, written down. |
+
+---
+
+## 12. Implementation plan
+
+Written 26 September 2026 by Claude Code (Claude Opus 5.5) from this PRD, under the product owner's direction. It turns the build order in section 10 into phases with concrete outputs. Each phase ends with its section 6 checks passing and a commit to GitHub.
+
+### Phases
+
+| Phase | What gets built | Concrete output | Status |
+| --- | --- | --- | --- |
+| 0. Alarm spike | A throwaway iPhone app with one button, "ring in 2 minutes", using Apple AlarmKit. Tested locked, after a restart, in airplane mode, and with Focus on. | Branch `spike/alarm`; a short test report in `docs/TECHNICAL-NOTES.md`. Decides whether the app is Expo plus a Swift alarm module, or native SwiftUI. | Not started |
+| 1. Local prototype and design | A browser prototype of the morning routine with test data only, and a design preview with the app's colours, type, buttons and inputs. | `design.html` and `index.html` at the repo root; opens locally in a browser. No account, no database, no server. | In progress |
+| 2. Account and setup (build step 1) | Sign-up, the notice screen that cannot be skipped, avatar presets, country confirmation, alarm and evening times. | Supabase project `arise` with Row Level Security; setup screens in the app. | Planned |
+| 3. Morning alarm (build step 2) | Set, repeat, ring, stop, snooze, next-ring status. | Local Swift module `modules/arise-alarm/` over AlarmKit. | Planned |
+| 4. Morning check-in (build step 3) | Home screen with the avatar, mood check-in, AI affirmation with reviewed fallback. | Edge Function `generate-affirmation`. The 14-day self-test starts here. | Planned |
+| 5. History, reminders, evening (build steps 4 to 6) | History with edit, delete and the weekly line; daytime reminders; evening check-out and intention. | Local notifications; `entries` and `reminders` tables. | Planned |
+| 6. Safety (build step 7) | Low-mood nudge, "Get support", crisis response with the reviewed support list. | `support_lines` and `fallback_affirmations` tables, reviewed by a human. | Planned |
+| 7. Build last (build steps 8 to 10) | Day brief with weather, outfit and umbrella; weather animations and outfits; the avatar speaks. | Open-Meteo weather; Edge Function `speak-affirmation` with ElevenLabs, audio cached. | Planned |
+| 8. Release pass (build step 11) | Account deletion, lock-screen text setting, every section 6 check, submission. | TestFlight build on the owner's iPhone. | Planned |
+
+### Tools
+
+| Need | Choice | Why, in plain words |
+| --- | --- | --- |
+| Framework | **Expo (React Native, TypeScript)** with a development build, plus a small Swift module for the alarm. The Phase 1 prototype is plain HTML, CSS and JavaScript. | One codebase for iPhone now and Android later. The alarm needs native iPhone code, which a development build can load and Expo Go cannot. No Next.js at any point. |
+| Database | **Supabase Postgres** in the cloud, with **SQLite on the phone** as the first place every entry is saved. | Save on the phone first so a mood tapped at 6am survives no signal; sync to the cloud after. Row Level Security means each user sees only their own history. |
+| Authentication | **Supabase Auth**, email magic link for version 1. | No password to forget; Sign in with Apple can be added later. |
+| File storage | **Supabase Storage** for cached voice audio, one file per morning. Avatar and weather art live in the repo. | Replays cost nothing; no daily image generation. |
+| AI | **Anthropic Claude** called from a Supabase Edge Function; the key lives in Supabase Secrets. | The key never touches the phone, and every answer is checked in code before it is shown. |
+| Running locally for now | Phase 1 opens `index.html` straight from disk in a browser. From Phase 2, the app runs through the Expo development server on the owner's iPhone, and Supabase runs locally through the Supabase CLI until it is deployed. | Nothing is published or deployed during development. |
+
+### Design reference
+
+The owner supplied a two-screen mockup, saved as `docs/design/reference-mockup.png`: "01 Wake gently" (greeting, avatar at sunrise, next alarm, "Begin my morning" and "Just show my day") and "02 Your day, at a glance" (weather card, outfit and umbrella tiles, today's intention, the next reminder, evening check-in time, and a three-tab bar: Today, Reminders, History). The front end follows it: deep navy night-to-dawn background, a warm sunrise-gold main button, soft blue weather card, rounded cards with thin light borders, and a bold rounded heading font.
+
+---
+
+## 13. Agent steering and change notes
+
+A dated record of every instruction the owner gave the AI builder (Claude Code) and what changed as a result. The course grader compares these notes with what was built.
+
+| Date | What the owner told the AI | What the AI did |
+| --- | --- | --- |
+| 2026-09-26 | **Tool choice steering: who builds the code.** The owner had proposed that Claude build the backend and ChatGPT build the frontend. The AI recommended one builder owning the whole codebase, because on a phone the alarm, on-device storage and syncing cut across "frontend" and "backend", and two AIs editing the same project without shared context would break it. The owner decided: "you will build the whole thing." | Recorded the decision in `docs/DECISIONS.md`. Claude Code builds all code; no second AI edits the repository. |
+| 2026-09-26 | **Design direction.** The owner supplied a two-screen mockup and asked for the front end to look like it. | Saved it as `docs/design/reference-mockup.png`; set the colours, type and components in the Design reference above; `design.html` and `index.html` follow it. |
+| 2026-09-26 | **Repository layout.** The owner asked that every step be documented and versioned on GitHub, where the course grader reads it. | Moved the supporting documents into `docs/`, kept `PRD.md` at the root for the grader, and committed each change separately with a plain-language message. |

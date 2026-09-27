@@ -19,4 +19,7 @@ One line per decision, newest at the bottom. Product decisions also update `PRD.
 | 2026-09-18 | Repo created at github.com/carlyncollinsmedia-lab/arise (public). Mac = real build with Claude Code; Windows = class work with OpenCode. Push before switching machines, pull when sitting down. | One repo, two working copies. |
 | 2026-09-22 | Validation survey "Your Mornings" is live at mornings-survey.vercel.app; results in survey_responses in the nezeville-media-os Supabase project. | Evidence for PRD section 2 and the QAF submission. |
 | 2026-09-23 | Version 1 platform is iPhone (the owner's own phone). Supersedes the earlier Android-first leaning. | It is the phone he carries; the PRD says version 1 ships on that one. |
-| 2026-09-23 | Proposed split: Claude builds the backend, ChatGPT builds the frontend. Still open. | Owner's idea while brainstorming; to be settled in the first build session. |
+| 2026-09-23 | Proposed split: Claude builds the backend, ChatGPT builds the frontend. Superseded on 2026-09-26. | Owner's idea while brainstorming. |
+| 2026-09-26 | Claude Code builds the whole codebase, frontend and backend. No second AI edits the repository. | On a phone app the alarm, local storage and sync cut across front and back; one builder with full context avoids breakage. Owner: "you will build the whole thing." |
+| 2026-09-26 | Front end follows the owner's two-screen mockup (docs/design/reference-mockup.png). | Owner's design direction. |
+| 2026-09-26 | PRD.md lives at the repo root; supporting docs in docs/. | The QAF grader reads PRD.md from the repo root. |
