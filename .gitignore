@@ -44,3 +44,6 @@ expo-env.d.ts
 # Full-size companion and background sources (kept on the Hdrive; web versions in assets/companions/web are committed)
 assets/companions/*.png
 assets/companions/cutout/
+
+# macOS helper files created on exFAT drives
+._*
