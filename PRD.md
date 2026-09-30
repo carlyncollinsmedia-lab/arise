@@ -37,7 +37,7 @@ Target core morning duration: two minutes or less, not counting optional note wr
 - 9 of 17 say their first thought is their to-do list, and "planning my day" is the most common thing people want to improve (4 of 17). This supports the daily intention and reminders.
 - 10 of 17 choose an outfit before leaving and 6 check the weather. This supports the outfit and umbrella lines in the day brief.
 - 10 of 17 have tried affirmations or positive self-talk, and 9 have tried a new alarm or sleep app. Arise sits where people already look.
-- 14 of 17 pray or meditate before leaving. Devotional mode is parked in section 8; this result is flagged for the owner to reconsider after version 1.
+- 14 of 17 pray or meditate before leaving. The owner reviewed this on 30 September 2026: faith quotes for every faith go into the version 2 paid tier (section 8, `docs/ROADMAP.md`). Version 1 stays neutral.
 - Where a routine stopped, the reasons were "it got repetitive" (3), "I kept forgetting" (2) and "I lost motivation" (2). The affirmation must vary day to day, and the alarm is what makes the routine impossible to forget.
 - Several "bad morning" stories were about oversleeping, and one was "the alarm didn't ring". An alarm that fails once loses the user, which is why the alarm is tested before anything else.
 
@@ -193,7 +193,8 @@ Decided and parked. Nothing here is built, designed, or promised in version 1. T
 - Second platform.
 - Selectable encouragement tone (gentle, practical, uplifting).
 - A practical action offered with the affirmation.
-- Devotional mode: scripture-based affirmations as an optional mode.
+- Faith quotes: an optional daily quote from the user's own faith, any faith, from a fixed reviewed library (replaces "devotional mode"; paid tier, version 2; see `docs/ROADMAP.md`).
+- Lock-screen and home-screen widget (version 2).
 - Extra voices and avatar packs.
 - Send one on: share today's affirmation as an image or send it to one person.
 - Calendar awareness.
@@ -323,3 +324,4 @@ A dated record of every instruction the owner gave the AI builder (Claude Code) 
 | 2026-09-26 | **Demo recorded.** The owner recorded the Phase 1 walkthrough. | Demo video: https://youtube.com/shorts/NobdEwUlwlQ (unlisted, test data only). |
 | 2026-09-26 | **Repository layout.** The owner asked that every step be documented and versioned on GitHub, where the course grader reads it. | Moved the supporting documents into `docs/`, kept `PRD.md` at the root for the grader, and committed each change separately with a plain-language message. |
 | 2026-09-30 | **Three gaps found while testing the prototype.** The owner said: "i dont have a place to set the morning alarms", "after i have opened the app and selected my mood, i didnt see the mood again, to go back if i want to change the mood", and "the voice option should be there for blind people." He approved all three changes. | Prototype: added a first-time alarm setup (time, days, alarm on, read-aloud) and a tappable "Next alarm" line on the home screen. Today's mood now shows as a chip on the affirmation and day screens and can be changed; one change gets a new pep talk, later changes keep it (each new one costs money). Added a "Read it to me" button and a read-aloud setting. PRD F05 and F07 updated; F07 moved from "build last" to "built early", with VoiceOver support from the first build. Logged in `docs/DECISIONS.md`. |
+| 2026-09-30 | **Paid ideas and faith quotes.** Asked for ideas worth paying for, the owner picked the lock-screen widget, then proposed: "the app will give you an inspiring quote from our religion... even Muslims and other religions use it... this is for the paid." He first asked about Christ Embassy's Rhapsody of Realities. | The AI flagged that Rhapsody is owned by LoveWorld Publishing and cannot be copied without permission, and that AI must never reword scripture. Wrote "Faith quotes" into `docs/ROADMAP.md` (version 2, paid) with a risk table: fixed reviewed library only, encouraging quotes tagged by mood, licensed translations only, never mixed faiths, no quote on crisis mornings, faith kept private, per-faith human review, Rhapsody via link until permission. Widget added to version 2 free tier. Replaced "devotional mode" in PRD section 8. Version 1 unchanged. |
