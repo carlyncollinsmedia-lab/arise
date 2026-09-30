@@ -652,7 +652,7 @@ export default function App() {
               on={settings.readAloud} onPress={() => update({ readAloud: !settings.readAloud })} />
             <Toggle label="Show reminder text on the lock screen" hint="Off keeps your reminders private if someone sees your phone."
               on={settings.reminderTextOnLockScreen} onPress={() => update({ reminderTextOnLockScreen: !settings.reminderTextOnLockScreen })} />
-            <Secondary label="Test: ring my alarm in 1 minute" onPress={async () => {
+            <Secondary label="Check my alarm works (rings in 1 minute)" onPress={async () => {
               if (permission !== 'authorized') { await applyAlarm(settings); return; }
               await AriseAlarm.scheduleOnceIn(60);
               setMessage('Test alarm set for one minute from now. Lock the phone and wait.');
