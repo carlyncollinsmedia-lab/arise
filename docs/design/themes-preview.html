@@ -36,6 +36,20 @@
     { name:'Warm sand', note:'light', bg:'#F7F0E5', card:'#FFFFFF', sel:'#FCE9DA', line:'rgba(60,40,20,0.16)', ink:'#2A1E14', muted:'#6B5A48', accent:'#B4531F', on:'#FFFFFF' }
   ];
   var A = '../../assets/companions/web/';
+  // Same smiley faces as the approved design (design.html / index.html).
+  var FILL = { Rough:'#6B7FA8', Low:'#7FA8E0', Okay:'#B9C6E4', Good:'#F2D27A', Great:'#F9C45A' };
+  var M = 'fill="none" stroke="#1A2340" stroke-width="2.4" stroke-linecap="round"';
+  var MOUTH = {
+    Rough:'<path d="M10.5 13.8l6-1.8M29.5 13.8l-6-1.8" '+M+'/><path d="M13 29c3.5-4.5 10.5-4.5 14 0" '+M+'/>',
+    Low:'<path d="M14 28c3-2.5 9-2.5 12 0" '+M+'/>',
+    Okay:'<path d="M14 26.5h12" '+M+'/>',
+    Good:'<path d="M13.5 24.5c3.5 3.5 9.5 3.5 13 0" '+M+'/>',
+    Great:'<path d="M12 23h16c0 5-3.6 8-8 8s-8-3-8-8z" fill="#1A2340"/><path d="M15.5 27.5c2.8 2 6.2 2 9 0" fill="none" stroke="#E86B5A" stroke-width="2.2" stroke-linecap="round"/>'
+  };
+  function face(m) {
+    return '<svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true" style="display:block;margin:0 auto 4px"><circle cx="20" cy="20" r="18" fill="' + FILL[m] + '"/>' +
+      '<circle cx="14" cy="16.5" r="2.2" fill="#1A2340"/><circle cx="26" cy="16.5" r="2.2" fill="#1A2340"/>' + MOUTH[m] + '</svg>';
+  }
   document.getElementById('grid').innerHTML = T.map(function (t) {
     return '<div><div class="name">' + t.name + (t.note ? ' <span style="font-weight:600;color:#777">(' + t.note + ')</span>' : '') + '</div>' +
       '<div class="phone" style="background:' + t.bg + ';color:' + t.ink + '">' +
@@ -43,7 +57,7 @@
         '<div class="scene"><img class="bg" src="' + A + 'bg-sunrise.jpg" alt=""><img class="who" src="' + A + 'woman-light.webp" alt=""></div>' +
         '<div class="pill" style="background:' + t.card + ';border-color:' + t.line + '">⏰ 6:00 AM, weekdays <span style="color:' + t.accent + ';font-weight:800">Change</span></div>' +
         '<div class="moods">' + ['Rough','Low','Okay','Good','Great'].map(function (m, i) {
-          return '<div class="mood' + (i === 3 ? ' on' : '') + '" style="background:' + (i === 3 ? t.sel : t.card) + ';border-color:' + (i === 3 ? t.accent : t.line) + '">' + m + '</div>';
+          return '<div class="mood' + (i === 3 ? ' on' : '') + '" style="background:' + (i === 3 ? t.sel : t.card) + ';border-color:' + (i === 3 ? t.accent : t.line) + '">' + face(m) + m + '</div>';
         }).join('') + '</div>' +
         '<div class="btn" style="background:' + t.accent + ';color:' + t.on + '">Begin my morning</div>' +
         '<div class="btn2" style="border-color:' + t.line + '">Change colours</div>' +
