@@ -3,7 +3,7 @@
 // alarm time and days, evening time. Settings are saved on the phone first.
 // The account (sign-in) screen comes next, once the sign-in method is decided.
 
-import { useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Storage from 'expo-sqlite/kv-store';
@@ -11,8 +11,22 @@ import Storage from 'expo-sqlite/kv-store';
 import AriseAlarm, { AlarmPermission } from './modules/arise-alarm';
 
 type Companion = 'woman' | 'man' | 'none';
+
+// Colour themes (owner request, 30 Sep): the original night blue plus three that
+// match the sunrise look, one of them light. Each keeps text contrast readable.
+type Theme = { name: string; dark: boolean; bg: string; card: string; selectedCard: string; control: string; line: string; ink: string; muted: string; accent: string; onAccent: string; warn: string; offSwitch: string };
+const THEMES = {
+  night: { name: 'Night sky', dark: true, bg: '#0B1530', card: '#13224A', selectedCard: '#1B2C5C', control: '#22346A', line: 'rgba(255,255,255,0.14)', ink: '#F5F7FC', muted: '#C3CCE0', accent: '#F9C45A', onAccent: '#1A2340', warn: '#FFB4A2', offSwitch: '#3A4A78' },
+  plum: { name: 'Plum dawn', dark: true, bg: '#1C1030', card: '#2B1A45', selectedCard: '#3A2459', control: '#442C66', line: 'rgba(255,255,255,0.14)', ink: '#F8F3FC', muted: '#D4C6E7', accent: '#F9C45A', onAccent: '#241338', warn: '#FFB4A2', offSwitch: '#56407A' },
+  forest: { name: 'Forest morning', dark: true, bg: '#0D1F18', card: '#163228', selectedCard: '#1E4235', control: '#24503F', line: 'rgba(255,255,255,0.14)', ink: '#F2F8F4', muted: '#C3DACE', accent: '#F2B84B', onAccent: '#10231B', warn: '#FFB4A2', offSwitch: '#35604F' },
+  sand: { name: 'Warm sand', dark: false, bg: '#F7F0E5', card: '#FFFFFF', selectedCard: '#FCE9DA', control: '#EFE2D0', line: 'rgba(60,40,20,0.16)', ink: '#2A1E14', muted: '#6B5A48', accent: '#B4531F', onAccent: '#FFFFFF', warn: '#A3321A', offSwitch: '#D8C8B4' },
+} satisfies Record<string, Theme>;
+type ThemeKey = keyof typeof THEMES;
+
 type Settings = {
   noticeAccepted: boolean;
+  setupComplete: boolean;
+  theme: ThemeKey;
   companion: Companion;
   country: string;
   alarm: { hour: number; minute: number; days: number[] };
@@ -22,6 +36,8 @@ type Settings = {
 
 const DEFAULTS: Settings = {
   noticeAccepted: false,
+  setupComplete: false,
+  theme: 'night',
   companion: 'woman',
   country: '',
   alarm: { hour: 6, minute: 0, days: [1, 2, 3, 4, 5] },
@@ -29,7 +45,7 @@ const DEFAULTS: Settings = {
   readAloud: false,
 };
 const KEY = 'arise.settings.v1';
-const STEPS = ['notice', 'companion', 'country', 'alarm', 'evening'] as const;
+const STEPS = ['notice', 'companion', 'colours', 'country', 'alarm', 'evening'] as const;
 type Step = (typeof STEPS)[number] | 'home';
 
 const DAY_LETTERS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -64,10 +80,12 @@ export default function App() {
     const saved = Storage.getItemSync(KEY);
     const s: Settings = saved ? { ...DEFAULTS, ...JSON.parse(saved) } : DEFAULTS;
     setSettings(s);
-    setStep(saved && s.noticeAccepted && s.country ? 'home' : 'notice');
+    if (saved && s.noticeAccepted && s.country) s.setupComplete = true; // settings saved before this flag existed
+    setStep(s.setupComplete ? 'home' : 'notice');
     setPermission(AriseAlarm.authorizationState());
   }, []);
 
+  const styles = useMemo(() => makeStyles(THEMES[settings?.theme ?? 'night']), [settings?.theme]);
   if (!settings) return <View style={styles.screen} />;
 
   const update = (patch: Partial<Settings>) => {
@@ -75,7 +93,8 @@ export default function App() {
     setSettings(next);
     Storage.setItemSync(KEY, JSON.stringify(next));
   };
-  const nextStep = () => setStep(STEPS[STEPS.indexOf(step as (typeof STEPS)[number]) + 1] ?? 'home');
+  // During first-time setup, go to the next screen; when changing one thing later, go back home.
+  const nextStep = () => setStep(settings.setupComplete ? 'home' : STEPS[STEPS.indexOf(step as (typeof STEPS)[number]) + 1] ?? 'home');
 
   // Replace whatever alarm is set with the one in settings. The phone is the truth.
   async function applyAlarm(s: Settings) {
@@ -122,6 +141,22 @@ export default function App() {
             <Primary label="Continue" onPress={nextStep} />
           </Card>
         );
+      case 'colours':
+        return (
+          <Card title="Pick your colours" subtitle="Choose the look you like. You can change it any time.">
+            {(Object.keys(THEMES) as ThemeKey[]).map((k) => {
+              const t = THEMES[k];
+              return (
+                <Choice key={k} wide selected={settings.theme === k} onPress={() => update({ theme: k })} label={t.name}>
+                  <View style={styles.swatches}>
+                    {[t.bg, t.card, t.accent].map((c) => <View key={c} style={[styles.swatch, { backgroundColor: c }]} />)}
+                  </View>
+                </Choice>
+              );
+            })}
+            <Primary label="Continue" onPress={nextStep} />
+          </Card>
+        );
       case 'country':
         return (
           <Card title="Where do you live?" subtitle="So “Get support” shows the right help line for your country.">
@@ -161,13 +196,14 @@ export default function App() {
           <Card title="Evening check-in" subtitle="When should Arise ask how your day went?">
             <TimePicker hour={settings.evening.hour} minute={settings.evening.minute}
               onChange={(hour, minute) => update({ evening: { hour, minute } })} />
-            <Primary label="Finish setup" onPress={() => setStep('home')} />
+            <Primary label={settings.setupComplete ? 'Save' : 'Finish setup'} onPress={() => { update({ setupComplete: true }); setStep('home'); }} />
           </Card>
         );
       default:
         return (
           <Home settings={settings} permission={permission} message={message}
             onChangeAlarm={() => setStep('alarm')}
+            onChangeColours={() => setStep('colours')}
             onTestAlarm={async () => {
               if (permission !== 'authorized') { await applyAlarm(settings); return; }
               await AriseAlarm.scheduleOnceIn(60);
@@ -178,14 +214,17 @@ export default function App() {
   })();
 
   return (
+    <StylesContext.Provider value={styles}>
     <View style={styles.screen}>
-      <StatusBar style="light" />
+      <StatusBar style={THEMES[settings.theme].dark ? 'light' : 'dark'} />
       <ScrollView contentContainerStyle={styles.scroll}>{content}</ScrollView>
     </View>
+    </StylesContext.Provider>
   );
 }
 
-function Home(props: { settings: Settings; permission: AlarmPermission; message: string; onChangeAlarm: () => void; onTestAlarm: () => void }) {
+function Home(props: { settings: Settings; permission: AlarmPermission; message: string; onChangeAlarm: () => void; onChangeColours: () => void; onTestAlarm: () => void }) {
+  const styles = useStyles();
   const { settings: s } = props;
   return (
     <View>
@@ -201,12 +240,14 @@ function Home(props: { settings: Settings; permission: AlarmPermission; message:
       {props.permission !== 'authorized' ? <Text style={styles.warn}>Alarms are not allowed yet. Tap Change to set them up.</Text> : null}
       <Text style={styles.small}>Evening check-in at {fmt(s.evening.hour, s.evening.minute)}.</Text>
       <Secondary label="Test: ring in 1 minute" onPress={props.onTestAlarm} />
+      <Secondary label="Change colours" onPress={props.onChangeColours} />
       {props.message ? <Text style={styles.small}>{props.message}</Text> : null}
     </View>
   );
 }
 
 function Card(props: { title: string; subtitle: string; children: React.ReactNode }) {
+  const styles = useStyles();
   return (
     <View>
       <Text style={styles.title} accessibilityRole="header">{props.title}</Text>
@@ -217,6 +258,7 @@ function Card(props: { title: string; subtitle: string; children: React.ReactNod
 }
 
 function Primary(props: { label: string; onPress: () => void; disabled?: boolean }) {
+  const styles = useStyles();
   return (
     <Pressable accessibilityRole="button" accessibilityState={{ disabled: !!props.disabled }} disabled={props.disabled}
       onPress={props.onPress} style={[styles.primary, props.disabled && { opacity: 0.4 }]}>
@@ -226,6 +268,7 @@ function Primary(props: { label: string; onPress: () => void; disabled?: boolean
 }
 
 function Secondary(props: { label: string; onPress: () => void }) {
+  const styles = useStyles();
   return (
     <Pressable accessibilityRole="button" onPress={props.onPress} style={styles.secondary}>
       <Text style={styles.secondaryText}>{props.label}</Text>
@@ -234,6 +277,7 @@ function Secondary(props: { label: string; onPress: () => void }) {
 }
 
 function Choice(props: { label: string; selected: boolean; onPress: () => void; wide?: boolean; children?: React.ReactNode }) {
+  const styles = useStyles();
   return (
     <Pressable accessibilityRole="radio" accessibilityState={{ selected: props.selected }} accessibilityLabel={props.label}
       onPress={props.onPress} style={[styles.choice, props.wide && styles.choiceWide, props.selected && styles.selected]}>
@@ -244,6 +288,7 @@ function Choice(props: { label: string; selected: boolean; onPress: () => void; 
 }
 
 function Toggle(props: { label: string; hint: string; on: boolean; onPress: () => void }) {
+  const styles = useStyles();
   return (
     <Pressable accessibilityRole="switch" accessibilityState={{ checked: props.on }} onPress={props.onPress} style={styles.toggle}>
       <View style={{ flex: 1 }}>
@@ -257,6 +302,7 @@ function Toggle(props: { label: string; hint: string; on: boolean; onPress: () =
 
 // Simple, accessible time picker: step the hour and the minutes (5-minute steps).
 function TimePicker(props: { hour: number; minute: number; onChange: (hour: number, minute: number) => void }) {
+  const styles = useStyles();
   const { hour, minute, onChange } = props;
   const step = (dh: number, dm: number) => {
     const total = (hour * 60 + minute + dh * 60 + dm + 1440) % 1440;
@@ -274,6 +320,7 @@ function TimePicker(props: { hour: number; minute: number; onChange: (hour: numb
 }
 
 function Stepper(props: { label: string; text: string; onPress: () => void }) {
+  const styles = useStyles();
   return (
     <Pressable accessibilityRole="button" accessibilityLabel={props.label} onPress={props.onPress} style={styles.stepper}>
       <Text style={styles.stepperText}>{props.text}</Text>
@@ -281,44 +328,49 @@ function Stepper(props: { label: string; text: string; onPress: () => void }) {
   );
 }
 
-const C = { night900: '#0B1530', night800: '#13224A', line: 'rgba(255,255,255,0.14)', ink: '#F5F7FC', muted: '#C3CCE0', sun: '#F9C45A', onSun: '#1A2340' };
+const StylesContext = createContext<ReturnType<typeof makeStyles> | null>(null);
+function useStyles() {
+  return useContext(StylesContext)!;
+}
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: C.night900 },
+const makeStyles = (C: Theme) => StyleSheet.create({
+  screen: { flex: 1, backgroundColor: C.bg },
   scroll: { padding: 22, paddingTop: 72, paddingBottom: 48 },
   title: { color: C.ink, fontSize: 30, fontWeight: '800', marginBottom: 6 },
   subtitle: { color: C.muted, fontSize: 17, marginBottom: 20, lineHeight: 23 },
   body: { color: C.ink, fontSize: 17, lineHeight: 25, marginBottom: 14 },
-  label: { color: C.sun, fontSize: 13, fontWeight: '800', letterSpacing: 1, marginTop: 18, marginBottom: 8, textTransform: 'uppercase' },
+  label: { color: C.accent, fontSize: 13, fontWeight: '800', letterSpacing: 1, marginTop: 18, marginBottom: 8, textTransform: 'uppercase' },
   row: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
-  primary: { backgroundColor: C.sun, borderRadius: 18, paddingVertical: 17, alignItems: 'center', marginTop: 24 },
-  primaryText: { color: C.onSun, fontSize: 19, fontWeight: '800' },
+  primary: { backgroundColor: C.accent, borderRadius: 18, paddingVertical: 17, alignItems: 'center', marginTop: 24 },
+  primaryText: { color: C.onAccent, fontSize: 19, fontWeight: '800' },
   secondary: { borderColor: C.line, borderWidth: 1.5, borderRadius: 18, paddingVertical: 15, alignItems: 'center', marginTop: 16 },
   secondaryText: { color: C.ink, fontSize: 17, fontWeight: '700' },
-  choice: { flex: 1, minWidth: 96, backgroundColor: C.night800, borderColor: C.line, borderWidth: 1.5, borderRadius: 16, padding: 10, alignItems: 'center', gap: 8, marginBottom: 8 },
+  choice: { flex: 1, minWidth: 96, backgroundColor: C.card, borderColor: C.line, borderWidth: 1.5, borderRadius: 16, padding: 10, alignItems: 'center', gap: 8, marginBottom: 8 },
   choiceWide: { flexBasis: '100%', alignItems: 'flex-start', paddingVertical: 16, paddingHorizontal: 16 },
-  selected: { borderColor: C.sun, backgroundColor: '#1B2C5C' },
+  selected: { borderColor: C.accent, backgroundColor: C.selectedCard },
   choiceText: { color: C.ink, fontSize: 17, fontWeight: '700' },
   thumb: { width: 70, height: 92, borderRadius: 12, resizeMode: 'cover' },
   noThumb: { backgroundColor: '#E7A35A' },
-  day: { width: 42, height: 42, borderRadius: 21, borderWidth: 1.5, borderColor: C.line, alignItems: 'center', justifyContent: 'center', backgroundColor: C.night800 },
+  day: { width: 42, height: 42, borderRadius: 21, borderWidth: 1.5, borderColor: C.line, alignItems: 'center', justifyContent: 'center', backgroundColor: C.card },
   dayText: { color: C.ink, fontSize: 16, fontWeight: '800' },
-  timeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: C.night800, borderRadius: 18, padding: 10 },
+  timeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: C.card, borderRadius: 18, padding: 10 },
   time: { color: C.ink, fontSize: 32, fontWeight: '800' },
-  stepper: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#22346A', alignItems: 'center', justifyContent: 'center' },
+  stepper: { width: 44, height: 44, borderRadius: 22, backgroundColor: C.control, alignItems: 'center', justifyContent: 'center' },
   stepperText: { color: C.ink, fontSize: 24, fontWeight: '800' },
-  toggle: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: C.night800, borderRadius: 16, padding: 14, marginTop: 18 },
-  switch: { width: 50, height: 30, borderRadius: 15, backgroundColor: '#3A4A78', padding: 3 },
-  switchOn: { backgroundColor: C.sun },
+  toggle: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: C.card, borderRadius: 16, padding: 14, marginTop: 18 },
+  switch: { width: 50, height: 30, borderRadius: 15, backgroundColor: C.offSwitch, padding: 3 },
+  switchOn: { backgroundColor: C.accent },
   knob: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#fff' },
   knobOn: { marginLeft: 20 },
-  warn: { color: '#FFB4A2', fontSize: 15, marginTop: 14, lineHeight: 21 },
+  warn: { color: C.warn, fontSize: 15, marginTop: 14, lineHeight: 21 },
   small: { color: C.muted, fontSize: 14, marginTop: 10, lineHeight: 20 },
   hello: { color: C.ink, fontSize: 32, fontWeight: '800', textAlign: 'center', marginBottom: 16 },
   sceneWrap: { height: 330, borderRadius: 24, overflow: 'hidden', marginBottom: 18 },
   scene: { position: 'absolute', width: '100%', height: '100%' },
   companion: { position: 'absolute', bottom: 0, alignSelf: 'center', width: 200, height: 300, resizeMode: 'contain' },
-  pill: { alignSelf: 'center', backgroundColor: C.night800, borderColor: C.line, borderWidth: 1, borderRadius: 999, paddingVertical: 10, paddingHorizontal: 18 },
+  pill: { alignSelf: 'center', backgroundColor: C.card, borderColor: C.line, borderWidth: 1, borderRadius: 999, paddingVertical: 10, paddingHorizontal: 18 },
   pillText: { color: C.ink, fontSize: 16, fontWeight: '700' },
-  link: { color: C.sun, fontWeight: '800' },
+  link: { color: C.accent, fontWeight: '800' },
+  swatches: { flexDirection: 'row', gap: 6 },
+  swatch: { width: 34, height: 34, borderRadius: 10, borderWidth: 1, borderColor: C.line },
 });
