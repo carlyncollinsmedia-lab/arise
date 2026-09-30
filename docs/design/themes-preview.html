@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Arise colour themes</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body { margin:0; font-family:Nunito, system-ui, sans-serif; background:#e9e6ef; color:#1a1a1a; padding:28px 16px 48px; }
+  h1 { text-align:center; margin:0 0 6px; font-size:28px; }
+  p.lead { text-align:center; margin:0 0 28px; color:#555; font-weight:600; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:28px; max-width:1180px; margin:0 auto; }
+  .name { text-align:center; font-weight:800; font-size:20px; margin-bottom:10px; }
+  .phone { border-radius:38px; padding:18px 14px 20px; box-shadow:0 18px 40px rgba(0,0,0,.25); border:6px solid #111; min-height:560px; display:flex; flex-direction:column; gap:12px; }
+  .hello { font-size:24px; font-weight:800; text-align:center; margin-top:10px; }
+  .scene { position:relative; height:230px; border-radius:20px; overflow:hidden; }
+  .scene img.bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .scene img.who { position:absolute; bottom:0; left:50%; transform:translateX(-50%); height:210px; }
+  .pill { align-self:center; border-radius:999px; padding:8px 14px; font-weight:700; font-size:14px; border:1px solid; }
+  .btn { border-radius:16px; padding:14px; text-align:center; font-weight:800; font-size:16px; }
+  .btn2 { border-radius:16px; padding:12px; text-align:center; font-weight:700; font-size:15px; border:1.5px solid; }
+  .moods { display:flex; gap:6px; }
+  .mood { flex:1; border-radius:12px; padding:8px 0; text-align:center; font-size:12px; font-weight:800; border:1.5px solid; }
+  .mood.on { border-width:2px; }
+</style>
+</head>
+<body>
+<h1>Arise colour themes</h1>
+<p class="lead">Pick one during setup, or change it any time from the home screen.</p>
+<div class="grid" id="grid"></div>
+<script>
+  var T = [
+    { name:'Night sky', note:'the original', bg:'#0B1530', card:'#13224A', sel:'#1B2C5C', line:'rgba(255,255,255,0.14)', ink:'#F5F7FC', muted:'#C3CCE0', accent:'#F9C45A', on:'#1A2340' },
+    { name:'Plum dawn', note:'', bg:'#1C1030', card:'#2B1A45', sel:'#3A2459', line:'rgba(255,255,255,0.14)', ink:'#F8F3FC', muted:'#D4C6E7', accent:'#F9C45A', on:'#241338' },
+    { name:'Forest morning', note:'', bg:'#0D1F18', card:'#163228', sel:'#1E4235', line:'rgba(255,255,255,0.14)', ink:'#F2F8F4', muted:'#C3DACE', accent:'#F2B84B', on:'#10231B' },
+    { name:'Warm sand', note:'light', bg:'#F7F0E5', card:'#FFFFFF', sel:'#FCE9DA', line:'rgba(60,40,20,0.16)', ink:'#2A1E14', muted:'#6B5A48', accent:'#B4531F', on:'#FFFFFF' }
+  ];
+  var A = '../../assets/companions/web/';
+  document.getElementById('grid').innerHTML = T.map(function (t) {
+    return '<div><div class="name">' + t.name + (t.note ? ' <span style="font-weight:600;color:#777">(' + t.note + ')</span>' : '') + '</div>' +
+      '<div class="phone" style="background:' + t.bg + ';color:' + t.ink + '">' +
+        '<div class="hello">A fresh start.</div>' +
+        '<div class="scene"><img class="bg" src="' + A + 'bg-sunrise.jpg" alt=""><img class="who" src="' + A + 'woman-light.webp" alt=""></div>' +
+        '<div class="pill" style="background:' + t.card + ';border-color:' + t.line + '">⏰ 6:00 AM, weekdays <span style="color:' + t.accent + ';font-weight:800">Change</span></div>' +
+        '<div class="moods">' + ['Rough','Low','Okay','Good','Great'].map(function (m, i) {
+          return '<div class="mood' + (i === 3 ? ' on' : '') + '" style="background:' + (i === 3 ? t.sel : t.card) + ';border-color:' + (i === 3 ? t.accent : t.line) + '">' + m + '</div>';
+        }).join('') + '</div>' +
+        '<div class="btn" style="background:' + t.accent + ';color:' + t.on + '">Begin my morning</div>' +
+        '<div class="btn2" style="border-color:' + t.line + '">Change colours</div>' +
+        '<div style="color:' + t.muted + ';font-size:13px;text-align:center">Evening check-in at 8:00 PM.</div>' +
+      '</div></div>';
+  }).join('');
+</script>
+</body>
+</html>
