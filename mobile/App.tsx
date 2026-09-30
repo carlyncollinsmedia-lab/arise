@@ -11,6 +11,7 @@ import { StatusBar } from 'expo-status-bar';
 import Storage from 'expo-sqlite/kv-store';
 import * as Haptics from 'expo-haptics';
 import * as Speech from 'expo-speech';
+import * as Notifications from 'expo-notifications';
 import Svg, { Circle, Path } from 'react-native-svg';
 
 import AriseAlarm, { AlarmPermission } from './modules/arise-alarm';
@@ -37,7 +38,10 @@ type Settings = {
   alarm: { hour: number; minute: number; days: number[] };
   evening: { hour: number; minute: number };
   readAloud: boolean;
+  reminderTextOnLockScreen: boolean;
+  city: City | null;
 };
+type City = { name: string; label: string; lat: number; lon: number };
 
 const DEFAULTS: Settings = {
   noticeAccepted: false,
@@ -48,10 +52,12 @@ const DEFAULTS: Settings = {
   alarm: { hour: 6, minute: 0, days: [1, 2, 3, 4, 5] },
   evening: { hour: 20, minute: 0 },
   readAloud: false,
+  reminderTextOnLockScreen: false,
+  city: null,
 };
 const KEY = 'arise.settings.v1';
-const STEPS = ['notice', 'companion', 'colours', 'country', 'alarm', 'evening'] as const;
-type Step = (typeof STEPS)[number] | 'home' | 'mood' | 'pepTalk';
+const STEPS = ['notice', 'companion', 'colours', 'country', 'city', 'alarm', 'evening'] as const;
+type Step = (typeof STEPS)[number] | 'home' | 'mood' | 'pepTalk' | 'day' | 'evening-checkin' | 'history' | 'reminders';
 
 const DAY_LETTERS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -61,6 +67,79 @@ const IMAGES = {
   man: require('./assets/companions/man-light.webp'),
   scene: require('./assets/companions/bg-sunrise.jpg'),
 };
+type Outfit = 'light' | 'layers' | 'warm' | 'winter' | 'waterproof';
+const OUTFITS: Record<'woman' | 'man', Record<Outfit, number>> = {
+  woman: { light: require('./assets/companions/woman-light.webp'), layers: require('./assets/companions/woman-layers.webp'), warm: require('./assets/companions/woman-warm.webp'), winter: require('./assets/companions/woman-winter.webp'), waterproof: require('./assets/companions/woman-waterproof.webp') },
+  man: { light: require('./assets/companions/man-light.webp'), layers: require('./assets/companions/man-layers.webp'), warm: require('./assets/companions/man-warm.webp'), winter: require('./assets/companions/man-winter.webp'), waterproof: require('./assets/companions/man-waterproof.webp') },
+};
+const SCENES = {
+  sunrise: require('./assets/companions/bg-sunrise.jpg'), summer: require('./assets/companions/bg-summer.jpg'), fall: require('./assets/companions/bg-fall.jpg'),
+  winter: require('./assets/companions/bg-winter.jpg'), rain: require('./assets/companions/bg-rain.jpg'),
+};
+
+// ---------- Weather and what to wear (PRD F09/F10, TECHNICAL-NOTES "Weather") ----------
+// Open-Meteo: free, no key. Cached for 60 minutes; after 3 hours without a refresh
+// the forecast counts as stale and we give no outfit advice rather than guess.
+type Weather = { fetchedAt: number; tempNow: number; codeNow: number; minFeels: number; maxRainChance: number | null; maxGust: number | null; rainy: boolean; snowy: boolean };
+type DayBrief = { weather: Weather; stale: boolean; outfit: Outfit | null; outfitText: string; umbrellaText: string; scene: keyof typeof SCENES; description: string };
+const RAIN_CODES = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99];
+const SNOW_CODES = [71, 73, 75, 77, 85, 86];
+function describe(code: number) {
+  if (code === 0) return 'Clear sky';
+  if (code <= 2) return 'Partly cloudy';
+  if (code === 3) return 'Cloudy';
+  if (code <= 48) return 'Foggy';
+  if (code <= 57) return 'Drizzle';
+  if (code <= 67) return 'Rain';
+  if (code <= 77) return 'Snow';
+  if (code <= 82) return 'Rain showers';
+  if (code <= 86) return 'Snow showers';
+  return 'Thunderstorms';
+}
+async function searchCities(name: string): Promise<City[]> {
+  const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?count=5&language=en&name=${encodeURIComponent(name)}`);
+  const body = await res.json();
+  return (body.results ?? []).map((r: any) => ({ name: r.name, label: [r.name, r.admin1, r.country].filter(Boolean).join(', '), lat: r.latitude, lon: r.longitude }));
+}
+async function getWeather(city: City): Promise<Weather | null> {
+  const cacheKey = `arise.weather.${city.lat.toFixed(2)},${city.lon.toFixed(2)}`;
+  const cached: Weather | null = JSON.parse(Storage.getItemSync(cacheKey) ?? 'null');
+  if (cached && Date.now() - cached.fetchedAt < 60 * 60e3) return cached;
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weather_code` +
+      `&hourly=apparent_temperature,precipitation_probability,wind_gusts_10m,weather_code&forecast_hours=12&timezone=auto`;
+    const b = await (await fetch(url)).json();
+    const h = b.hourly;
+    const nums = (xs: (number | null)[]) => xs.filter((x): x is number => typeof x === 'number');
+    const rain = nums(h.precipitation_probability), gust = nums(h.wind_gusts_10m), codes: number[] = h.weather_code;
+    const w: Weather = {
+      fetchedAt: Date.now(),
+      tempNow: b.current.temperature_2m,
+      codeNow: b.current.weather_code,
+      minFeels: Math.min(...nums(h.apparent_temperature)),
+      maxRainChance: rain.length ? Math.max(...rain) : null, // missing is "unavailable", never zero
+      maxGust: gust.length ? Math.max(...gust) : null,
+      rainy: codes.some((c) => RAIN_CODES.includes(c)),
+      snowy: codes.some((c) => SNOW_CODES.includes(c)),
+    };
+    Storage.setItemSync(cacheKey, JSON.stringify(w));
+    return w;
+  } catch {
+    return cached; // offline: use the last forecast, marked stale if old
+  }
+}
+function brief(w: Weather): DayBrief {
+  const stale = Date.now() - w.fetchedAt > 3 * 60 * 60e3;
+  const rainLikely = w.rainy || (w.maxRainChance ?? 0) >= 40;
+  const windy = (w.maxGust ?? 0) >= 40;
+  const base: Outfit = w.minFeels < 0 ? 'winter' : w.minFeels < 10 ? 'warm' : w.minFeels < 20 ? 'layers' : 'light';
+  const outfit: Outfit = rainLikely && base !== 'winter' ? 'waterproof' : base;
+  const words: Record<Outfit, string> = { winter: 'Dress for winter', warm: 'Wear something warm', layers: 'Wear layers', light: 'Dress light', waterproof: 'Waterproof jacket' };
+  const umbrellaText = w.maxRainChance === null && !w.rainy ? 'Rain chance unavailable'
+    : rainLikely ? (windy ? 'Rain and strong wind: a hood beats an umbrella' : 'Take an umbrella') : 'No umbrella needed';
+  const scene: keyof typeof SCENES = w.snowy || base === 'winter' ? 'winter' : rainLikely ? 'rain' : base === 'light' ? 'summer' : 'fall';
+  return { weather: w, stale, outfit: stale ? null : outfit, outfitText: stale ? 'Forecast is out of date, so no outfit advice' : words[outfit] + (rainLikely && base !== 'light' && outfit === 'waterproof' ? ' and layers' : ''), umbrellaText: stale ? 'Check the sky before you go' : umbrellaText, scene: stale ? 'sunrise' : scene, description: describe(w.codeNow) };
+}
 
 function fmt(hour: number, minute: number) {
   const h = hour % 12 || 12;
@@ -77,7 +156,12 @@ function daysText(days: number[]) {
 
 // ---------- Morning check-in ----------
 type Mood = 'rough' | 'low' | 'okay' | 'good' | 'great';
-type Entry = { date: string; mood: Mood | null; note: string; changes: number; affirmation: string; status: '' | 'generated' | 'fallback' | 'crisis' };
+type Outcome = 'done' | 'partly' | 'not_done';
+type Entry = {
+  date: string; mood: Mood | null; note: string; changes: number; affirmation: string; status: '' | 'generated' | 'fallback' | 'crisis';
+  intention?: string; outcome?: Outcome | null; evening?: Mood | null;
+};
+type Reminder = { id: string; text: string; at: number; notificationId: string };
 const MOODS: { key: Mood; label: string; fill: string }[] = [
   { key: 'rough', label: 'Rough', fill: '#6B7FA8' },
   { key: 'low', label: 'Low', fill: '#7FA8E0' },
@@ -107,6 +191,53 @@ function loadEntry(): Entry {
 }
 function saveEntry(e: Entry) {
   Storage.setItemSync(`arise.entry.${e.date}`, JSON.stringify(e));
+}
+function allEntries(): Entry[] {
+  return Storage.getAllKeysSync()
+    .filter((k) => k.startsWith('arise.entry.'))
+    .map((k) => JSON.parse(Storage.getItemSync(k)!) as Entry)
+    .filter((e) => e.mood || e.evening)
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+function loadReminders(): Reminder[] {
+  return JSON.parse(Storage.getItemSync('arise.reminders') ?? '[]');
+}
+function saveReminders(list: Reminder[]) {
+  Storage.setItemSync('arise.reminders', JSON.stringify(list));
+}
+const rank = (m?: Mood | null) => MOODS.findIndex((x) => x.key === m);
+
+// PRD F13: one honest line for the week. Only days with both moods are compared;
+// a missing mood is never treated as low.
+function weekLine(entries: Entry[]) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 6);
+  const since = `${cutoff.getFullYear()}-${String(cutoff.getMonth() + 1).padStart(2, '0')}-${String(cutoff.getDate()).padStart(2, '0')}`;
+  const week = entries.filter((e) => e.date >= since);
+  const both = week.filter((e) => e.mood && e.evening);
+  const higher = both.filter((e) => rank(e.evening) > rank(e.mood)).length;
+  return `This week: ${week.filter((e) => e.mood).length} mornings checked in, ${week.filter((e) => e.evening).length} evenings. Ended higher than you started on ${higher} of the ${both.length} days with both.`;
+}
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: true, shouldSetBadge: false }),
+});
+async function notificationsAllowed() {
+  const current = await Notifications.getPermissionsAsync();
+  if (current.granted) return true;
+  const asked = await Notifications.requestPermissionsAsync({ ios: { allowAlert: true, allowSound: true, allowBadge: false } });
+  return asked.granted;
+}
+// The evening check-in is a plain daily notification with generic text (PRD F12, privacy).
+async function scheduleEvening(hour: number, minute: number) {
+  const old = Storage.getItemSync('arise.eveningNotification');
+  if (old) await Notifications.cancelScheduledNotificationAsync(old).catch(() => {});
+  if (!(await notificationsAllowed())) return;
+  const id = await Notifications.scheduleNotificationAsync({
+    content: { title: 'Arise', body: 'How did your day go? One tap to check in.' },
+    trigger: { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour, minute },
+  });
+  Storage.setItemSync('arise.eveningNotification', id);
 }
 
 // Ask Claude (through our Supabase function) for today's pep talk, with the PRD's 8-second limit.
@@ -169,6 +300,15 @@ export default function App() {
   const [entry, setEntry] = useState<Entry>(loadEntry);
   const [writing, setWriting] = useState(false);
   const [speaking, setSpeaking] = useState(false);
+  const [day, setDay] = useState<DayBrief | null>(null);
+  const [cityQuery, setCityQuery] = useState('');
+  const [cityResults, setCityResults] = useState<City[] | null>(null);
+
+  // Load the day brief when the day screen opens.
+  useEffect(() => {
+    if (step !== 'day' || !settings?.city) return;
+    getWeather(settings.city).then((w) => setDay(w ? brief(w) : null));
+  }, [step, settings?.city]);
 
   useEffect(() => {
     const saved = Storage.getItemSync(KEY);
@@ -301,6 +441,22 @@ export default function App() {
             <Primary label="Continue" disabled={!settings.country} onPress={nextStep} />
           </Card>
         );
+      case 'city':
+        return (
+          <Card title="Your town or city" subtitle="For today's weather, what to wear, and whether to take an umbrella.">
+            <TextInput value={cityQuery} onChangeText={setCityQuery} placeholder="e.g. Edmonton or Lagos" autoCorrect={false}
+              placeholderTextColor={THEMES[settings.theme].muted} style={[styles.note, { minHeight: 0 }]} accessibilityLabel="Town or city"
+              returnKeyType="search" onSubmitEditing={async () => setCityResults(await searchCities(cityQuery).catch(() => []))} />
+            <Secondary label="Search" onPress={async () => setCityResults(await searchCities(cityQuery).catch(() => []))} />
+            {cityResults && cityResults.length === 0 ? <Text style={styles.small}>No places found. Check the spelling, or try a bigger town nearby.</Text> : null}
+            {cityResults?.map((c) => (
+              <Choice key={`${c.lat},${c.lon}`} wide label={c.label} selected={settings.city?.label === c.label} onPress={() => update({ city: c })} />
+            ))}
+            {settings.city ? <Text style={styles.small}>Chosen: {settings.city.label}</Text> : null}
+            <Primary label="Continue" disabled={!settings.city} onPress={nextStep} />
+            {!settings.city ? <Secondary label="Skip for now" onPress={nextStep} /> : null}
+          </Card>
+        );
       case 'alarm':
         return (
           <Card title="Your wake-up alarm" subtitle="What time should Arise wake you up?">
@@ -331,7 +487,11 @@ export default function App() {
           <Card title="Evening check-in" subtitle="When should Arise ask how your day went?">
             <TimePicker hour={settings.evening.hour} minute={settings.evening.minute}
               onChange={(hour, minute) => update({ evening: { hour, minute } })} />
-            <Primary label={settings.setupComplete ? 'Save' : 'Finish setup'} onPress={() => { update({ setupComplete: true }); setStep('home'); }} />
+            <Primary label={settings.setupComplete ? 'Save' : 'Finish setup'} onPress={() => {
+              update({ setupComplete: true });
+              scheduleEvening(settings.evening.hour, settings.evening.minute);
+              setStep('home');
+            }} />
           </Card>
         );
       case 'mood':
@@ -390,13 +550,92 @@ export default function App() {
             {!writing && entry.affirmation ? (
               <Secondary label={speaking ? '■ Stop' : '🔊 Read it to me'} onPress={() => (speaking ? stopSpeaking() : speak(entry.affirmation))} />
             ) : null}
-            <Primary label="Done" onPress={() => { stopSpeaking(); setStep('home'); }} />
+            <Text style={styles.label}>Today's intention (optional)</Text>
+            <TextInput value={entry.intention ?? ''} onChangeText={(t) => updateEntry({ intention: t.slice(0, 120) })}
+              placeholder="One line for today" placeholderTextColor={THEMES[settings.theme].muted} maxLength={120}
+              style={[styles.note, { minHeight: 0 }]} accessibilityLabel="Today's intention, optional" />
+            <Primary label="See my day  ›" onPress={() => { stopSpeaking(); setStep('day'); }} />
           </View>
         );
       }
+      case 'day': {
+        const companion = settings.companion;
+        return (
+          <View>
+            <Text style={styles.title} accessibilityRole="header">Ready for your day.</Text>
+            <Text style={styles.small}>{new Date().toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
+            <View style={[styles.sceneWrap, { height: 260, marginTop: 12 }]}>
+              <Image source={SCENES[day?.scene ?? 'sunrise']} style={styles.scene} />
+              {companion !== 'none' ? <Image source={OUTFITS[companion][day?.outfit ?? 'light']} style={[styles.companion, { height: 240 }]}
+                accessibilityLabel="Your companion dressed for today's weather" /> : null}
+            </View>
+            {!settings.city ? (
+              <>
+                <Text style={styles.body}>Add your town or city to see today's weather and what to wear.</Text>
+                <Secondary label="Add my city" onPress={() => setStep('city')} />
+              </>
+            ) : !day ? (
+              <Text style={styles.body}>Getting today's weather for {settings.city.name}…</Text>
+            ) : (
+              <>
+                <View style={styles.weatherCard} accessibilityLabel={`${settings.city.name}: ${Math.round(day.weather.tempNow)} degrees, ${day.description}.`}>
+                  <Text style={styles.weatherCity}>{settings.city.name}</Text>
+                  <Text style={styles.weatherTemp}>{Math.round(day.weather.tempNow)}°</Text>
+                  <Text style={styles.weatherDesc}>{day.description}</Text>
+                  <Text style={styles.weatherSrc}>{day.stale ? 'Out of date · ' : ''}Updated {new Date(day.weather.fetchedAt).toLocaleTimeString('en-CA', { hour: 'numeric', minute: '2-digit' })}</Text>
+                </View>
+                <View style={[styles.row, { marginTop: 12 }]}>
+                  <View style={styles.tile}><Text style={styles.tileIcon}>🧥</Text><Text style={styles.tileText}>{day.outfitText}</Text></View>
+                  <View style={styles.tile}><Text style={styles.tileIcon}>☂️</Text><Text style={styles.tileText}>{day.umbrellaText}</Text></View>
+                </View>
+              </>
+            )}
+            {entry.intention ? <View style={styles.item}><Text style={styles.small}>Today's intention</Text><Text style={styles.chipText}>{entry.intention}</Text></View> : null}
+            <Text style={styles.small}>Your evening check-in is at {fmt(settings.evening.hour, settings.evening.minute)}.</Text>
+            <Primary label="Done" onPress={() => setStep('home')} />
+          </View>
+        );
+      }
+      case 'evening-checkin':
+        return (
+          <Card title="How did your day go?" subtitle="One tap. It saves straight away.">
+            <View style={styles.moodRow}>
+              {MOODS.map((m) => {
+                const on = entry.evening === m.key;
+                return (
+                  <Tap key={m.key} accessibilityRole="radio" accessibilityState={{ selected: on }} accessibilityLabel={m.label}
+                    onPress={() => updateEntry({ evening: m.key })} style={[styles.mood, on && styles.selected]}>
+                    <Face mood={m.key} />
+                    <Text style={styles.moodText}>{m.label}</Text>
+                  </Tap>
+                );
+              })}
+            </View>
+            {entry.intention ? (
+              <>
+                <Text style={styles.label}>Your intention: {entry.intention}</Text>
+                <View style={styles.row}>
+                  {([['done', 'Done'], ['partly', 'Partly'], ['not_done', 'Not done']] as [Outcome, string][]).map(([k, l]) => (
+                    <Choice key={k} label={l} selected={entry.outcome === k} onPress={() => updateEntry({ outcome: entry.outcome === k ? null : k })} />
+                  ))}
+                </View>
+                <Text style={styles.small}>This is not a score. Leave it blank if you like.</Text>
+              </>
+            ) : null}
+            <Primary label="Done" onPress={() => setStep('home')} />
+          </Card>
+        );
+      case 'history':
+        return <History onBack={() => setStep('home')} onChanged={() => setEntry(loadEntry())} />;
+      case 'reminders':
+        return <Reminders settings={settings} update={update} onBack={() => setStep('home')} />;
       default:
         return (
-          <Home entry={entry} onBegin={() => {
+          <Home entry={entry} onEvening={() => {
+            const e = entry.date === today() ? entry : loadEntry();
+            if (e !== entry) setEntry(e);
+            setStep('evening-checkin');
+          }} onDay={() => setStep('day')} onHistory={() => setStep('history')} onReminders={() => setStep('reminders')} onBegin={() => {
             // A new day starts a new entry, even if the app stayed open overnight.
             const e = entry.date === today() ? entry : loadEntry();
             if (e !== entry) setEntry(e);
@@ -423,7 +662,7 @@ export default function App() {
   );
 }
 
-function Home(props: { entry: Entry; onBegin: () => void; settings: Settings; permission: AlarmPermission; message: string; onChangeAlarm: () => void; onChangeColours: () => void; onTestAlarm: () => void }) {
+function Home(props: { entry: Entry; onBegin: () => void; onDay: () => void; onEvening: () => void; onHistory: () => void; onReminders: () => void; settings: Settings; permission: AlarmPermission; message: string; onChangeAlarm: () => void; onChangeColours: () => void; onTestAlarm: () => void }) {
   const styles = useStyles();
   const { settings: s } = props;
   return (
@@ -439,11 +678,117 @@ function Home(props: { entry: Entry; onBegin: () => void; settings: Settings; pe
       </Tap>
       {props.permission !== 'authorized' ? <Text style={styles.warn}>Alarms are not allowed yet. Tap Change to set them up.</Text> : null}
       <Primary label={props.entry.mood && props.entry.affirmation ? "See today's words" : 'Begin my morning'} onPress={props.onBegin} />
-      <Text style={styles.small}>Evening check-in at {fmt(s.evening.hour, s.evening.minute)}.</Text>
+      <Secondary label="Just show my day  ›" onPress={props.onDay} />
+      <Secondary label={props.entry.evening ? 'Evening check-in done ✓' : `Evening check-in (${fmt(s.evening.hour, s.evening.minute)})`} onPress={props.onEvening} />
+      <View style={[styles.row, { marginTop: 4 }]}>
+        <View style={{ flex: 1 }}><Secondary label="History" onPress={props.onHistory} /></View>
+        <View style={{ flex: 1 }}><Secondary label="Reminders" onPress={props.onReminders} /></View>
+      </View>
       <Secondary label="Test: ring in 1 minute" onPress={props.onTestAlarm} />
       <Secondary label="Change colours" onPress={props.onChangeColours} />
       {props.message ? <Text style={styles.small}>{props.message}</Text> : null}
     </View>
+  );
+}
+
+function History(props: { onBack: () => void; onChanged: () => void }) {
+  const styles = useStyles();
+  const [entries, setEntries] = useState(allEntries);
+  const [confirming, setConfirming] = useState<string | null>(null);
+  const label = (m?: Mood | null) => MOODS.find((x) => x.key === m)?.label ?? '—';
+  return (
+    <Card title="History" subtitle="Newest first. Only you can see this.">
+      <Text style={styles.week}>{weekLine(entries)}</Text>
+      {entries.length === 0 ? <Text style={styles.small}>No mornings yet.</Text> : null}
+      {entries.map((e) => (
+        <View key={e.date} style={styles.item}>
+          <Text style={styles.small}>{new Date(`${e.date}T12:00`).toLocaleDateString('en-CA', { weekday: 'long', month: 'short', day: 'numeric' })}</Text>
+          <View style={[styles.row, { alignItems: 'center', marginTop: 6 }]}>
+            {e.mood ? <Face mood={e.mood} size={26} /> : null}
+            <Text style={styles.chipText}>Morning: {label(e.mood)}   Evening: {label(e.evening)}</Text>
+          </View>
+          {e.intention ? <Text style={styles.small}>Intention: {e.intention}{e.outcome ? ` (${e.outcome === 'not_done' ? 'not done' : e.outcome})` : ''}</Text> : null}
+          {e.affirmation ? <Text style={styles.small}>{e.affirmation}</Text> : null}
+          <Tap accessibilityRole="button" style={styles.smallBtn}
+            accessibilityLabel={confirming === e.date ? 'Tap again to delete this day' : 'Delete this day'}
+            onPress={() => {
+              if (confirming !== e.date) { setConfirming(e.date); return; }
+              Storage.removeItemSync(`arise.entry.${e.date}`);
+              setEntries(allEntries());
+              setConfirming(null);
+              props.onChanged();
+            }}>
+            <Text style={styles.smallBtnText}>{confirming === e.date ? 'Tap again to delete' : 'Delete'}</Text>
+          </Tap>
+        </View>
+      ))}
+      <Primary label="Back" onPress={props.onBack} />
+    </Card>
+  );
+}
+
+// PRD F11: a reminder is text plus a date and time; it arrives as a normal notification.
+function Reminders(props: { settings: Settings; update: (p: Partial<Settings>) => void; onBack: () => void }) {
+  const styles = useStyles();
+  const [list, setList] = useState(() => loadReminders().filter((r) => r.at > Date.now()));
+  const [text, setText] = useState('');
+  const [dayOffset, setDayOffset] = useState(0);
+  const [time, setTime] = useState(() => { const d = new Date(Date.now() + 3600e3); return { hour: d.getHours(), minute: 0 }; });
+  const [error, setError] = useState('');
+  const when = new Date();
+  when.setDate(when.getDate() + dayOffset);
+  when.setHours(time.hour, time.minute, 0, 0);
+  const dayName = dayOffset === 0 ? 'Today' : dayOffset === 1 ? 'Tomorrow' : when.toLocaleDateString('en-CA', { weekday: 'long', month: 'short', day: 'numeric' });
+
+  async function add() {
+    if (!text.trim()) { setError('Type what to remind you about.'); return; }
+    if (when.getTime() <= Date.now()) { setError('That time has already passed. Pick a later time.'); return; }
+    if (!(await notificationsAllowed())) { setError('Notifications are off. Turn them on in Settings → Arise.'); return; }
+    const notificationId = await Notifications.scheduleNotificationAsync({
+      content: { title: 'Arise reminder', body: props.settings.reminderTextOnLockScreen ? text.trim() : 'You have a reminder. Open Arise to see it.' },
+      trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: when },
+    });
+    const next = [...list, { id: `${Date.now()}`, text: text.trim(), at: when.getTime(), notificationId }].sort((a, b) => a.at - b.at);
+    setList(next);
+    saveReminders(next);
+    setText('');
+    setError('');
+  }
+  async function cancel(r: Reminder) {
+    await Notifications.cancelScheduledNotificationAsync(r.notificationId).catch(() => {});
+    const next = list.filter((x) => x.id !== r.id);
+    setList(next);
+    saveReminders(next);
+  }
+
+  return (
+    <Card title="Reminders" subtitle="Plain notifications. The morning alarm is the special one.">
+      <TextInput value={text} onChangeText={(t) => setText(t.slice(0, 80))} placeholder="e.g. Call the bank"
+        placeholderTextColor={THEMES[props.settings.theme].muted} maxLength={80} style={[styles.note, { minHeight: 0 }]} accessibilityLabel="Reminder text" />
+      <View style={[styles.timeRow, { marginTop: 12 }]} accessibilityLabel={`Day ${dayName}`}>
+        <Stepper label="Earlier day" text="‹" onPress={() => setDayOffset(Math.max(0, dayOffset - 1))} />
+        <Text style={[styles.time, { fontSize: 20 }]}>{dayName}</Text>
+        <Stepper label="Later day" text="›" onPress={() => setDayOffset(Math.min(30, dayOffset + 1))} />
+      </View>
+      <View style={{ marginTop: 10 }}>
+        <TimePicker hour={time.hour} minute={time.minute} onChange={(hour, minute) => setTime({ hour, minute })} />
+      </View>
+      {error ? <Text style={styles.warn}>{error}</Text> : null}
+      <Primary label="Add reminder" onPress={add} />
+      <Toggle label="Show reminder text on the lock screen" hint="Off keeps your reminders private if someone sees your phone."
+        on={props.settings.reminderTextOnLockScreen} onPress={() => props.update({ reminderTextOnLockScreen: !props.settings.reminderTextOnLockScreen })} />
+      {list.length === 0 ? <Text style={styles.small}>No reminders yet.</Text> : null}
+      {list.map((r) => (
+        <View key={r.id} style={styles.item}>
+          <Text style={styles.small}>{new Date(r.at).toLocaleString('en-CA', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</Text>
+          <Text style={styles.chipText}>{r.text}</Text>
+          <Tap accessibilityRole="button" accessibilityLabel={`Cancel reminder ${r.text}`} style={styles.smallBtn} onPress={() => cancel(r)}>
+            <Text style={styles.smallBtnText}>Cancel</Text>
+          </Tap>
+        </View>
+      ))}
+      <Primary label="Back" onPress={props.onBack} />
+    </Card>
   );
 }
 
@@ -574,6 +919,18 @@ const makeStyles = (C: Theme) => StyleSheet.create({
   link: { color: C.accent, fontWeight: '800' },
   swatches: { flexDirection: 'row', gap: 6 },
   moodRow: { flexDirection: 'row', gap: 6 },
+  weatherCard: { backgroundColor: '#3F74C2', borderRadius: 22, padding: 18 },
+  weatherCity: { color: '#FFFFFF', fontSize: 16, fontWeight: '800' },
+  weatherTemp: { color: '#FFFFFF', fontSize: 52, fontWeight: '800', lineHeight: 58 },
+  weatherDesc: { color: '#FFFFFF', fontSize: 18, fontWeight: '700' },
+  weatherSrc: { color: '#E6EEFB', fontSize: 13, marginTop: 6 },
+  tile: { flex: 1, backgroundColor: C.card, borderColor: C.line, borderWidth: 1, borderRadius: 18, padding: 14, gap: 6 },
+  tileIcon: { fontSize: 26 },
+  tileText: { color: C.ink, fontSize: 16, fontWeight: '800', lineHeight: 21 },
+  week: { color: C.ink, fontSize: 15, fontWeight: '600', lineHeight: 21, backgroundColor: C.selectedCard, borderColor: C.accent, borderWidth: 1, borderRadius: 14, padding: 12, marginBottom: 8 },
+  item: { backgroundColor: C.card, borderColor: C.line, borderWidth: 1, borderRadius: 14, padding: 14, marginTop: 10 },
+  smallBtn: { alignSelf: 'flex-start', borderColor: C.line, borderWidth: 1, borderRadius: 10, paddingVertical: 6, paddingHorizontal: 12, marginTop: 10 },
+  smallBtnText: { color: C.muted, fontWeight: '700' },
   mood: { flex: 1, alignItems: 'center', gap: 6, paddingVertical: 10, borderRadius: 14, borderWidth: 1.5, borderColor: C.line, backgroundColor: C.card },
   moodText: { color: C.ink, fontSize: 13, fontWeight: '800' },
   note: { minHeight: 80, color: C.ink, fontSize: 17, backgroundColor: C.card, borderColor: C.line, borderWidth: 1.5, borderRadius: 14, padding: 12, textAlignVertical: 'top' },

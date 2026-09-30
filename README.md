@@ -19,6 +19,7 @@ Open `index.html` in a browser (test data only; add `?new` to the address to sta
 | 30 Sep | Step 1 backend | Database for accounts, alarms, mornings and reminders, each person seeing only their own rows (Row Level Security). | `supabase/migrations/`, `docs/TECHNICAL-NOTES.md` |
 | 30 Sep | Steps 1–2 in the real app | Expo app in `mobile/`: first-time setup (notice, companion, country, alarm, evening) and a real repeating wake-up alarm through our own AlarmKit module. Installed on the test iPhone. | `mobile/App.tsx`, `mobile/modules/arise-alarm/` |
 | 30 Sep | Step 3 in the real app | Morning check-in with the approved smiley faces, Claude pep talk (fallback within 8 seconds), change-mood rule, crisis message, read-aloud, four colour themes, tap vibration. | `mobile/App.tsx` |
+| 30 Sep | Steps 4–6 and 8 in the real app | History with the weekly line, reminders, evening check-in, today's intention, and live weather with what to wear and umbrella advice. | `mobile/App.tsx` |
 
 ## Documents
 

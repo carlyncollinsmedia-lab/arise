@@ -36,7 +36,8 @@
             "deploymentTarget": "26.1"
           }
         }
-      ]
+      ],
+      "./plugins/withoutPushEntitlement"
     ],
     "scheme": "arise"
   }
