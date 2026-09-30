@@ -85,6 +85,8 @@ Test app: `spike/AlarmTest` on branch `spike/alarm` (SwiftUI + Apple AlarmKit, o
 | 1 | Phone locked, app closed, "ring in 2 minutes" | 2026-09-30 | **Passed.** Rang and showed the alarm screen (owner: "it worked"). |
 | 2 | After a restart (alarm set, then phone powered off and on, unlocked once, app not opened) | 2026-09-30 | **Passed.** Rang after the restart. |
 | 3 | Airplane mode on | 2026-09-30 | **Passed.** Rang with no network. |
-| 4 | Focus / Do Not Disturb on | | Pending |
+| 4 | Focus / Do Not Disturb on | 2026-09-30 | **Passed.** Rang through Do Not Disturb. |
 
 Problem found and fixed: the first build silently ignored the button because Xcode's generated Info.plist dropped `NSAlarmKitUsageDescription`, so iOS never showed the permission prompt. Fixed with an explicit Info.plist; the real app must include this key.
+
+**Verdict (2026-09-30): the spike passed all four tests.** Apple AlarmKit rings a locked iPhone after a restart, with no network, and through Do Not Disturb. The alarm approach is confirmed. Not yet tested, to cover in build step 2: repeating weekly alarms, snooze (needs a Live Activity widget for the countdown), silent switch on, very low battery, time-zone and daylight-saving changes, and the Expo wrapper around the Swift code.
