@@ -55,3 +55,4 @@ assets/companions/cutout/
 spike/AlarmTest/build/
 *.xcuserstate
 xcuserdata/
+config.local.js

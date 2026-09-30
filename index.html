@@ -189,7 +189,7 @@
 </head>
 <body>
 <div class="phone">
-  <div class="test-banner">PROTOTYPE · TEST DATA ONLY · NOTHING IS SENT ANYWHERE</div>
+  <div class="test-banner" id="test-banner">PROTOTYPE · TEST DATA ONLY · NOTHING IS SENT ANYWHERE</div>
   <header class="top">
     <button class="icon-btn left" id="back-btn" aria-label="Back" hidden>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
@@ -374,6 +374,7 @@
   </div>
 </div>
 
+<script src="config.local.js"></script>
 <script>
 /* ============================================================
    Arise Phase 1 prototype. Test data only.
@@ -535,10 +536,37 @@
 
   document.getElementById('continue-btn').onclick = function () {
     var e = ensureToday();
-    if (!e.affirmation) generate(e);
-    showAff(e); show('aff');
-    if (data.settings.speak) speakAff();
+    if (e.affirmation || (e.note && CRISIS.test(e.note)) || !window.ARISE_CONFIG) {
+      if (!e.affirmation) generate(e);
+      showAff(e); show('aff');
+      if (data.settings.speak) speakAff();
+      return;
+    }
+    // Real AI: ask the generate-affirmation function (Claude), with the PRD's 8-second limit.
+    showWriting(); show('aff');
+    var ctl = new AbortController(), timer = setTimeout(function () { ctl.abort(); }, 8000);
+    fetch(window.ARISE_CONFIG.affirmationUrl, {
+      method: 'POST', signal: ctl.signal,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.ARISE_CONFIG.anonKey },
+      body: JSON.stringify({ mood: e.morning, note: e.note || '' })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      if (res.source === 'claude') { e.affirmation = res.affirmation; e.status = 'claude'; }
+      else if (res.source === 'needs_support') { e.status = 'crisis'; e.affirmation = ''; }
+      else { e.affirmation = res.affirmation || FALLBACK; e.status = 'fallback'; }
+      save(data);
+    }).catch(function () { generate(e); }).then(function () {
+      clearTimeout(timer); showAff(e);
+      if (data.settings.speak) speakAff();
+    });
   };
+  function showWriting() {
+    var e = entryToday();
+    renderMoodChip('aff-mood-chip', e);
+    document.getElementById('aff-mood-line').textContent = e.note ? 'You wrote: "' + e.note + '"' : '';
+    var bubble = document.getElementById('aff-bubble');
+    bubble.classList.remove('crisis');
+    bubble.innerHTML = '<p id="aff-text">Your companion is writing your words for this morning…</p><span class="tag" id="aff-tag"></span>';
+  }
 
   function generate(e) {
     if (e.note && CRISIS.test(e.note)) { e.status = 'crisis'; e.affirmation = ''; save(data); return; }
@@ -565,7 +593,7 @@
       bubble.classList.remove('crisis');
       bubble.innerHTML = '<p id="aff-text"></p><span class="tag" id="aff-tag"></span>';
       document.getElementById('aff-text').textContent = e.affirmation;
-      document.getElementById('aff-tag').textContent = e.status === 'fallback' ? 'General message' : 'Sample affirmation · the AI version arrives in Phase 4';
+      document.getElementById('aff-tag').textContent = e.status === 'claude' ? 'Written for you this morning' : e.status === 'fallback' ? 'General message' : 'Sample affirmation (AI not connected on this computer)';
     }
   }
   document.getElementById('today-btn').onclick = function () { show('day'); };
@@ -794,6 +822,8 @@
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') settings.classList.remove('open'); });
   applyLook();
 
+  // Honest banner: with the AI connected, the mood and note do leave this computer.
+  if (window.ARISE_CONFIG) document.getElementById('test-banner').textContent = 'PROTOTYPE · TEST DATA · MOOD AND NOTE SENT TO CLAUDE FOR THE PEP TALK';
   save(data);
   setSwitch('speak-toggle', !!data.settings.speak);
   renderAlarmPill();
