@@ -70,6 +70,7 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					E8CBE23BC87A185FEB370F09 = {
+						DevelopmentTeam = W6V9R9C5KX;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -125,6 +126,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W6V9R9C5KX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Alarm Test";
 				INFOPLIST_KEY_NSAlarmKitUsageDescription = "Arise uses alarms to wake you up at the time you choose.";
@@ -140,6 +142,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W6V9R9C5KX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Alarm Test";
 				INFOPLIST_KEY_NSAlarmKitUsageDescription = "Arise uses alarms to wake you up at the time you choose.";

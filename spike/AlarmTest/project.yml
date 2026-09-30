@@ -13,6 +13,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.nezeville.arise.alarmtest
         PRODUCT_NAME: Arise Alarm Test
         CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: W6V9R9C5KX
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: YES
