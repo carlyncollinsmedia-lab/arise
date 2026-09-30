@@ -75,3 +75,16 @@ _Still to decide: framework; alarm approach; weather provider; asset dimensions.
 | Date | Decision | Why | Recorded by |
 | --- | --- | --- | --- |
 | 2026-09-23 | Version 1 platform is iPhone. | It is the phone the owner carries; the PRD says version 1 ships on that one. The alarm will use Apple AlarmKit (iOS 26+). | Owner, recorded by Claude 2026-09-26 |
+
+## Alarm spike test report (build step 0)
+
+Test app: `spike/AlarmTest` on branch `spike/alarm` (SwiftUI + Apple AlarmKit, one-time alarm, no snooze). Phone: iPhone 14 Pro Max, iOS 26.7 (owner's wife's phone, with her agreement). Installed with the owner's free Apple ID (personal team, 7-day signing).
+
+| # | Test | Date | Result |
+| --- | --- | --- | --- |
+| 1 | Phone locked, app closed, "ring in 2 minutes" | 2026-09-30 | **Passed.** Rang and showed the alarm screen (owner: "it worked"). |
+| 2 | After a restart | | Pending |
+| 3 | Airplane mode on | | Pending |
+| 4 | Focus / Do Not Disturb on | | Pending |
+
+Problem found and fixed: the first build silently ignored the button because Xcode's generated Info.plist dropped `NSAlarmKitUsageDescription`, so iOS never showed the permission prompt. Fixed with an explicit Info.plist; the real app must include this key.
