@@ -57,7 +57,7 @@ const DEFAULTS: Settings = {
 };
 const KEY = 'arise.settings.v1';
 const STEPS = ['notice', 'companion', 'colours', 'country', 'city', 'alarm', 'evening'] as const;
-type Step = (typeof STEPS)[number] | 'home' | 'mood' | 'pepTalk' | 'day' | 'evening-checkin' | 'history' | 'reminders';
+type Step = (typeof STEPS)[number] | 'home' | 'mood' | 'pepTalk' | 'day' | 'evening-checkin' | 'history' | 'reminders' | 'settings';
 
 const DAY_LETTERS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -302,6 +302,7 @@ export default function App() {
   const [speaking, setSpeaking] = useState(false);
   const [day, setDay] = useState<DayBrief | null>(null);
   const [cityQuery, setCityQuery] = useState('');
+  const [returnTo, setReturnTo] = useState<Step>('home'); // where to go after changing one setting
   const [cityResults, setCityResults] = useState<City[] | null>(null);
 
   // Load the day brief when the day screen opens.
@@ -328,7 +329,9 @@ export default function App() {
     Storage.setItemSync(KEY, JSON.stringify(next));
   };
   // During first-time setup, go to the next screen; when changing one thing later, go back home.
-  const nextStep = () => setStep(settings.setupComplete ? 'home' : STEPS[STEPS.indexOf(step as (typeof STEPS)[number]) + 1] ?? 'home');
+  const nextStep = () => setStep(settings.setupComplete ? returnTo : STEPS[STEPS.indexOf(step as (typeof STEPS)[number]) + 1] ?? 'home');
+  // Open one setup screen to change it, then come back to where the person was.
+  const change = (target: Step, from: Step) => { setReturnTo(from); setMessage(''); setStep(target); };
 
   const updateEntry = (patch: Partial<Entry>) => {
     const next = { ...entry, ...patch };
@@ -488,9 +491,10 @@ export default function App() {
             <TimePicker hour={settings.evening.hour} minute={settings.evening.minute}
               onChange={(hour, minute) => update({ evening: { hour, minute } })} />
             <Primary label={settings.setupComplete ? 'Save' : 'Finish setup'} onPress={() => {
+              const wasComplete = settings.setupComplete;
               update({ setupComplete: true });
               scheduleEvening(settings.evening.hour, settings.evening.minute);
-              setStep('home');
+              setStep(wasComplete ? returnTo : 'home');
             }} />
           </Card>
         );
@@ -572,7 +576,7 @@ export default function App() {
             {!settings.city ? (
               <>
                 <Text style={styles.body}>Add your town or city to see today's weather and what to wear.</Text>
-                <Secondary label="Add my city" onPress={() => setStep('city')} />
+                <Secondary label="Add my city" onPress={() => change('city', 'day')} />
               </>
             ) : !day ? (
               <Text style={styles.body}>Getting today's weather for {settings.city.name}…</Text>
@@ -625,6 +629,39 @@ export default function App() {
             <Primary label="Done" onPress={() => setStep('home')} />
           </Card>
         );
+      case 'settings': {
+        const row = (label: string, value: string, target: Step) => (
+          <Tap key={label} accessibilityRole="button" accessibilityLabel={`${label}: ${value}. Tap to change.`}
+            onPress={() => change(target, 'settings')} style={styles.toggle}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.choiceText}>{label}</Text>
+              <Text style={styles.small}>{value}</Text>
+            </View>
+            <Text style={styles.link}>Change</Text>
+          </Tap>
+        );
+        return (
+          <Card title="Settings" subtitle="Change how Arise looks and wakes you.">
+            {row('Colours', THEMES[settings.theme].name, 'colours')}
+            {row('Companion', settings.companion === 'none' ? 'No companion' : settings.companion === 'woman' ? 'Woman' : 'Man', 'companion')}
+            {row('Wake-up alarm', `${fmt(settings.alarm.hour, settings.alarm.minute)}, ${daysText(settings.alarm.days)}`, 'alarm')}
+            {row('Evening check-in', fmt(settings.evening.hour, settings.evening.minute), 'evening')}
+            {row('Town or city', settings.city?.label ?? 'Not set', 'city')}
+            {row('Country for “Get support”', settings.country || 'Not set', 'country')}
+            <Toggle label="Read my pep talk out loud" hint="Helpful if you can't see the screen well."
+              on={settings.readAloud} onPress={() => update({ readAloud: !settings.readAloud })} />
+            <Toggle label="Show reminder text on the lock screen" hint="Off keeps your reminders private if someone sees your phone."
+              on={settings.reminderTextOnLockScreen} onPress={() => update({ reminderTextOnLockScreen: !settings.reminderTextOnLockScreen })} />
+            <Secondary label="Test: ring my alarm in 1 minute" onPress={async () => {
+              if (permission !== 'authorized') { await applyAlarm(settings); return; }
+              await AriseAlarm.scheduleOnceIn(60);
+              setMessage('Test alarm set for one minute from now. Lock the phone and wait.');
+            }} />
+            {message ? <Text style={styles.small}>{message}</Text> : null}
+            <Primary label="Done" onPress={() => { setMessage(''); setStep('home'); }} />
+          </Card>
+        );
+      }
       case 'history':
         return <History onBack={() => setStep('home')} onChanged={() => setEntry(loadEntry())} />;
       case 'reminders':
@@ -641,13 +678,8 @@ export default function App() {
             if (e !== entry) setEntry(e);
             setStep(e.mood && e.affirmation ? 'pepTalk' : 'mood');
           }} settings={settings} permission={permission} message={message}
-            onChangeAlarm={() => setStep('alarm')}
-            onChangeColours={() => setStep('colours')}
-            onTestAlarm={async () => {
-              if (permission !== 'authorized') { await applyAlarm(settings); return; }
-              await AriseAlarm.scheduleOnceIn(60);
-              setMessage('Test alarm set for one minute from now. Lock the phone and wait.');
-            }} />
+            onChangeAlarm={() => change('alarm', 'home')}
+            onSettings={() => setStep('settings')} />
         );
     }
   })();
@@ -662,12 +694,17 @@ export default function App() {
   );
 }
 
-function Home(props: { entry: Entry; onBegin: () => void; onDay: () => void; onEvening: () => void; onHistory: () => void; onReminders: () => void; settings: Settings; permission: AlarmPermission; message: string; onChangeAlarm: () => void; onChangeColours: () => void; onTestAlarm: () => void }) {
+function Home(props: { entry: Entry; onBegin: () => void; onDay: () => void; onEvening: () => void; onHistory: () => void; onReminders: () => void; settings: Settings; permission: AlarmPermission; message: string; onChangeAlarm: () => void; onSettings: () => void }) {
   const styles = useStyles();
   const { settings: s } = props;
   return (
     <View>
-      <Text style={styles.hello}>A fresh start.</Text>
+      <View style={styles.topRow}>
+        <Text style={styles.hello}>A fresh start.</Text>
+        <Tap accessibilityRole="button" accessibilityLabel="Settings" onPress={props.onSettings} style={styles.gear} hitSlop={10}>
+          <Text style={styles.gearText}>⚙︎</Text>
+        </Tap>
+      </View>
       <View style={styles.sceneWrap}>
         <Image source={IMAGES.scene} style={styles.scene} />
         {s.companion !== 'none' ? <Image source={IMAGES[s.companion]} style={styles.companion} accessibilityLabel="Your Arise companion saying good morning" /> : null}
@@ -684,9 +721,7 @@ function Home(props: { entry: Entry; onBegin: () => void; onDay: () => void; onE
         <View style={{ flex: 1 }}><Secondary label="History" onPress={props.onHistory} /></View>
         <View style={{ flex: 1 }}><Secondary label="Reminders" onPress={props.onReminders} /></View>
       </View>
-      <Secondary label="Test: ring in 1 minute" onPress={props.onTestAlarm} />
-      <Secondary label="Change colours" onPress={props.onChangeColours} />
-      {props.message ? <Text style={styles.small}>{props.message}</Text> : null}
+
     </View>
   );
 }
@@ -910,7 +945,7 @@ const makeStyles = (C: Theme) => StyleSheet.create({
   knobOn: { marginLeft: 20 },
   warn: { color: C.warn, fontSize: 15, marginTop: 14, lineHeight: 21 },
   small: { color: C.muted, fontSize: 14, marginTop: 10, lineHeight: 20 },
-  hello: { color: C.ink, fontSize: 32, fontWeight: '800', textAlign: 'center', marginBottom: 16 },
+  hello: { color: C.ink, fontSize: 32, fontWeight: '800', textAlign: 'center' },
   sceneWrap: { height: 330, borderRadius: 24, overflow: 'hidden', marginBottom: 18 },
   scene: { position: 'absolute', width: '100%', height: '100%' },
   companion: { position: 'absolute', bottom: 0, alignSelf: 'center', width: 200, height: 300, resizeMode: 'contain' },
@@ -919,6 +954,9 @@ const makeStyles = (C: Theme) => StyleSheet.create({
   link: { color: C.accent, fontWeight: '800' },
   swatches: { flexDirection: 'row', gap: 6 },
   moodRow: { flexDirection: 'row', gap: 6 },
+  topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  gear: { position: 'absolute', right: 0, width: 44, height: 44, borderRadius: 22, backgroundColor: C.card, borderColor: C.line, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  gearText: { color: C.ink, fontSize: 24 },
   weatherCard: { backgroundColor: '#3F74C2', borderRadius: 22, padding: 18 },
   weatherCity: { color: '#FFFFFF', fontSize: 16, fontWeight: '800' },
   weatherTemp: { color: '#FFFFFF', fontSize: 52, fontWeight: '800', lineHeight: 58 },
