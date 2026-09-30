@@ -97,7 +97,7 @@ Migrations in `supabase/migrations/`. Tables: `profiles` (made automatically at 
 
 ## Real app alarm check (2026-09-30)
 
-The real Expo app (`mobile/`, Release build, own `arise-alarm` Swift module) rang on the test iPhone from "Test: ring in 1 minute" with the phone locked (owner: "it worked"). The weekly repeating alarm set during setup is still to be confirmed on a real morning.
+The real Expo app (`mobile/`, Release build, own `arise-alarm` Swift module) rang on the test iPhone from "Test: ring in 1 minute" with the phone locked (owner: "it worked"). The weekly repeating alarm set during setup is still to be confirmed on a real morning. Morning check-in on the phone (2026-09-30): smiley-face mood, note, Claude pep talk, read-aloud and tap vibration all worked (owner: "it works").
 
 ## Known issue: iOS 27 needs the scene life cycle (found 2026-09-30)
 
