@@ -84,7 +84,7 @@ Test app: `spike/AlarmTest` on branch `spike/alarm` (SwiftUI + Apple AlarmKit, o
 | --- | --- | --- | --- |
 | 1 | Phone locked, app closed, "ring in 2 minutes" | 2026-09-30 | **Passed.** Rang and showed the alarm screen (owner: "it worked"). |
 | 2 | After a restart (alarm set, then phone powered off and on, unlocked once, app not opened) | 2026-09-30 | **Passed.** Rang after the restart. |
-| 3 | Airplane mode on | | Pending |
+| 3 | Airplane mode on | 2026-09-30 | **Passed.** Rang with no network. |
 | 4 | Focus / Do Not Disturb on | | Pending |
 
 Problem found and fixed: the first build silently ignored the button because Xcode's generated Info.plist dropped `NSAlarmKitUsageDescription`, so iOS never showed the permission prompt. Fixed with an explicit Info.plist; the real app must include this key.
