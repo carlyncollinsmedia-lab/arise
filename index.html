@@ -436,6 +436,8 @@
   var CRISIS = /(kill myself|end my life|suicid|self[- ]?harm|hurt myself|don'?t want to (live|be here)|want to die)/i;
 
   var STORE = 'arise-prototype-v1';
+  // Opening index.html?new starts over as if the app was just installed (for demos).
+  if (/[?&]new\b/.test(location.search)) { try { localStorage.removeItem(STORE); } catch (x) {} history.replaceState(null, '', location.pathname); }
   function load() { try { return JSON.parse(localStorage.getItem(STORE)) || null; } catch (e) { return null; } }
   function save(d) { try { localStorage.setItem(STORE, JSON.stringify(d)); } catch (e) {} }
   // Device-local date (PRD: the entry date is the phone's local date, never UTC).
