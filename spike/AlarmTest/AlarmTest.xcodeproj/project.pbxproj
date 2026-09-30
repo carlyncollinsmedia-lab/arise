@@ -1,0 +1,178 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D531548BE7FCC8F9FCEF00E9 /* AlarmTestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6689B22D815A048415B09F /* AlarmTestApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3E6689B22D815A048415B09F /* AlarmTestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTestApp.swift; sourceTree = "<group>"; };
+		C9931BACF3ABAA734C45CF96 /* AlarmTest.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AlarmTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		7C5C740924373D4B39E78B64 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C9931BACF3ABAA734C45CF96 /* AlarmTest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B289B1ACD067C3F0781B828E /* AlarmTest */ = {
+			isa = PBXGroup;
+			children = (
+				3E6689B22D815A048415B09F /* AlarmTestApp.swift */,
+			);
+			path = AlarmTest;
+			sourceTree = "<group>";
+		};
+		C50AA30D8365890BFDAC4F80 = {
+			isa = PBXGroup;
+			children = (
+				B289B1ACD067C3F0781B828E /* AlarmTest */,
+				7C5C740924373D4B39E78B64 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E8CBE23BC87A185FEB370F09 /* AlarmTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 46F5D820618378FDAD288B64 /* Build configuration list for PBXNativeTarget "AlarmTest" */;
+			buildPhases = (
+				B3AEA13E0B339F0BEDBBCD7D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AlarmTest;
+			packageProductDependencies = (
+			);
+			productName = AlarmTest;
+			productReference = C9931BACF3ABAA734C45CF96 /* AlarmTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EFE98E3252EACCF91913AAC0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					E8CBE23BC87A185FEB370F09 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 7CF43618507FAAB4CC0B9B5C /* Build configuration list for PBXProject "AlarmTest" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = C50AA30D8365890BFDAC4F80;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7C5C740924373D4B39E78B64 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E8CBE23BC87A185FEB370F09 /* AlarmTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B3AEA13E0B339F0BEDBBCD7D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D531548BE7FCC8F9FCEF00E9 /* AlarmTestApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4157D530592A125F78AEABF9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		76E39AF22C9BD71AB56F028C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		8E19037F2099E5ECF72756AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Alarm Test";
+				INFOPLIST_KEY_NSAlarmKitUsageDescription = "Arise uses alarms to wake you up at the time you choose.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nezeville.arise.alarmtest;
+				PRODUCT_NAME = "Arise Alarm Test";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		B898CC58CFB1832CDDFF7ECE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Alarm Test";
+				INFOPLIST_KEY_NSAlarmKitUsageDescription = "Arise uses alarms to wake you up at the time you choose.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nezeville.arise.alarmtest;
+				PRODUCT_NAME = "Arise Alarm Test";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		46F5D820618378FDAD288B64 /* Build configuration list for PBXNativeTarget "AlarmTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B898CC58CFB1832CDDFF7ECE /* Debug */,
+				8E19037F2099E5ECF72756AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7CF43618507FAAB4CC0B9B5C /* Build configuration list for PBXProject "AlarmTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				76E39AF22C9BD71AB56F028C /* Debug */,
+				4157D530592A125F78AEABF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EFE98E3252EACCF91913AAC0 /* Project object */;
+}

@@ -50,3 +50,8 @@ assets/companions/cutout/
 
 # Local settings (project address + public app key), never committed
 .env.local
+
+# Xcode build output
+spike/AlarmTest/build/
+*.xcuserstate
+xcuserdata/

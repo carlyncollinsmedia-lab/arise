@@ -1,0 +1,21 @@
+name: AlarmTest
+options:
+  bundleIdPrefix: com.nezeville.arise
+  deploymentTarget:
+    iOS: "26.1"
+targets:
+  AlarmTest:
+    type: application
+    platform: iOS
+    sources: [AlarmTest]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nezeville.arise.alarmtest
+        PRODUCT_NAME: Arise Alarm Test
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSAlarmKitUsageDescription: "Arise uses alarms to wake you up at the time you choose."
+        INFOPLIST_KEY_CFBundleDisplayName: "Alarm Test"
