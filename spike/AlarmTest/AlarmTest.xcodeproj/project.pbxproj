@@ -128,8 +128,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = W6V9R9C5KX;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AlarmTest/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Alarm Test";
-				INFOPLIST_KEY_NSAlarmKitUsageDescription = "Arise uses alarms to wake you up at the time you choose.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nezeville.arise.alarmtest;
 				PRODUCT_NAME = "Arise Alarm Test";
@@ -144,8 +144,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = W6V9R9C5KX;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AlarmTest/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Alarm Test";
-				INFOPLIST_KEY_NSAlarmKitUsageDescription = "Arise uses alarms to wake you up at the time you choose.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nezeville.arise.alarmtest;
 				PRODUCT_NAME = "Arise Alarm Test";

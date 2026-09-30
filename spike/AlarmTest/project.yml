@@ -7,7 +7,9 @@ targets:
   AlarmTest:
     type: application
     platform: iOS
-    sources: [AlarmTest]
+    sources:
+      - path: AlarmTest
+        excludes: [Info.plist]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.nezeville.arise.alarmtest
@@ -18,5 +20,5 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_NSAlarmKitUsageDescription: "Arise uses alarms to wake you up at the time you choose."
+        INFOPLIST_FILE: AlarmTest/Info.plist
         INFOPLIST_KEY_CFBundleDisplayName: "Alarm Test"
