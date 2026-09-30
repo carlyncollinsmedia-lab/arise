@@ -80,8 +80,8 @@ const SCENES = {
 // ---------- Weather and what to wear (PRD F09/F10, TECHNICAL-NOTES "Weather") ----------
 // Open-Meteo: free, no key. Cached for 60 minutes; after 3 hours without a refresh
 // the forecast counts as stale and we give no outfit advice rather than guess.
-type Weather = { fetchedAt: number; tempNow: number; codeNow: number; minFeels: number; maxRainChance: number | null; maxGust: number | null; rainy: boolean; snowy: boolean };
-type DayBrief = { weather: Weather; stale: boolean; outfit: Outfit | null; outfitText: string; umbrellaText: string; scene: keyof typeof SCENES; description: string };
+type Weather = { fetchedAt: number; tempNow: number; feelsNow: number; codeNow: number; minFeels: number; minFeelsHour: number; maxRainChance: number | null; maxGust: number | null; rainy: boolean; snowy: boolean };
+type DayBrief = { weather: Weather; stale: boolean; outfit: Outfit | null; outfitText: string; umbrellaText: string; scene: keyof typeof SCENES; description: string; feelsText: string };
 const RAIN_CODES = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99];
 const SNOW_CODES = [71, 73, 75, 77, 85, 86];
 function describe(code: number) {
@@ -103,20 +103,35 @@ async function searchCities(name: string): Promise<City[]> {
 }
 async function getWeather(city: City): Promise<Weather | null> {
   const cacheKey = `arise.weather.${city.lat.toFixed(2)},${city.lon.toFixed(2)}`;
-  const cached: Weather | null = JSON.parse(Storage.getItemSync(cacheKey) ?? 'null');
+  const cacheKey2 = cacheKey; // v2 cache: older entries lack feelsNow and are ignored below
+  const cachedRaw: Weather | null = JSON.parse(Storage.getItemSync(cacheKey2) ?? 'null');
+  const cached = cachedRaw && typeof cachedRaw.feelsNow === 'number' ? cachedRaw : null;
   if (cached && Date.now() - cached.fetchedAt < 60 * 60e3) return cached;
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weather_code` +
-      `&hourly=apparent_temperature,precipitation_probability,wind_gusts_10m,weather_code&forecast_hours=12&timezone=auto`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,apparent_temperature,weather_code` +
+      `&hourly=apparent_temperature,precipitation_probability,wind_gusts_10m,weather_code&forecast_hours=16&timezone=auto`;
     const b = await (await fetch(url)).json();
     const h = b.hourly;
-    const nums = (xs: (number | null)[]) => xs.filter((x): x is number => typeof x === 'number');
-    const rain = nums(h.precipitation_probability), gust = nums(h.wind_gusts_10m), codes: number[] = h.weather_code;
+    // Only the waking hours of the day ahead (6 AM to 9 PM, local to the city), so an
+    // afternoon check does not count tonight's cold. Owner test, Calgary, 30 Sep:
+    // 14° at 4 PM was told "dress for winter" because the old 12-hour window reached 3 AM.
+    const hourOf = (t: string) => Number(t.slice(11, 13));
+    let idx = (h.time as string[]).map((t, i) => (hourOf(t) >= 6 && hourOf(t) <= 21 ? i : -1)).filter((i) => i >= 0).slice(0, 16);
+    // Stay within one day: the rest of today, or tomorrow's day if today's waking hours are over.
+    if (idx.length) { const day0 = (h.time[idx[0]] as string).slice(0, 10); idx = idx.filter((i) => (h.time[i] as string).startsWith(day0)); }
+    if (idx.length === 0) idx = [0, 1, 2];
+    const pick = (xs: (number | null)[]) => idx.map((i) => xs[i]).filter((x): x is number => typeof x === 'number');
+    const feels = pick(h.apparent_temperature), rain = pick(h.precipitation_probability), gust = pick(h.wind_gusts_10m);
+    const codes = pick(h.weather_code);
+    const minFeels = Math.min(...feels);
+    const minAt = idx.find((i) => h.apparent_temperature[i] === minFeels) ?? idx[0];
     const w: Weather = {
       fetchedAt: Date.now(),
       tempNow: b.current.temperature_2m,
+      feelsNow: b.current.apparent_temperature,
       codeNow: b.current.weather_code,
-      minFeels: Math.min(...nums(h.apparent_temperature)),
+      minFeels,
+      minFeelsHour: hourOf(h.time[minAt]),
       maxRainChance: rain.length ? Math.max(...rain) : null, // missing is "unavailable", never zero
       maxGust: gust.length ? Math.max(...gust) : null,
       rainy: codes.some((c) => RAIN_CODES.includes(c)),
@@ -138,7 +153,10 @@ function brief(w: Weather): DayBrief {
   const umbrellaText = w.maxRainChance === null && !w.rainy ? 'Rain chance unavailable'
     : rainLikely ? (windy ? 'Rain and strong wind: a hood beats an umbrella' : 'Take an umbrella') : 'No umbrella needed';
   const scene: keyof typeof SCENES = w.snowy || base === 'winter' ? 'winter' : rainLikely ? 'rain' : base === 'light' ? 'summer' : 'fall';
-  return { weather: w, stale, outfit: stale ? null : outfit, outfitText: stale ? 'Forecast is out of date, so no outfit advice' : words[outfit] + (rainLikely && base !== 'light' && outfit === 'waterproof' ? ' and layers' : ''), umbrellaText: stale ? 'Check the sky before you go' : umbrellaText, scene: stale ? 'sunrise' : scene, description: describe(w.codeNow) };
+  return { weather: w, stale, outfit: stale ? null : outfit, outfitText: stale ? 'Forecast is out of date, so no outfit advice' : words[outfit] + (rainLikely && base !== 'light' && outfit === 'waterproof' ? ' and layers' : ''), umbrellaText: stale ? 'Check the sky before you go' : umbrellaText, scene: stale ? 'sunrise' : scene, description: describe(w.codeNow),
+    feelsText: Math.round(w.minFeels) < Math.round(w.feelsNow) - 1
+      ? `Feels like ${Math.round(w.feelsNow)}° now, down to ${Math.round(w.minFeels)}° by ${fmt(w.minFeelsHour, 0)}`
+      : `Feels like ${Math.round(w.feelsNow)}°` };
 }
 
 function fmt(hour: number, minute: number) {
@@ -586,6 +604,7 @@ export default function App() {
                   <Text style={styles.weatherCity}>{settings.city.name}</Text>
                   <Text style={styles.weatherTemp}>{Math.round(day.weather.tempNow)}°</Text>
                   <Text style={styles.weatherDesc}>{day.description}</Text>
+                  <Text style={styles.weatherFeels}>{day.feelsText}</Text>
                   <Text style={styles.weatherSrc}>{day.stale ? 'Out of date · ' : ''}Updated {new Date(day.weather.fetchedAt).toLocaleTimeString('en-CA', { hour: 'numeric', minute: '2-digit' })}</Text>
                 </View>
                 <View style={[styles.row, { marginTop: 12 }]}>
@@ -976,6 +995,7 @@ const makeStyles = (C: Theme) => StyleSheet.create({
   weatherCity: { color: '#FFFFFF', fontSize: 16, fontWeight: '800' },
   weatherTemp: { color: '#FFFFFF', fontSize: 52, fontWeight: '800', lineHeight: 58 },
   weatherDesc: { color: '#FFFFFF', fontSize: 18, fontWeight: '700' },
+  weatherFeels: { color: '#FFFFFF', fontSize: 15, fontWeight: '700', marginTop: 4 },
   weatherSrc: { color: '#E6EEFB', fontSize: 13, marginTop: 6 },
   tile: { flex: 1, backgroundColor: C.card, borderColor: C.line, borderWidth: 1, borderRadius: 18, padding: 14, gap: 6 },
   tileIcon: { fontSize: 26 },

@@ -50,8 +50,8 @@ Everything under "Inputs" is a constraint or a proposal to weigh, not a decision
 ### Weather (from PRD-full section 8)
 
 - One weather provider (Open-Meteo is free without a key; decide at the architecture step). Cache per location; refresh on entry if older than 60 minutes; after three hours without refresh, mark stale and give no outfit advice.
-- Deterministic clothing rules on the lowest apparent temperature in the next 12 hours: below 0°C winter; 0–9°C warm; 10–19°C layers; 20°C and above light. Rain protection is an overlay.
-- Umbrella: recommend at 40% or higher rain probability in the next 12 hours; with gusts of 40 km/h or more, prefer waterproof guidance and note the umbrella may be impractical. Missing data is "unavailable", never zero.
+- Deterministic clothing rules on the lowest apparent temperature over the waking hours of the day ahead (6 AM to 9 PM local to the city; the rest of today, or tomorrow once today's are over). Changed 2026-09-30 from "the next 12 hours" after the owner's Calgary test: at 4 PM and 14°, the 12-hour window reached 3 AM (feels like −0.3°) and said "dress for winter". Thresholds: below 0°C winter; 0–9°C warm; 10–19°C layers; 20°C and above light. Rain protection is an overlay.
+- Umbrella: recommend at 40% or higher rain probability over the same waking hours; with gusts of 40 km/h or more, prefer waterproof guidance and note the umbrella may be impractical. Missing data is "unavailable", never zero.
 - The same computed weather state drives the animation, the avatar outfit, and the text.
 
 ### Security minimums (from PRD-full section 10)
