@@ -163,6 +163,28 @@
     .choice img { width:54px; height:70px; object-fit:cover; object-position:50% 0; border-radius:10px; background:#2a3a66; }
     .choice .noimg { width:54px; height:70px; border-radius:10px; background:linear-gradient(180deg,#E7A35A,#3D3A5E); }
     .choice[aria-pressed="true"] { border-color:var(--sun-500); box-shadow:0 0 0 3px rgba(249,196,90,.18); }
+    button.pill { cursor:pointer; font:inherit; color:inherit; }
+    button.pill .edit { color:var(--sun-500); font-size:13px; font-weight:800; }
+    .mood-chip { align-self:flex-start; display:inline-flex; align-items:center; gap:8px; background:var(--night-800); border:1.5px solid var(--line); color:var(--ink-100);
+      border-radius:999px; padding:6px 14px 6px 6px; font-size:15px; font-weight:700; cursor:pointer; margin:6px 0 4px; }
+    .mood-chip .face { width:28px; height:28px; }
+    .mood-chip .edit { color:var(--sun-500); font-size:13px; font-weight:800; }
+    .listen { align-self:flex-start; margin:12px 0 0 62px; display:inline-flex; align-items:center; gap:8px; background:none; border:1.5px solid var(--line-strong);
+      color:var(--ink-100); border-radius:999px; padding:8px 16px; font-size:15px; font-weight:700; cursor:pointer; }
+    .listen[aria-pressed="true"] { border-color:var(--sun-500); color:var(--sun-500); }
+    .alarm-time { width:100%; font-size:40px; font-weight:800; text-align:center; background:var(--night-900); color:var(--ink-100); border:1.5px solid var(--line); border-radius:16px; padding:10px; }
+    .days { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:8px; }
+    .days .choice { padding:10px 0; font-size:14px; }
+    .quick { display:flex; gap:8px; margin-top:8px; }
+    .quick .choice { flex:1; padding:10px 4px; }
+    .toggle-row { display:flex; align-items:center; gap:12px; margin-top:14px; padding:12px 14px; background:var(--night-900); border:1.5px solid var(--line); border-radius:14px; cursor:pointer; width:100%; color:var(--ink-100); font:inherit; text-align:left; }
+    .toggle-row .txt { flex:1; font-size:15px; font-weight:700; line-height:1.3; }
+    .toggle-row .txt small { display:block; color:var(--ink-300); font-weight:600; font-size:13px; }
+    .switch { width:48px; height:28px; border-radius:999px; background:#3a4a78; position:relative; flex:none; transition:background .15s; }
+    .switch::after { content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; transition:left .15s; }
+    .toggle-row[aria-checked="true"] .switch { background:var(--sun-500); }
+    .toggle-row[aria-checked="true"] .switch::after { left:23px; }
+    .sheet { max-height:92%; overflow-y:auto; }
   </style>
 </head>
 <body>
@@ -190,7 +212,7 @@
       <h1 class="hello" id="hello">A fresh start, Uche.</h1>
       <p class="sub">Take this morning one step at a time.</p>
       <div class="scene"><img class="bg" id="home-bg" src="assets/companions/web/bg-sunrise.jpg" alt="" /><img class="companion" id="home-companion" src="assets/companions/web/woman-light.webp" alt="Your Arise companion saying good morning" /></div>
-      <div class="pill"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M5 3 2 6M19 3l3 3"/></svg>Next alarm · <strong>Tomorrow, 6:00 AM</strong></div>
+      <button class="pill" id="alarm-pill" aria-label="Wake-up alarm. Tap to change."><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M5 3 2 6M19 3l3 3"/></svg><span id="alarm-when">Next alarm · <strong>Tomorrow, 6:00 AM</strong></span><span class="edit">Change</span></button>
       <button class="btn btn-primary" id="begin-btn">
         <span><span class="main" id="begin-main">Begin my morning</span><span class="sub2" id="begin-sub">A two-minute check-in</span></span>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
@@ -220,6 +242,7 @@
     <!-- 3. AFFIRMATION -->
     <section class="screen" id="screen-aff" aria-label="Affirmation">
       <h1 class="title">For this morning</h1>
+      <button class="mood-chip" id="aff-mood-chip"></button>
       <p class="date" id="aff-mood-line"></p>
       <div class="aff-wrap">
         <div class="mini-avatar" id="mini-avatar"><img id="mini-avatar-img" src="assets/companions/web/woman-light.webp" alt="" /></div>
@@ -228,6 +251,7 @@
           <span class="tag" id="aff-tag"></span>
         </div>
       </div>
+      <button class="listen" id="listen-btn" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><span id="listen-label">Read it to me</span></button>
       <div class="spacer"></div>
       <button class="btn btn-primary" id="today-btn">
         <span><span class="main">See my day</span><span class="sub2">Weather, outfit and plans</span></span>
@@ -238,7 +262,7 @@
     <!-- 4. YOUR DAY, AT A GLANCE -->
     <section class="screen" id="screen-day" aria-label="Your day">
       <div class="day-hero">
-        <div><h1 class="title">Ready for your day.</h1><p class="date" id="today-date"></p></div>
+        <div><h1 class="title">Ready for your day.</h1><p class="date" id="today-date"></p><button class="mood-chip" id="day-mood-chip"></button></div>
         <div class="day-scene"><img class="bg" id="day-bg" src="assets/companions/web/bg-rain.jpg" alt="" /><img class="companion" id="day-companion" src="assets/companions/web/woman-waterproof.webp" alt="Your companion dressed for today's weather" /></div>
       </div>
       <div class="weather-card">
@@ -303,6 +327,10 @@
         <button class="choice" data-companion="man"><img src="assets/companions/web/man-light.webp" alt="" />Man</button>
         <button class="choice" data-companion="none"><span class="noimg"></span>No companion</button>
       </div>
+      <div class="choice-label">Wake-up alarm</div>
+      <button class="toggle-row" id="open-alarm-from-settings" style="margin-top:0"><span class="txt" id="settings-alarm-line">6:00 AM</span><span class="edit" style="color:var(--sun-500);font-weight:800">Change</span></button>
+      <div class="choice-label">Listening</div>
+      <button class="toggle-row" id="speak-toggle" role="switch" aria-checked="false" style="margin-top:0"><span class="txt">Read my pep talk out loud<small>It plays by itself each morning. Helpful if you can't see the screen well.</small></span><span class="switch" aria-hidden="true"></span></button>
       <div class="choice-label">Sample weather (prototype only)</div>
       <div class="choices five" id="weather-choices">
         <button class="choice" data-weather="clear">Sunrise</button>
@@ -312,6 +340,25 @@
         <button class="choice" data-weather="rain">Rain</button>
       </div>
       <button class="btn btn-secondary" id="close-settings" style="justify-content:center">Done</button>
+    </div>
+  </div>
+
+  <div class="sheet-bg" id="alarm-sheet" role="dialog" aria-modal="true" aria-labelledby="alarm-title">
+    <div class="sheet">
+      <h2 id="alarm-title">Your wake-up alarm</h2>
+      <p id="alarm-intro">What time should Arise wake you up?</p>
+      <label class="choice-label" for="alarm-time">Time</label>
+      <input type="time" id="alarm-time" class="alarm-time" value="06:00" />
+      <div class="choice-label">Which days?</div>
+      <div class="quick">
+        <button class="choice" data-quick="weekdays">Weekdays</button>
+        <button class="choice" data-quick="everyday">Every day</button>
+        <button class="choice" data-quick="weekends">Weekends</button>
+      </div>
+      <div class="days" id="alarm-days" role="group" aria-label="Days"></div>
+      <button class="toggle-row" id="alarm-on" role="switch" aria-checked="true"><span class="txt">Alarm on<small>Rings even when your phone is locked.</small></span><span class="switch" aria-hidden="true"></span></button>
+      <button class="toggle-row" id="alarm-speak" role="switch" aria-checked="false"><span class="txt">Read my pep talk out loud<small>Helpful if you can't see the screen well. You can change this in Settings.</small></span><span class="switch" aria-hidden="true"></span></button>
+      <button class="btn btn-primary" id="save-alarm" style="justify-content:center; margin-top:16px"><span class="main" style="font-size:18px">Save alarm</span></button>
     </div>
   </div>
 
@@ -466,7 +513,13 @@
     moodsEl.querySelectorAll('.mood').forEach(function (b) {
       b.onclick = function () {
         var en = ensureToday();
-        en.morning = b.dataset.mood; en.affirmation = ''; // saves the instant it is tapped
+        // Saves the instant it is tapped. The first change after a pep talk gets a new one;
+        // after that the mood still updates but the pep talk stays (each new one costs money).
+        if (en.affirmation && en.morning !== b.dataset.mood) {
+          en.changes = (en.changes || 0) + 1;
+          if (en.changes <= 1) en.affirmation = '';
+        }
+        en.morning = b.dataset.mood;
         save(data);
         moodsEl.querySelectorAll('.mood').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
         document.getElementById('continue-btn').disabled = false;
@@ -482,6 +535,7 @@
     var e = ensureToday();
     if (!e.affirmation) generate(e);
     showAff(e); show('aff');
+    if (data.settings.speak) speakAff();
   };
 
   function generate(e) {
@@ -497,7 +551,9 @@
   }
   function showAff(e) {
     var m = MOODS.find(function (x) { return x.key === e.morning; });
-    document.getElementById('aff-mood-line').textContent = 'You said: ' + (m ? m.label : '') + (e.note ? ' · "' + e.note + '"' : '');
+    renderMoodChip('aff-mood-chip', e);
+    document.getElementById('aff-mood-line').textContent = e.note ? 'You wrote: "' + e.note + '"' : '';
+    if (e.changes > 1) document.getElementById('aff-mood-line').textContent += (e.note ? ' · ' : '') + 'Mood updated. Your pep talk stays the same for today.';
     var bubble = document.getElementById('aff-bubble');
     if (e.status === 'crisis') {
       bubble.classList.add('crisis');
@@ -512,11 +568,107 @@
   }
   document.getElementById('today-btn').onclick = function () { show('day'); };
 
+  // ---------- Mood chip: see and change today's mood ----------
+  function renderMoodChip(id, e) {
+    var chip = document.getElementById(id), m = e && MOODS.find(function (x) { return x.key === e.morning; });
+    if (!m) { chip.innerHTML = 'How are you today? <span class="edit">Check in</span>'; chip.setAttribute('aria-label', 'No mood yet. Tap to check in.'); }
+    else { chip.innerHTML = face(m) + 'Today: ' + m.label + ' <span class="edit">Change</span>'; chip.setAttribute('aria-label', 'Your mood today is ' + m.label + '. Tap to change it.'); }
+    chip.onclick = function () { stopSpeaking(); renderMoods(); show('mood'); };
+  }
+
+  // ---------- Read it to me ----------
+  // Prototype uses the browser's built-in voice. The real app uses the companion's voice (F07).
+  var listenBtn = document.getElementById('listen-btn');
+  function stopSpeaking() { try { speechSynthesis.cancel(); } catch (x) {} listenBtn.setAttribute('aria-pressed', 'false'); document.getElementById('listen-label').textContent = 'Read it to me'; }
+  function speakAff() {
+    var e = entryToday(); if (!e || !('speechSynthesis' in window)) return;
+    var text = e.status === 'crisis' ? document.getElementById('aff-bubble').innerText : e.affirmation;
+    stopSpeaking();
+    var u = new SpeechSynthesisUtterance(text); u.rate = 0.92;
+    u.onend = stopSpeaking;
+    listenBtn.setAttribute('aria-pressed', 'true'); document.getElementById('listen-label').textContent = 'Stop';
+    speechSynthesis.speak(u);
+  }
+  listenBtn.onclick = function () { listenBtn.getAttribute('aria-pressed') === 'true' ? stopSpeaking() : speakAff(); };
+  document.getElementById('today-btn').addEventListener('click', stopSpeaking);
+  document.getElementById('back-btn').addEventListener('click', stopSpeaking);
+
+  // ---------- Wake-up alarm (F04) ----------
+  // Prototype only shows and saves the setting; the real alarm rings from the phone itself.
+  var DAY = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  function nextRing(a) {
+    if (!a.on || !a.days.length) return null;
+    var p = a.time.split(':'), now = new Date();
+    for (var i = 0; i < 8; i++) {
+      var d = new Date(now); d.setDate(now.getDate() + i); d.setHours(+p[0], +p[1], 0, 0);
+      if (d > now && a.days.indexOf(d.getDay()) >= 0) return d;
+    }
+    return null;
+  }
+  function daysText(days) {
+    var k = days.slice().sort().join();
+    if (k === '0,1,2,3,4,5,6') return 'every day';
+    if (k === '1,2,3,4,5') return 'weekdays';
+    if (k === '0,6') return 'weekends';
+    return days.slice().sort(function (a, b) { return ((a + 6) % 7) - ((b + 6) % 7); }).map(function (d) { return DAY[d]; }).join(', ');
+  }
+  function renderAlarmPill() {
+    var a = data.settings.alarm, n = nextRing(a), el = document.getElementById('alarm-when'), line;
+    if (!a.on) line = 'Alarm off · <strong>Tap to set</strong>';
+    else if (!n) line = 'No days picked · <strong>Tap to set</strong>';
+    else {
+      var dd = Math.round((new Date(n.getFullYear(), n.getMonth(), n.getDate()) - new Date(new Date().setHours(0,0,0,0))) / 864e5);
+      var when = dd === 0 ? 'Today' : dd === 1 ? 'Tomorrow' : DAY[n.getDay()];
+      line = 'Next alarm · <strong>' + when + ', ' + fmtTime(a.time) + '</strong>';
+    }
+    el.innerHTML = line;
+    document.getElementById('settings-alarm-line').textContent = a.on ? fmtTime(a.time) + ', ' + daysText(a.days) : 'Alarm off';
+  }
+  var alarmSheet = document.getElementById('alarm-sheet'), draft;
+  function setSwitch(id, on) { document.getElementById(id).setAttribute('aria-checked', on ? 'true' : 'false'); }
+  function renderDraftDays() {
+    var order = [1,2,3,4,5,6,0];
+    document.getElementById('alarm-days').innerHTML = order.map(function (d) {
+      return '<button class="choice" data-day="' + d + '" aria-pressed="' + (draft.days.indexOf(d) >= 0) + '" aria-label="' + DAY[d] + '">' + DAY[d].charAt(0) + '</button>';
+    }).join('');
+    document.querySelectorAll('[data-day]').forEach(function (b) {
+      b.onclick = function () { var d = +b.dataset.day, i = draft.days.indexOf(d); if (i >= 0) draft.days.splice(i, 1); else draft.days.push(d); renderDraftDays(); };
+    });
+  }
+  function openAlarm(first) {
+    var a = data.settings.alarm;
+    draft = { time: a.time, days: a.days.slice(), on: a.on, speak: !!data.settings.speak };
+    document.getElementById('alarm-title').textContent = first ? 'Welcome to Arise' : 'Your wake-up alarm';
+    document.getElementById('alarm-intro').textContent = first ? "First, let's set your alarm. What time should Arise wake you up?" : 'What time should Arise wake you up?';
+    document.getElementById('alarm-time').value = draft.time;
+    setSwitch('alarm-on', draft.on); setSwitch('alarm-speak', draft.speak);
+    renderDraftDays();
+    settings.classList.remove('open');
+    alarmSheet.classList.add('open'); document.getElementById('alarm-time').focus();
+  }
+  document.querySelectorAll('[data-quick]').forEach(function (b) {
+    b.onclick = function () { draft.days = { weekdays:[1,2,3,4,5], everyday:[0,1,2,3,4,5,6], weekends:[0,6] }[b.dataset.quick].slice(); renderDraftDays(); };
+  });
+  document.getElementById('alarm-on').onclick = function () { draft.on = !draft.on; setSwitch('alarm-on', draft.on); };
+  document.getElementById('alarm-speak').onclick = function () { draft.speak = !draft.speak; setSwitch('alarm-speak', draft.speak); };
+  document.getElementById('save-alarm').onclick = function () {
+    data.settings.alarm = { time: document.getElementById('alarm-time').value || '06:00', days: draft.days, on: draft.on };
+    data.settings.speak = draft.speak; data.settings.alarmSet = true; save(data);
+    setSwitch('speak-toggle', draft.speak);
+    alarmSheet.classList.remove('open'); renderAlarmPill();
+  };
+  document.getElementById('alarm-pill').onclick = function () { openAlarm(false); };
+  document.getElementById('open-alarm-from-settings').onclick = function () { openAlarm(false); };
+  document.getElementById('speak-toggle').onclick = function () {
+    data.settings.speak = !data.settings.speak; save(data); setSwitch('speak-toggle', data.settings.speak);
+  };
+
   // ---------- Day ----------
   function fmtTime(t) { var p = t.split(':'), h = +p[0], m = p[1]; return ((h % 12) || 12) + ':' + m + ' ' + (h < 12 ? 'AM' : 'PM'); }
   function renderDay() {
     document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-CA', { weekday:'long', day:'numeric', month:'long' });
     var e = entryToday();
+    renderMoodChip('day-mood-chip', e);
     document.getElementById('intention-text').textContent = (e && e.intention) || 'Tap the pencil to set one line for today.';
     var now = new Date(), upcoming = data.reminders
       .map(function (r) { return { r: r, at: new Date(r.date + 'T' + r.time) }; })
@@ -612,6 +764,7 @@
     rain:   { bg:'bg-rain',    outfit:'waterproof', temp:'11°', desc:'Rain later today',      icon:'rain',   wear:'Waterproof<br/>jacket', umb:'Take an<br/>umbrella' }
   };
   data.settings = data.settings || { companion:'woman', weather:'clear' };
+  data.settings.alarm = data.settings.alarm || { time:'06:00', days:[1,2,3,4,5], on:true };
   var A = 'assets/companions/web/';
   function applyLook() {
     var st = data.settings, w = WEATHER[st.weather] || WEATHER.rain, who = st.companion;
@@ -640,7 +793,10 @@
   applyLook();
 
   save(data);
+  setSwitch('speak-toggle', !!data.settings.speak);
+  renderAlarmPill();
   show('home');
+  if (!data.settings.alarmSet) openAlarm(true);
 })();
 </script>
 </body>
