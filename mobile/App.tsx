@@ -663,16 +663,16 @@ export default function App() {
         );
       }
       case 'history':
-        return <History onBack={() => setStep('home')} onChanged={() => setEntry(loadEntry())} />;
+        return <History onChanged={() => setEntry(loadEntry())} />;
       case 'reminders':
-        return <Reminders settings={settings} update={update} onBack={() => setStep('home')} />;
+        return <Reminders settings={settings} update={update} />;
       default:
         return (
           <Home entry={entry} onEvening={() => {
             const e = entry.date === today() ? entry : loadEntry();
             if (e !== entry) setEntry(e);
             setStep('evening-checkin');
-          }} onDay={() => setStep('day')} onHistory={() => setStep('history')} onReminders={() => setStep('reminders')} onBegin={() => {
+          }} onDay={() => setStep('day')} onBegin={() => {
             // A new day starts a new entry, even if the app stayed open overnight.
             const e = entry.date === today() ? entry : loadEntry();
             if (e !== entry) setEntry(e);
@@ -689,12 +689,27 @@ export default function App() {
     <View style={styles.screen}>
       <StatusBar style={THEMES[settings.theme].dark ? 'light' : 'dark'} />
       <ScrollView contentContainerStyle={styles.scroll}>{content}</ScrollView>
+      {step === 'home' || step === 'history' || step === 'reminders' ? (
+        <View style={styles.tabBar} accessibilityRole="tablist">
+          {([['home', 'Today', '☀︎'], ['reminders', 'Reminders', '🔔'], ['history', 'History', '📊']] as [Step, string, string][]).map(([target, label, icon]) => {
+            const on = step === target;
+            return (
+              <Tap key={target} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={label}
+                onPress={() => setStep(target)} style={styles.tab}>
+                <Text style={[styles.tabIcon, !on && { opacity: 0.6 }]}>{icon}</Text>
+                <Text style={[styles.tabText, on && styles.tabTextOn]}>{label}</Text>
+                {on ? <View style={styles.tabLine} /> : null}
+              </Tap>
+            );
+          })}
+        </View>
+      ) : null}
     </View>
     </StylesContext.Provider>
   );
 }
 
-function Home(props: { entry: Entry; onBegin: () => void; onDay: () => void; onEvening: () => void; onHistory: () => void; onReminders: () => void; settings: Settings; permission: AlarmPermission; message: string; onChangeAlarm: () => void; onSettings: () => void }) {
+function Home(props: { entry: Entry; onBegin: () => void; onDay: () => void; onEvening: () => void; settings: Settings; permission: AlarmPermission; message: string; onChangeAlarm: () => void; onSettings: () => void }) {
   const styles = useStyles();
   const { settings: s } = props;
   return (
@@ -717,16 +732,12 @@ function Home(props: { entry: Entry; onBegin: () => void; onDay: () => void; onE
       <Primary label={props.entry.mood && props.entry.affirmation ? "See today's words" : 'Begin my morning'} onPress={props.onBegin} />
       <Secondary label="Just show my day  ›" onPress={props.onDay} />
       <Secondary label={props.entry.evening ? 'Evening check-in done ✓' : `Evening check-in (${fmt(s.evening.hour, s.evening.minute)})`} onPress={props.onEvening} />
-      <View style={[styles.row, { marginTop: 4 }]}>
-        <View style={{ flex: 1 }}><Secondary label="History" onPress={props.onHistory} /></View>
-        <View style={{ flex: 1 }}><Secondary label="Reminders" onPress={props.onReminders} /></View>
-      </View>
 
     </View>
   );
 }
 
-function History(props: { onBack: () => void; onChanged: () => void }) {
+function History(props: { onChanged: () => void }) {
   const styles = useStyles();
   const [entries, setEntries] = useState(allEntries);
   const [confirming, setConfirming] = useState<string | null>(null);
@@ -757,13 +768,12 @@ function History(props: { onBack: () => void; onChanged: () => void }) {
           </Tap>
         </View>
       ))}
-      <Primary label="Back" onPress={props.onBack} />
     </Card>
   );
 }
 
 // PRD F11: a reminder is text plus a date and time; it arrives as a normal notification.
-function Reminders(props: { settings: Settings; update: (p: Partial<Settings>) => void; onBack: () => void }) {
+function Reminders(props: { settings: Settings; update: (p: Partial<Settings>) => void }) {
   const styles = useStyles();
   const [list, setList] = useState(() => loadReminders().filter((r) => r.at > Date.now()));
   const [text, setText] = useState('');
@@ -822,7 +832,6 @@ function Reminders(props: { settings: Settings; update: (p: Partial<Settings>) =
           </Tap>
         </View>
       ))}
-      <Primary label="Back" onPress={props.onBack} />
     </Card>
   );
 }
@@ -954,6 +963,12 @@ const makeStyles = (C: Theme) => StyleSheet.create({
   link: { color: C.accent, fontWeight: '800' },
   swatches: { flexDirection: 'row', gap: 6 },
   moodRow: { flexDirection: 'row', gap: 6 },
+  tabBar: { flexDirection: 'row', backgroundColor: C.card, borderTopColor: C.line, borderTopWidth: 1, paddingTop: 10, paddingBottom: 30 },
+  tab: { flex: 1, alignItems: 'center', gap: 3 },
+  tabIcon: { fontSize: 22 },
+  tabText: { color: C.muted, fontSize: 13, fontWeight: '700' },
+  tabTextOn: { color: C.ink, fontWeight: '800' },
+  tabLine: { width: 36, height: 3, borderRadius: 2, backgroundColor: C.accent, marginTop: 2 },
   topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
   gear: { position: 'absolute', right: 0, width: 44, height: 44, borderRadius: 22, backgroundColor: C.card, borderColor: C.line, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   gearText: { color: C.ink, fontSize: 24 },
