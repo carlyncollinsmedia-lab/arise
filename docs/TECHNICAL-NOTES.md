@@ -95,6 +95,10 @@ Problem found and fixed: the first build silently ignored the button because Xco
 
 Migrations in `supabase/migrations/`. Tables: `profiles` (made automatically at sign-up), `alarm_schedules` (informational copy; the phone's AlarmKit schedule is the truth), `entries` (one per person per local date, id made on the phone), `reminders`, `support_lines` (empty until a person verifies each line; the AI never writes numbers), `fallback_affirmations` (the five reviewed fallbacks). Row Level Security on every table: each person reads and writes only their own rows. Checked with two test users in a rolled-back transaction: user A saw 1 entry (their own), 0 of user B's, and their own auto-created profile. Supabase security advisor: no issues after revoking direct calls to `handle_new_user`. Sign-in method is not configured yet (owner decision pending; recommendation: email link plus Sign in with Apple). The schema does not depend on it.
 
+## Real app alarm check (2026-09-30)
+
+The real Expo app (`mobile/`, Release build, own `arise-alarm` Swift module) rang on the test iPhone from "Test: ring in 1 minute" with the phone locked (owner: "it worked"). The weekly repeating alarm set during setup is still to be confirmed on a real morning.
+
 ## Known issue: iOS 27 needs the scene life cycle (found 2026-09-30)
 
 The Expo 57 app crashes at launch on the iOS 27 simulator (`UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption`): iOS 27 requires the scene-based life cycle, and the generated AppDelegate does not adopt it yet. iOS 26 (the test phone, 26.7) is not affected. Expo ships `ExpoAppSceneDelegate` for this; adopt it with a small config plugin (Info.plist `UIApplicationSceneManifest` + AppDelegate conforming to `ExpoReactNativeFactoryProvider`) or a newer Expo template, before any tester moves to iOS 27.
