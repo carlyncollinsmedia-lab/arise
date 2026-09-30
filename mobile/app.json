@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Arise",
+    "slug": "arise",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.nezeville.arise",
+      "appleTeamId": "W6V9R9C5KX",
+      "infoPlist": {
+        "NSAlarmKitUsageDescription": "Arise uses alarms to wake you up at the time you choose."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.nezeville.arise"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-sqlite",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "26.1"
+          }
+        }
+      ]
+    ],
+    "scheme": "arise"
+  }
+}

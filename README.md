@@ -17,6 +17,7 @@ Open `index.html` in a browser (test data only; add `?new` to the address to sta
 | 30 Sep | Prototype updates from owner testing | Alarm setup on first open, see and change today's mood, read the pep talk aloud; real Claude pep talks when connected. | `index.html`, PRD section 13 |
 | 30 Sep | Step 0: alarm spike | Test iPhone app using Apple AlarmKit. Passed all four tests on a real iPhone: locked, after a restart, airplane mode, Do Not Disturb. | branch `spike/alarm`, `docs/TECHNICAL-NOTES.md` |
 | 30 Sep | Step 1 backend | Database for accounts, alarms, mornings and reminders, each person seeing only their own rows (Row Level Security). | `supabase/migrations/`, `docs/TECHNICAL-NOTES.md` |
+| 30 Sep | Steps 1–2 in the real app | Expo app in `mobile/`: first-time setup (notice, companion, country, alarm, evening) and a real repeating wake-up alarm through our own AlarmKit module. Installed on the test iPhone. | `mobile/App.tsx`, `mobile/modules/arise-alarm/` |
 
 ## Documents
 
