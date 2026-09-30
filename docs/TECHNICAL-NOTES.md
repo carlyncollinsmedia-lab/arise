@@ -83,7 +83,7 @@ Test app: `spike/AlarmTest` on branch `spike/alarm` (SwiftUI + Apple AlarmKit, o
 | # | Test | Date | Result |
 | --- | --- | --- | --- |
 | 1 | Phone locked, app closed, "ring in 2 minutes" | 2026-09-30 | **Passed.** Rang and showed the alarm screen (owner: "it worked"). |
-| 2 | After a restart | | Pending |
+| 2 | After a restart (alarm set, then phone powered off and on, unlocked once, app not opened) | 2026-09-30 | **Passed.** Rang after the restart. |
 | 3 | Airplane mode on | | Pending |
 | 4 | Focus / Do Not Disturb on | | Pending |
 
