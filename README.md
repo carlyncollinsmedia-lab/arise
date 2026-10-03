@@ -6,7 +6,9 @@ When the alarm stops, a personal avatar greets you, asks how you feel, and speak
 
 ## Try the prototype
 
-Open `index.html` in a browser (test data only; add `?new` to the address to start as a first-time user). With a local `config.local.js`, pep talks are written live by Claude; without it, reviewed samples are shown. Design system: `design.html`. Prototype demo video: https://youtube.com/shorts/NobdEwUlwlQ
+**Live web app: https://arise-morning.netlify.app** (works on a phone and a computer; add it to your phone's home screen from Settings). Hosted on Netlify; built by `scripts/build-web.sh` (see `netlify.toml`). The Claude key stays in Supabase; the page only knows the function address and the public key, and Claude calls are capped at 300 a day.
+
+To run it locally instead, open `index.html` in a browser (test data only; add `?new` to the address to start as a first-time user). With a local `config.local.js`, pep talks are written live by Claude; without it, reviewed samples are shown. Design system: `design.html`. Prototype demo video: https://youtube.com/shorts/NobdEwUlwlQ
 
 ## Progress
 
