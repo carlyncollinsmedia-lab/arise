@@ -31,6 +31,10 @@
     body { font-family:var(--font); color:var(--ink-100); background:#4a6a9e; -webkit-font-smoothing:antialiased;
       display:flex; justify-content:center; align-items:flex-start; min-height:100vh; }
     button { font-family:var(--font); }
+    .rem-toast { position:fixed; left:50%; top:16px; transform:translateX(-50%); z-index:50; width:min(92vw,400px);
+      background:var(--sun-500); color:var(--ink-on-sun); border-radius:var(--radius-md); padding:14px 16px;
+      box-shadow:0 14px 34px rgba(0,0,0,.4); display:flex; gap:12px; align-items:center; font-weight:700; }
+    .rem-toast button { margin-left:auto; border:0; border-radius:var(--radius-pill); padding:8px 14px; background:var(--night-900); color:var(--ink-100); font-weight:800; cursor:pointer; }
     /* Wide screens: today's scene becomes the wallpaper behind the app. */
     #wallpaper { position:fixed; inset:-40px; z-index:-1; background:#4a6a9e center/cover no-repeat;
       filter:blur(18px) brightness(.72) saturate(1.1); transition:background-image .6s; }
@@ -305,6 +309,10 @@
     <section class="screen" id="screen-reminders" aria-label="Reminders">
       <h1 class="title">Reminders</h1>
       <p class="date">Plain notifications. The morning alarm is the special one.</p>
+      <div class="card" id="notif-card" hidden style="margin-top:4px">
+        <p id="notif-text" style="margin:0 0 10px">Let Arise show a pop-up when a reminder is due. It works while Arise is open in a tab, even behind other windows.</p>
+        <button class="btn btn-secondary" id="notif-btn" style="justify-content:center;margin:0">Allow reminder pop-ups</button>
+      </div>
       <div class="field" style="margin-top:4px">
         <label for="rem-text">New reminder</label>
         <input type="text" id="rem-text" maxlength="80" placeholder="e.g. Call the bank" />
@@ -484,7 +492,7 @@
     return {
       entries: days,
       reminders: [
-        { id: 1, text: 'School pick-up', date: today, time: '15:30' },
+        { id: 1, text: 'School pick-up', date: today, time: '15:30', fired: new Date(today + 'T15:30') <= new Date() },
         { id: 2, text: 'Pay the hydro bill', date: iso(tmr), time: '09:00' }
       ],
       lastAff: {}
@@ -508,7 +516,7 @@
     if (push !== false) trail.push(name);
     document.getElementById('back-btn').hidden = (name === 'home' || name === 'reminders' || name === 'history');
     if (name === 'day') renderDay();
-    if (name === 'reminders') renderReminders();
+    if (name === 'reminders') { renderReminders(); renderNotifCard(); }
     if (name === 'history') renderHistory();
     if (name === 'home') renderHome();
     window.scrollTo(0, 0);
@@ -755,7 +763,7 @@
     var list = data.reminders.slice().sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
     el.innerHTML = list.length ? list.map(function (r) {
       return '<div class="item"><div class="meta">' + new Date(r.date + 'T00:00').toLocaleDateString('en-CA', { weekday:'short', month:'short', day:'numeric' }) + ' · ' + fmtTime(r.time) + '</div>' +
-        '<div class="main"></div><div class="actions"><button data-del="' + r.id + '">Cancel</button></div></div>';
+        '<div class="main"></div><div class="actions"><button data-del="' + r.id + '">' + (r.fired ? 'Clear' : 'Cancel') + '</button></div></div>';
     }).join('') : '<div class="empty">No reminders yet.</div>';
     el.querySelectorAll('.item .main').forEach(function (n, i) { n.textContent = list[i].text; });
     el.querySelectorAll('[data-del]').forEach(function (b) {
@@ -768,8 +776,73 @@
     if (!t || !d || !tm) { document.getElementById('rem-text').focus(); return; }
     data.reminders.push({ id: Date.now(), text: t, date: d, time: tm }); save(data);
     document.getElementById('rem-text').value = ''; document.getElementById('rem-time').value = '';
-    renderReminders();
+    askNotify();
+    renderReminders(); renderNotifCard();
   };
+
+  // ---------- Reminder pop-ups (web) ----------
+  // A website can't ring like the phone app's alarm, but while Arise is open in a tab
+  // it checks every 20 seconds and pops up any reminder that is due: a system
+  // notification if allowed, plus a banner and a soft chime inside the page.
+  var canNotify = 'Notification' in window;
+  function renderNotifCard() {
+    var card = document.getElementById('notif-card'), txt = document.getElementById('notif-text'), btn = document.getElementById('notif-btn');
+    if (!canNotify) {
+      card.hidden = false; btn.hidden = true;
+      txt.textContent = 'This browser can only show reminders inside Arise while it is open. On iPhone, add Arise to your Home Screen (Settings) to allow pop-ups.';
+      return;
+    }
+    card.hidden = Notification.permission === 'granted';
+    if (Notification.permission === 'denied') {
+      btn.hidden = true;
+      txt.textContent = 'Pop-ups are blocked for this site. Reminders will still show inside Arise while it is open. To allow them, use the lock icon next to the address bar.';
+    }
+  }
+  function askNotify() {
+    if (canNotify && Notification.permission === 'default') Notification.requestPermission().then(renderNotifCard);
+  }
+  document.getElementById('notif-btn').onclick = askNotify;
+  function chime() {
+    try {
+      var ac = new (window.AudioContext || window.webkitAudioContext)();
+      [660, 880].forEach(function (f, i) {
+        var o = ac.createOscillator(), g = ac.createGain(), t0 = ac.currentTime + i * 0.25;
+        o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.25, t0 + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.6);
+        o.start(t0); o.stop(t0 + 0.65);
+      });
+    } catch (e) {}
+  }
+  function showRemToast(r) {
+    var el = document.createElement('div');
+    el.className = 'rem-toast'; el.setAttribute('role', 'alert');
+    el.innerHTML = '<span aria-hidden="true">🔔</span><span class="t"></span><button type="button">OK</button>';
+    el.querySelector('.t').textContent = r.text;
+    el.querySelector('button').onclick = function () { el.remove(); };
+    document.body.appendChild(el);
+  }
+  function fireReminder(r) {
+    if (canNotify && Notification.permission === 'granted') {
+      var opts = { body: r.text, icon: 'assets/icons/icon-192.png', tag: 'arise-rem-' + r.id };
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.ready.then(function (reg) { reg.showNotification('Arise reminder', opts); });
+      } else {
+        try { new Notification('Arise reminder', opts); } catch (e) {}
+      }
+    }
+    showRemToast(r); chime();
+  }
+  function checkReminders() {
+    var now = Date.now(), changed = false;
+    data.reminders.forEach(function (r) {
+      var at = new Date(r.date + 'T' + r.time).getTime();
+      // Only fire reminders that came due in the last 12 hours, once each.
+      if (!r.fired && at <= now && now - at < 12 * 3600e3) { r.fired = true; changed = true; fireReminder(r); }
+    });
+    if (changed) { save(data); if (document.getElementById('screen-reminders').classList.contains('active')) renderReminders(); renderDay(); }
+  }
+  setInterval(checkReminders, 20000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) checkReminders(); });
 
   // ---------- History ----------
   function label(k) { var m = MOODS.find(function (x) { return x.key === k; }); return m ? m.label : '—'; }
