@@ -8,6 +8,7 @@ import Anthropic from "npm:@anthropic-ai/sdk";
 
 const MODEL = "claude-opus-5"; // Model choice is an open owner decision (HANDOFF section 8).
 const TIMEOUT_MS = 8000; // PRD section 6: fallback must appear within eight seconds.
+const DAILY_CAP = 300; // Cost control: Claude calls per day across everyone; after that, reviewed fallbacks.
 
 const MOODS = ["rough", "low", "okay", "good", "great"] as const;
 type Mood = (typeof MOODS)[number];
@@ -80,6 +81,23 @@ function fallback(mood: Mood, reason: string) {
   return json({ source: "fallback", mood, affirmation: FALLBACKS[mood], reason });
 }
 
+// Counts this call against today's cap. If the counter can't be reached, play safe and say no.
+async function claimAiCall(): Promise<boolean> {
+  const url = Deno.env.get("SUPABASE_URL");
+  const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !key) return false;
+  try {
+    const r = await fetch(`${url}/rest/v1/rpc/claim_ai_call`, {
+      method: "POST",
+      headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ daily_cap: DAILY_CAP }),
+    });
+    return r.ok && (await r.json()) === true;
+  } catch {
+    return false;
+  }
+}
+
 function countSentences(text: string) {
   return text.split(/[.!?]+(?=\s|$)/).filter((s) => s.trim().length > 0).length;
 }
@@ -108,6 +126,7 @@ Deno.serve(async (req) => {
 
   const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
   if (!apiKey) return fallback(mood, "no_key");
+  if (!(await claimAiCall())) return fallback(mood, "daily_cap");
 
   const client = new Anthropic({ apiKey, maxRetries: 0, timeout: TIMEOUT_MS });
   const userText = note
@@ -117,7 +136,7 @@ Deno.serve(async (req) => {
   try {
     const response = await client.messages.create({
       model: MODEL,
-      max_tokens: 1000,
+      max_tokens: 400, // ~70-word answer plus JSON; caps the cost of any one call
       output_config: {
         effort: "low",
         format: { type: "json_schema", schema: SCHEMA },

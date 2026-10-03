@@ -1,0 +1,13 @@
+# Netlify hosting for the web version of Arise (QAF Lesson 9).
+[build]
+  command = "sh scripts/build-web.sh"
+  publish = "dist"
+
+# Basic protections for every page.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
