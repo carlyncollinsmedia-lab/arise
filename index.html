@@ -275,7 +275,7 @@
       </div>
       <div class="weather-card">
         <span id="w-icon"></span>
-        <div><div class="city">Edmonton</div><div class="temp" id="w-temp">12°</div><div class="desc" id="w-desc">Rain later today</div><div class="src">Sample forecast · updated 6:02 AM</div></div>
+        <div><div class="city" id="w-city">Edmonton</div><div class="temp" id="w-temp">12°</div><div class="desc" id="w-desc">Rain later today</div><div class="src" id="w-src">Sample forecast · updated 6:02 AM</div></div>
       </div>
       <div class="tiles">
         <div class="tile"><svg class="icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M14 8l8 4 8-4 8 8-5 5v17H11V21l-5-5z" fill="#7FA8E0" stroke="#C3D6F2" stroke-width="1.5" stroke-linejoin="round"/><path d="M22 12v26" stroke="#3A5A8C" stroke-width="2"/></svg><span id="w-outfit">Wear<br/>layers</span></div>
@@ -344,13 +344,23 @@
         <button class="toggle-row" id="install-btn" style="margin-top:0" hidden><span class="txt">Add Arise to your home screen<small>Opens full screen like an app, even without internet.</small></span><span class="edit" style="color:var(--sun-500);font-weight:800">Add</span></button>
         <p id="install-ios" hidden style="font-size:14px">On iPhone: tap the Share button <span aria-hidden="true">(the square with an arrow)</span>, then <b>Add to Home Screen</b>.</p>
       </div>
-      <div class="choice-label">Sample weather (prototype only)</div>
+      <div class="choice-label">Your town or city</div>
+      <p style="font-size:14px;margin-top:0">For today's real weather, what to wear, and whether to take an umbrella.</p>
+      <form id="city-form" style="display:flex;gap:8px">
+        <input type="text" id="city-input" maxlength="60" placeholder="e.g. Calgary" autocomplete="address-level2" style="flex:1" aria-label="Town or city" />
+        <button class="btn btn-secondary" type="submit" style="width:auto;padding:0 16px;margin:0">Find</button>
+      </form>
+      <div id="city-results" role="list" style="display:flex;flex-direction:column;gap:6px;margin-top:8px"></div>
+      <p id="city-current" style="font-size:14px"></p>
+      <div id="sample-weather">
+      <div class="choice-label">Sample weather (until you pick a city)</div>
       <div class="choices five" id="weather-choices">
         <button class="choice" data-weather="clear">Sunrise</button>
         <button class="choice" data-weather="summer">Summer</button>
         <button class="choice" data-weather="fall">Fall</button>
         <button class="choice" data-weather="winter">Winter</button>
         <button class="choice" data-weather="rain">Rain</button>
+      </div>
       </div>
       <button class="btn btn-secondary" id="close-settings" style="justify-content:center">Done</button>
     </div>
@@ -809,8 +819,99 @@
   data.settings = data.settings || { companion:'woman', weather:'clear' };
   data.settings.alarm = data.settings.alarm || { time:'06:00', days:[1,2,3,4,5], on:true };
   var A = 'assets/companions/web/';
+
+  // ---------- Live weather (same rules as the phone app, mobile/App.tsx) ----------
+  // Open-Meteo: free, no key. Saved for 60 minutes; after 3 hours without a refresh
+  // the forecast counts as stale and we give no outfit advice rather than guess.
+  var RAIN_CODES = [51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99], SNOW_CODES = [71,73,75,77,85,86];
+  function describe(c) {
+    if (c === 0) return 'Clear sky'; if (c <= 2) return 'Partly cloudy'; if (c === 3) return 'Cloudy';
+    if (c <= 48) return 'Foggy'; if (c <= 57) return 'Drizzle'; if (c <= 67) return 'Rain'; if (c <= 77) return 'Snow';
+    if (c <= 82) return 'Rain showers'; if (c <= 86) return 'Snow showers'; return 'Thunderstorms';
+  }
+  function hourText(h) { return (h % 12 || 12) + ':00 ' + (h < 12 ? 'AM' : 'PM'); }
+  function liveLook(city, w) {
+    var stale = Date.now() - w.fetchedAt > 3 * 3600e3;
+    var rainLikely = w.rainy || (w.maxRainChance || 0) >= 40, windy = (w.maxGust || 0) >= 40;
+    var base = w.minFeels < 0 ? 'winter' : w.minFeels < 10 ? 'warm' : w.minFeels < 20 ? 'layers' : 'light';
+    var outfit = rainLikely && base !== 'winter' ? 'waterproof' : base;
+    var WORDS = { winter:'Dress for<br/>winter', warm:'Wear something<br/>warm', layers:'Wear<br/>layers', light:'Dress<br/>light', waterproof:'Waterproof<br/>jacket' };
+    var umb = w.maxRainChance === null && !w.rainy ? 'Rain chance<br/>unavailable'
+      : rainLikely ? (windy ? 'Rain and wind:<br/>a hood beats an umbrella' : 'Take an<br/>umbrella') : 'No umbrella<br/>needed';
+    var bg = w.snowy || base === 'winter' ? 'bg-winter' : rainLikely ? 'bg-rain' : base === 'light' ? 'bg-summer' : 'bg-fall';
+    var icon = w.snowy ? 'snow' : rainLikely ? 'rain' : w.codeNow <= 1 ? 'sun' : 'partly';
+    var feels = Math.round(w.minFeels) < Math.round(w.feelsNow) - 1
+      ? 'Feels like ' + Math.round(w.feelsNow) + '° now, ' + Math.round(w.minFeels) + '° by ' + hourText(w.minFeelsHour)
+      : 'Feels like ' + Math.round(w.feelsNow) + '°';
+    var at = new Date(w.fetchedAt).toLocaleTimeString([], { hour:'numeric', minute:'2-digit' });
+    return {
+      bg: stale ? 'bg-sunrise' : bg, outfit: stale ? 'light' : outfit, icon: icon, city: city.name,
+      temp: Math.round(w.tempNow) + '°', desc: describe(w.codeNow) + ' · ' + feels,
+      wear: stale ? 'No outfit advice:<br/>forecast is old' : WORDS[outfit],
+      umb: stale ? 'Check the sky<br/>before you go' : umb,
+      src: 'Live forecast · updated ' + at
+    };
+  }
+  function weatherKey(c) { return 'arise.weather.' + c.lat.toFixed(2) + ',' + c.lon.toFixed(2); }
+  function cachedWeather(c) { try { return JSON.parse(localStorage.getItem(weatherKey(c)) || 'null'); } catch (e) { return null; } }
+  function refreshWeather() {
+    var c = data.settings.city; if (!c) return;
+    var w = cachedWeather(c);
+    if (w && Date.now() - w.fetchedAt < 3600e3) return;
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=' + c.lat + '&longitude=' + c.lon +
+      '&current=temperature_2m,apparent_temperature,weather_code' +
+      '&hourly=apparent_temperature,precipitation_probability,wind_gusts_10m,weather_code&forecast_hours=16&timezone=auto')
+      .then(function (r) { return r.json(); }).then(function (b) {
+        var h = b.hourly, hourOf = function (t) { return Number(t.slice(11, 13)); };
+        // Only the waking hours of the day ahead (6 AM to 9 PM), so tonight's cold does not count.
+        var idx = h.time.map(function (t, i) { return hourOf(t) >= 6 && hourOf(t) <= 21 ? i : -1; }).filter(function (i) { return i >= 0; });
+        if (idx.length) { var d0 = h.time[idx[0]].slice(0, 10); idx = idx.filter(function (i) { return h.time[i].indexOf(d0) === 0; }); }
+        if (!idx.length) idx = [0, 1, 2];
+        var pick = function (xs) { return idx.map(function (i) { return xs[i]; }).filter(function (x) { return typeof x === 'number'; }); };
+        var feels = pick(h.apparent_temperature), rain = pick(h.precipitation_probability), gust = pick(h.wind_gusts_10m), codes = pick(h.weather_code);
+        var minFeels = Math.min.apply(null, feels);
+        var minAt = idx.filter(function (i) { return h.apparent_temperature[i] === minFeels; })[0]; if (minAt === undefined) minAt = idx[0];
+        var w = {
+          fetchedAt: Date.now(), tempNow: b.current.temperature_2m, feelsNow: b.current.apparent_temperature, codeNow: b.current.weather_code,
+          minFeels: minFeels, minFeelsHour: hourOf(h.time[minAt]),
+          maxRainChance: rain.length ? Math.max.apply(null, rain) : null, maxGust: gust.length ? Math.max.apply(null, gust) : null,
+          rainy: codes.some(function (x) { return RAIN_CODES.indexOf(x) >= 0; }), snowy: codes.some(function (x) { return SNOW_CODES.indexOf(x) >= 0; })
+        };
+        try { localStorage.setItem(weatherKey(c), JSON.stringify(w)); } catch (e) {}
+        applyLook();
+      }).catch(function () { /* offline: keep the last forecast, marked old after 3 hours */ });
+  }
+  var cityForm = document.getElementById('city-form'), cityResults = document.getElementById('city-results');
+  cityForm.onsubmit = function (ev) {
+    ev.preventDefault();
+    var q = document.getElementById('city-input').value.trim(); if (!q) return;
+    cityResults.innerHTML = '<p style="font-size:14px">Searching…</p>';
+    fetch('https://geocoding-api.open-meteo.com/v1/search?count=5&language=en&name=' + encodeURIComponent(q))
+      .then(function (r) { return r.json(); }).then(function (b) {
+        var list = b.results || [];
+        cityResults.innerHTML = list.length ? '' : '<p style="font-size:14px">No place found. Check the spelling and try again.</p>';
+        list.forEach(function (r) {
+          var btn = document.createElement('button');
+          btn.type = 'button'; btn.className = 'toggle-row'; btn.style.margin = '0'; btn.setAttribute('role', 'listitem');
+          btn.textContent = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
+          btn.onclick = function () {
+            data.settings.city = { name: r.name, label: btn.textContent, lat: r.latitude, lon: r.longitude };
+            save(data); cityResults.innerHTML = ''; document.getElementById('city-input').value = '';
+            applyLook(); refreshWeather();
+          };
+          cityResults.appendChild(btn);
+        });
+      }).catch(function () { cityResults.innerHTML = '<p style="font-size:14px">Can\'t reach the weather service. Check your connection.</p>'; });
+  };
+
   function applyLook() {
-    var st = data.settings, w = WEATHER[st.weather] || WEATHER.rain, who = st.companion;
+    var st = data.settings, who = st.companion;
+    var live = st.city && cachedWeather(st.city);
+    var w = live ? liveLook(st.city, live) : (WEATHER[st.weather] || WEATHER.rain);
+    document.getElementById('w-city').textContent = live ? w.city : (st.city ? st.city.name : 'Edmonton');
+    document.getElementById('w-src').textContent = live ? w.src : (st.city ? 'Getting the forecast…' : 'Sample forecast · updated 6:02 AM');
+    document.getElementById('city-current').textContent = st.city ? 'Using: ' + st.city.label : '';
+    document.getElementById('sample-weather').hidden = !!st.city;
     ['home-bg','day-bg'].forEach(function (id) { document.getElementById(id).src = A + w.bg + '.jpg'; });
     var show = who !== 'none';
     var hc = document.getElementById('home-companion'), dc = document.getElementById('day-companion');
@@ -834,6 +935,8 @@
   settings.addEventListener('click', function (ev) { if (ev.target === settings) settings.classList.remove('open'); });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') settings.classList.remove('open'); });
   applyLook();
+  refreshWeather();
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshWeather(); });
 
   // Honest banner: with the AI connected, the mood and note do leave this computer.
   if (window.ARISE_CONFIG) document.getElementById('test-banner').textContent = 'PROTOTYPE · TEST DATA · MOOD AND NOTE SENT TO CLAUDE FOR THE PEP TALK';
