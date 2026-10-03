@@ -31,6 +31,10 @@
     body { font-family:var(--font); color:var(--ink-100); background:#4a6a9e; -webkit-font-smoothing:antialiased;
       display:flex; justify-content:center; align-items:flex-start; min-height:100vh; }
     button { font-family:var(--font); }
+    /* Wide screens: today's scene becomes the wallpaper behind the app. */
+    #wallpaper { position:fixed; inset:-40px; z-index:-1; background:#4a6a9e center/cover no-repeat;
+      filter:blur(18px) brightness(.72) saturate(1.1); transition:background-image .6s; }
+    @media (max-width:519px) { #wallpaper { display:none; } }
     button:focus-visible, input:focus-visible, textarea:focus-visible { outline:3px solid var(--sun-500); outline-offset:3px; }
 
     /* Phone frame */
@@ -196,6 +200,7 @@
   </style>
 </head>
 <body>
+<div id="wallpaper" aria-hidden="true"></div>
 <div class="phone">
   <div class="test-banner" id="test-banner">PROTOTYPE · TEST DATA ONLY · NOTHING IS SENT ANYWHERE</div>
   <header class="top">
@@ -913,6 +918,7 @@
     document.getElementById('city-current').textContent = st.city ? 'Using: ' + st.city.label : '';
     document.getElementById('sample-weather').hidden = !!st.city;
     ['home-bg','day-bg'].forEach(function (id) { document.getElementById(id).src = A + w.bg + '.jpg'; });
+    document.getElementById('wallpaper').style.backgroundImage = 'url(' + A + w.bg + '.jpg)';
     var show = who !== 'none';
     var hc = document.getElementById('home-companion'), dc = document.getElementById('day-companion');
     hc.hidden = dc.hidden = !show;
