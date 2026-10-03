@@ -12,7 +12,8 @@ set -e
 cd "$(dirname "$0")/.."
 rm -rf dist
 mkdir -p dist/assets/companions
-cp index.html design.html dist/
+cp index.html design.html manifest.webmanifest sw.js dist/
+cp -R assets/icons dist/assets/
 cp -R assets/companions/web dist/assets/companions/
 find dist -name '._*' -delete
 

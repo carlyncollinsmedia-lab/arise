@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Arise — Morning Prototype</title>
+  <title>Arise</title>
   <meta name="description" content="Arise Phase 1 prototype: the morning routine with test data only. Opens locally in a browser." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#13224A" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Arise" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
@@ -331,6 +339,11 @@
       <button class="toggle-row" id="open-alarm-from-settings" style="margin-top:0"><span class="txt" id="settings-alarm-line">6:00 AM</span><span class="edit" style="color:var(--sun-500);font-weight:800">Change</span></button>
       <div class="choice-label">Listening</div>
       <button class="toggle-row" id="speak-toggle" role="switch" aria-checked="false" style="margin-top:0"><span class="txt">Read my pep talk out loud<small>It plays by itself each morning. Helpful if you can't see the screen well.</small></span><span class="switch" aria-hidden="true"></span></button>
+      <div id="install-block" hidden>
+        <div class="choice-label">On your phone</div>
+        <button class="toggle-row" id="install-btn" style="margin-top:0" hidden><span class="txt">Add Arise to your home screen<small>Opens full screen like an app, even without internet.</small></span><span class="edit" style="color:var(--sun-500);font-weight:800">Add</span></button>
+        <p id="install-ios" hidden style="font-size:14px">On iPhone: tap the Share button <span aria-hidden="true">(the square with an arrow)</span>, then <b>Add to Home Screen</b>.</p>
+      </div>
       <div class="choice-label">Sample weather (prototype only)</div>
       <div class="choices five" id="weather-choices">
         <button class="choice" data-weather="clear">Sunrise</button>
@@ -829,6 +842,27 @@
   renderAlarmPill();
   show('home');
   if (!data.settings.alarmSet) openAlarm(true);
+
+  // Installable web app: save the pages for offline use and offer "Add to home screen".
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js');
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  var installPrompt = null;
+  if (!standalone) {
+    if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+      document.getElementById('install-block').hidden = false;
+      document.getElementById('install-ios').hidden = false;
+    }
+    window.addEventListener('beforeinstallprompt', function (ev) {
+      ev.preventDefault(); installPrompt = ev;
+      document.getElementById('install-block').hidden = false;
+      document.getElementById('install-btn').hidden = false;
+    });
+    document.getElementById('install-btn').onclick = function () {
+      if (!installPrompt) return;
+      installPrompt.prompt();
+      installPrompt.userChoice.then(function () { installPrompt = null; document.getElementById('install-block').hidden = true; });
+    };
+  }
 })();
 </script>
 </body>
