@@ -1,9 +1,9 @@
 // Arise service worker: lets the installed web app open without a connection.
 // Pages: try the network first so updates show up, fall back to the saved copy.
 // Pictures and fonts: use the saved copy first. The pep-talk request is never cached.
-const CACHE = "arise-v2";
+const CACHE = "arise-v3";
 const SHELL = [
-  "./", "./index.html", "./manifest.webmanifest", "./config.local.js",
+  "./", "./index.html", "./reminders.html", "./manifest.webmanifest", "./config.local.js",
   "./assets/icons/icon-192.png", "./assets/icons/icon-512.png",
   "./assets/companions/web/bg-sunrise.jpg", "./assets/companions/web/bg-rain.jpg",
   "./assets/companions/web/woman-light.webp", "./assets/companions/web/man-light.webp",

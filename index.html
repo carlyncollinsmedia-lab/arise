@@ -319,6 +319,7 @@
         <div class="form-row"><input type="date" id="rem-date" aria-label="Date" /><input type="time" id="rem-time" aria-label="Time" /></div>
         <button class="btn btn-primary" id="add-rem" style="margin-top:12px; justify-content:center"><span class="main" style="font-size:18px">Add reminder</span></button>
       </div>
+      <button class="btn btn-secondary" id="rem-window-btn" style="justify-content:center;margin-top:12px">Open reminders in their own window</button>
       <div class="list" id="rem-list"></div>
     </section>
 
@@ -767,13 +768,14 @@
     }).join('') : '<div class="empty">No reminders yet.</div>';
     el.querySelectorAll('.item .main').forEach(function (n, i) { n.textContent = list[i].text; });
     el.querySelectorAll('[data-del]').forEach(function (b) {
-      b.onclick = function () { data.reminders = data.reminders.filter(function (r) { return String(r.id) !== b.dataset.del; }); save(data); renderReminders(); };
+      b.onclick = function () { syncReminders(); data.reminders = data.reminders.filter(function (r) { return String(r.id) !== b.dataset.del; }); save(data); renderReminders(); };
     });
     document.getElementById('rem-date').value = document.getElementById('rem-date').value || today;
   }
   document.getElementById('add-rem').onclick = function () {
     var t = document.getElementById('rem-text').value.trim(), d = document.getElementById('rem-date').value, tm = document.getElementById('rem-time').value;
     if (!t || !d || !tm) { document.getElementById('rem-text').focus(); return; }
+    syncReminders();
     data.reminders.push({ id: Date.now(), text: t, date: d, time: tm }); save(data);
     document.getElementById('rem-text').value = ''; document.getElementById('rem-time').value = '';
     askNotify();
@@ -832,7 +834,20 @@
     }
     showRemToast(r); chime();
   }
+  // The stand-alone reminders window (reminders.html) shares this list.
+  document.getElementById('rem-window-btn').onclick = function () {
+    var w = window.open('reminders.html', 'arise-reminders', 'popup,width=420,height=680');
+    if (!w) location.href = 'reminders.html';
+  };
+  function syncReminders() { var fresh = load(); if (fresh && fresh.reminders) data.reminders = fresh.reminders; }
+  window.addEventListener('storage', function (e) {
+    if (e.key !== STORE) return;
+    syncReminders();
+    if (document.getElementById('screen-reminders').classList.contains('active')) renderReminders();
+    renderDay();
+  });
   function checkReminders() {
+    syncReminders(); // the other window may have added one or already popped it
     var now = Date.now(), changed = false;
     data.reminders.forEach(function (r) {
       var at = new Date(r.date + 'T' + r.time).getTime();
