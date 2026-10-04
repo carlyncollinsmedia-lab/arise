@@ -12,6 +12,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const MODEL = "claude-opus-5"; // Model choice is an open owner decision (HANDOFF section 8).
 const TIMEOUT_MS = 8000; // PRD section 6: fallback must appear within eight seconds.
 const DAILY_CAP = 300; // Cost control: Claude calls per day across everyone; after that, reviewed fallbacks.
+const PER_USER_PER_DAY = 2; // Plus: the morning pep talk plus one rewrite.
 
 const MOODS = ["rough", "low", "okay", "good", "great"] as const;
 type Mood = (typeof MOODS)[number];
@@ -84,15 +85,26 @@ function fallback(mood: Mood, reason: string) {
   return json({ source: "fallback", mood, affirmation: FALLBACKS[mood], reason });
 }
 
-// Is the caller a signed-in Plus subscriber? The public key alone never is.
-async function callerIsPlus(req: Request): Promise<boolean> {
+// Returns the caller's user id if they are a signed-in Plus subscriber; the public key alone never is.
+async function plusUserId(req: Request): Promise<string | null> {
   const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
-  if (!token) return false;
+  if (!token) return null;
   try {
     const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const { data: { user } } = await admin.auth.getUser(token);
-    if (!user) return false;
+    if (!user) return null;
     const { data } = await admin.rpc("is_plus", { uid: user.id });
+    return data === true ? user.id : null;
+  } catch {
+    return null;
+  }
+}
+
+// Counts this call against the person's daily allowance (pep talk + one rewrite).
+async function claimUserCall(uid: string): Promise<boolean> {
+  try {
+    const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const { data } = await admin.rpc("claim_user_ai_call", { uid, per_day: PER_USER_PER_DAY });
     return data === true;
   } catch {
     return false;
@@ -144,9 +156,11 @@ Deno.serve(async (req) => {
 
   const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
   if (!apiKey) return fallback(mood, "no_key");
-  if (!(await callerIsPlus(req))) {
+  const uid = await plusUserId(req);
+  if (!uid) {
     return json({ source: "free", mood, affirmation: FALLBACKS[mood] });
   }
+  if (!(await claimUserCall(uid))) return fallback(mood, "user_daily_limit");
   if (!(await claimAiCall())) return fallback(mood, "daily_cap");
 
   const client = new Anthropic({ apiKey, maxRetries: 0, timeout: TIMEOUT_MS });

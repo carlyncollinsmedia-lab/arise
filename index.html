@@ -770,9 +770,14 @@
       if (data.settings.speak) speakAff();
       return;
     }
-    // Real AI: ask the generate-affirmation function (Claude), with the PRD's 8-second limit.
     showWriting(); show('aff');
+    askClaude(e, false);
+  };
+  // Real AI: ask the generate-affirmation function (Claude), with the PRD's 8-second limit.
+  // A rewrite (Plus: one a day) keeps the current words if the new request fails.
+  function askClaude(e, rewrite) {
     var ctl = new AbortController(), timer = setTimeout(function () { ctl.abort(); }, 8000);
+    var before = { affirmation: e.affirmation, status: e.status };
     fetch(window.ARISE_CONFIG.affirmationUrl, {
       method: 'POST', signal: ctl.signal,
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (plus.token || window.ARISE_CONFIG.anonKey) },
@@ -780,14 +785,19 @@
     }).then(function (r) { return r.json(); }).then(function (res) {
       if (res.source === 'claude') { e.affirmation = res.affirmation; e.status = 'claude'; }
       else if (res.source === 'needs_support') { e.status = 'crisis'; e.affirmation = ''; }
+      else if (rewrite) { e.affirmation = before.affirmation; e.status = before.status; plusFlashAff = "Couldn't write new words right now, so here are this morning's again."; }
       else if (res.source === 'free') { generate(e); }
       else { e.affirmation = res.affirmation || FALLBACK; e.status = 'fallback'; }
       save(data);
-    }).catch(function () { generate(e); }).then(function () {
+    }).catch(function () {
+      if (rewrite) { e.affirmation = before.affirmation; e.status = before.status; plusFlashAff = "Couldn't write new words right now, so here are this morning's again."; }
+      else generate(e);
+    }).then(function () {
       clearTimeout(timer); showAff(e);
       if (data.settings.speak) speakAff();
     });
-  };
+  }
+  var plusFlashAff = '';
   function showWriting() {
     var e = entryToday();
     renderMoodChip('aff-mood-chip', e);
@@ -823,6 +833,16 @@
       bubble.innerHTML = '<p id="aff-text"></p><span class="tag" id="aff-tag"></span>';
       document.getElementById('aff-text').textContent = e.affirmation;
       document.getElementById('aff-tag').textContent = e.status === 'claude' ? 'Written for you this morning' : e.status === 'fallback' ? 'General message' : 'Reviewed affirmation for your mood';
+      if (e.status === 'claude' && plus.active && !e.rewritten) {
+        var rw = document.createElement('button');
+        rw.className = 'upsell'; rw.type = 'button'; rw.textContent = 'Not quite right? Write new words (1 left today)';
+        rw.onclick = function () {
+          e.rewritten = true; save(data);
+          showWriting(); askClaude(e, true);
+        };
+        bubble.appendChild(rw);
+      }
+      if (plusFlashAff) { var fl = document.createElement('p'); fl.className = 'tag'; fl.textContent = plusFlashAff; bubble.appendChild(fl); plusFlashAff = ''; }
       if (e.status !== 'claude' && !plus.active) {
         var up = document.createElement('button');
         up.className = 'upsell'; up.type = 'button'; up.textContent = 'Want words written just for you? See Arise Plus';
