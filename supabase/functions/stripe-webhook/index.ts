@@ -6,7 +6,6 @@
 import Stripe from "npm:stripe@17";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "");
 const cryptoProvider = Stripe.createSubtleCryptoProvider();
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
@@ -28,9 +27,12 @@ async function saveSubscription(s: Stripe.Subscription, fallbackUserId?: string 
 }
 
 Deno.serve(async (req) => {
+  const key = Deno.env.get("STRIPE_SECRET_KEY");
   const secret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+  if (!key || !secret) return new Response("Payments not set up", { status: 503 });
   const signature = req.headers.get("Stripe-Signature");
-  if (!secret || !signature) return new Response("Not set up or not signed", { status: 400 });
+  if (!signature) return new Response("Not signed", { status: 400 });
+  const stripe = new Stripe(key);
 
   const body = await req.text();
   let event: Stripe.Event;
