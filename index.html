@@ -589,7 +589,7 @@
         <button class="choice" data-quick="weekends">Weekends</button>
       </div>
       <div class="days" id="alarm-days" role="group" aria-label="Days"></div>
-      <button class="toggle-row" id="alarm-on" role="switch" aria-checked="true"><span class="txt">Alarm on<small>Rings even when your phone is locked.</small></span><span class="switch" aria-hidden="true"></span></button>
+      <button class="toggle-row" id="alarm-on" role="switch" aria-checked="true"><span class="txt">Alarm on<small>While Arise is open on this device it plays a wake-up chime. The full alarm that rings on a locked phone is in the Arise phone app.</small></span><span class="switch" aria-hidden="true"></span></button>
       <button class="toggle-row" id="alarm-speak" role="switch" aria-checked="false"><span class="txt">Read my pep talk out loud<small>Helpful if you can't see the screen well. You can change this in Settings.</small></span><span class="switch" aria-hidden="true"></span></button>
       <button class="btn btn-primary" id="save-alarm" style="justify-content:center; margin-top:16px"><span class="main" style="font-size:18px">Save alarm</span></button>
     </div>
@@ -1059,8 +1059,22 @@
     });
     if (changed) { save(data); if (document.getElementById('screen-reminders').classList.contains('active')) renderReminders(); renderDay(); }
   }
-  setInterval(checkReminders, 20000);
-  document.addEventListener('visibilitychange', function () { if (!document.hidden) checkReminders(); });
+  // Web wake-up chime: a website can't ring a locked phone, but while Arise is open
+  // it greets you at your alarm time with a chime, a banner and a pop-up if allowed.
+  function checkAlarm() {
+    var a = data.settings && data.settings.alarm;
+    if (!a || !a.on) return;
+    var now = new Date(), hm = a.time.split(':'), at = new Date(now); at.setHours(+hm[0], +hm[1], 0, 0);
+    if (a.days.indexOf(now.getDay()) < 0 || now < at || now - at > 15 * 60e3) return; // within 15 min of alarm time
+    var day = iso(now); // not 'today': the tab may have stayed open overnight
+    if (data.settings.lastAlarmRang === day) return;
+    data.settings.lastAlarmRang = day; save(data);
+    var nm = (data.settings.name || '').trim();
+    fireReminder({ id: 'alarm-' + day, text: 'Good morning' + (nm ? ', ' + nm : '') + '. Time to rise.' });
+    chime(); setTimeout(chime, 1600);
+  }
+  setInterval(function () { checkReminders(); checkAlarm(); }, 20000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) { checkReminders(); checkAlarm(); } });
 
   // ---------- History ----------
   function label(k) { var m = MOODS.find(function (x) { return x.key === k; }); return m ? m.label : '—'; }
