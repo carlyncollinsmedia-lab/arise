@@ -13,7 +13,7 @@ set -e
 cd "$(dirname "$0")/.."
 rm -rf dist
 mkdir -p dist/assets/companions
-cp index.html reminders.html manifest.webmanifest sw.js dist/
+cp index.html reminders.html privacy.html terms.html manifest.webmanifest sw.js dist/
 cp -R assets/icons dist/assets/
 mkdir -p dist/assets/support && cp assets/support/lines.json dist/assets/support/
 cp -R assets/companions/web dist/assets/companions/

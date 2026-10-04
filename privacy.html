@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arise · Privacy</title>
+<meta name="description" content="How Arise handles your information: what stays on your device, what is shared and why.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script>try{var t=(JSON.parse(localStorage.getItem('arise-prototype-v1'))||{}).settings;if(t&&t.theme&&t.theme!=='night')document.documentElement.dataset.theme=t.theme;}catch(e){}</script>
+<style>
+  :root{
+    --bg:#0B1530; --top:#3A5A8C; --card:#13224A; --text:#F5F7FC; --muted:#C3CCE0;
+    --accent:#F9C45A; --line:rgba(255,255,255,.16);
+  }
+  html[data-theme="plum"]{ --bg:#1C1030; --card:#2B1A45; --top:#5A3A7E; --text:#F8F3FC; --muted:#D4C6E7; }
+  html[data-theme="forest"]{ --bg:#0D1F18; --card:#163228; --top:#2F5A48; --text:#F2F8F4; --muted:#C3DACE; --accent:#F2B84B; }
+  html[data-theme="sand"]{ --bg:#F7F0E5; --card:#FFFFFF; --top:#F1D3AE; --text:#2A1E14; --muted:#6B5A48; --accent:#B4531F; --line:rgba(60,40,20,.16); }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; min-height:100vh; color:var(--text);
+    background:var(--bg) linear-gradient(180deg,var(--top) 0%,var(--bg) 420px) no-repeat;
+    font:400 17px/1.65 "Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+  a{color:var(--accent);text-underline-offset:2px}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+  .back{
+    display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;
+    background:var(--card);border:1px solid var(--line);color:var(--text);
+    text-decoration:none;font-weight:700;font-size:15px;
+  }
+  .back:hover{border-color:var(--accent)}
+  .draft{
+    margin:20px 0 0;padding:10px 14px;border:1px dashed var(--accent);border-radius:12px;
+    font-size:14px;color:var(--muted);background:var(--card);
+  }
+  .draft strong{color:var(--accent)}
+  h1{font-weight:800;font-size:34px;line-height:1.2;margin:28px 0 4px}
+  .meta{color:var(--muted);margin:0 0 20px;font-size:15px}
+  h2{font-weight:800;font-size:21px;line-height:1.3;margin:34px 0 8px}
+  p,ul{margin:0 0 14px}
+  ul{padding-left:22px}
+  li{margin:0 0 6px}
+  .muted{color:var(--muted)}
+  .short{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:0 0 8px}
+  .short h2{margin-top:0}
+  .short p{margin:0}
+  table{width:100%;border-collapse:collapse;margin:6px 0 16px;font-size:15.5px}
+  th,td{text-align:left;vertical-align:top;padding:10px 8px;border-bottom:1px solid var(--line)}
+  th{font-weight:800;color:var(--muted);font-size:14px}
+  .tablewrap{overflow-x:auto}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:15px}
+  footer nav{display:flex;flex-wrap:wrap;gap:8px 20px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">‹ Back to Arise</a>
+
+  <p class="draft"><strong>Draft</strong> — to be reviewed by a lawyer before Arise sells to the public.</p>
+
+  <h1>Privacy Policy</h1>
+  <p class="meta">Effective date: 3 October 2026</p>
+
+  <section class="short">
+    <h2>In short</h2>
+    <p>Your morning check-ins, notes, history, reminders, name, city and settings stay on your own device. We do not keep them on our servers. We send your city to a weather service so we can show the forecast. If you buy Arise Plus, we keep your email address and your subscription details, and Stripe handles your payment. If you ask for a Plus pep talk, your mood and optional note go to an AI service to write it, and we do not store that note. We show no ads, we do not sell your data, and we do not use tracking cookies or analytics.</p>
+  </section>
+
+  <h2>Who we are</h2>
+  <p>Arise is a morning companion web app (<a href="https://arise-morning.netlify.app">arise-morning.netlify.app</a>), with an iPhone app in development. Arise is owned and run by Nezeville Media Inc., a company in Alberta, Canada. Nuuch Systems runs the technology for Arise. When this policy says “we” or “us”, it means Nezeville Media Inc.</p>
+  <p>Questions about privacy? Email <a href="mailto:hello@nuuchsystems.com">hello@nuuchsystems.com</a>.</p>
+
+  <h2>What stays on your device</h2>
+  <p>These things are saved only in your own browser or phone (in something called “local storage”). They are <strong>not</strong> sent to or stored on our servers:</p>
+  <ul>
+    <li>your morning mood check-ins and any short notes you write</li>
+    <li>your history</li>
+    <li>your reminders</li>
+    <li>your name and city</li>
+    <li>your settings, such as colour theme, companion avatar and (for Plus) your chosen faith for faith quotes</li>
+  </ul>
+  <p>Because this information lives only on your device, we cannot see it, and we cannot get it back for you. If you clear your browser data, delete the app, or switch to another device, it will be gone.</p>
+
+  <h2>What we share, and why</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Service</th><th>What it gets</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Open-Meteo (<a href="https://open-meteo.com">open-meteo.com</a>)</td><td>The city name or map coordinates you chose</td><td>To get your weather forecast and outfit advice. No account is needed.</td></tr>
+      <tr><td>Supabase (our server, in Canada)</td><td>Plus only: your email address, sign-in records, subscription status, Stripe customer ID and renewal date</td><td>To sign you in and know that you have Plus</td></tr>
+      <tr><td>Stripe</td><td>Plus only: your payment details, which you enter on Stripe’s own pages</td><td>To take payment and manage your subscription</td></tr>
+      <tr><td>Anthropic (Claude AI)</td><td>Plus pep talks only: your mood and your optional note</td><td>To write your pep talk</td></tr>
+      <tr><td>Netlify</td><td>Normal web traffic, like any website host</td><td>To deliver the Arise website to your browser</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>We do not sell, rent or trade your information. We do not share it with advertisers.</p>
+
+  <h2>Arise Plus: your account and payments</h2>
+  <p>To use Arise Plus you sign in with a link we email to you. Our sign-in service (Supabase Auth) stores your email address and records of when you signed in.</p>
+  <p>Stripe processes your payments. <strong>We never see your card number.</strong> We keep only:</p>
+  <ul>
+    <li>whether your subscription is active</li>
+    <li>your Stripe customer ID (a reference number)</li>
+    <li>your renewal date</li>
+  </ul>
+  <p>Stripe handles your payment information under its own privacy policy at <a href="https://stripe.com/privacy">stripe.com/privacy</a>.</p>
+
+  <h2>Plus pep talks and AI</h2>
+  <p>When you ask for a Plus pep talk, your mood and your optional note (up to 280 characters) are sent through our server to Anthropic’s Claude AI, which writes the pep talk.</p>
+  <ul>
+    <li>We do <strong>not</strong> store your note on our servers.</li>
+    <li>We do <strong>not</strong> keep your note text in our logs. We only log how much AI text was used (token counts).</li>
+    <li>Anthropic handles the request under its commercial terms. By default, it does not use this kind of data to train its AI models.</li>
+    <li>You can leave the note blank. Then only your mood is sent.</li>
+  </ul>
+  <p>Please do not put private details, like health information or other people’s names, in your note.</p>
+
+  <h2>Faith quotes</h2>
+  <p>Faith quotes are an optional Plus feature. The faith you choose is a setting saved only on your device. It is not sent to the AI, and it is never used for advertising.</p>
+
+  <h2>No ads, no tracking</h2>
+  <p>Arise has no ads. We do not use tracking cookies, and we do not use analytics tools in the app. We use your browser’s storage only to make the app work, for example to remember your check-ins and settings, and to keep you signed in to Plus.</p>
+
+  <h2>Where your data is kept</h2>
+  <p>Our account and subscription data is stored with Supabase on servers in Canada (the ca-central-1 region). Stripe, Anthropic, Netlify and Open-Meteo may handle data in other countries, including the United States, under their own safeguards. When data is in another country, the laws of that country may apply to it.</p>
+
+  <h2>How long we keep it</h2>
+  <p>We keep your Plus account details (email, sign-in records and subscription details) while you have an account. If you ask us to delete your account, we will delete these details, except for records we must keep by law, such as tax and payment records. Information on your device stays there until you delete it.</p>
+
+  <h2>Your rights</h2>
+  <p>Arise follows Canadian privacy law, mainly the federal <em>Personal Information Protection and Electronic Documents Act</em> (PIPEDA) and Alberta’s <em>Personal Information Protection Act</em> (PIPA). You have the right to:</p>
+  <ul>
+    <li><strong>see</strong> the personal information we hold about you</li>
+    <li><strong>correct</strong> it if it is wrong</li>
+    <li><strong>ask us to delete</strong> it</li>
+    <li><strong>withdraw your consent</strong>, for example by cancelling Plus and asking us to delete your account</li>
+  </ul>
+  <p>To do any of these, email <a href="mailto:hello@nuuchsystems.com">hello@nuuchsystems.com</a>. We will reply within 30 days. Remember, most of your Arise information is only on your own device, so you can see or delete it yourself at any time.</p>
+  <p><strong>If you live in the EU or UK:</strong> you also have rights under the GDPR, including the right to access, correct, delete, limit or object to how we use your data, and to get a copy of it in a common format. We use your data to provide the service you asked for (for Plus, to carry out our agreement with you). You can also complain to your local data protection authority.</p>
+  <p>If you are not happy with our answer, you can contact the <a href="https://www.priv.gc.ca">Office of the Privacy Commissioner of Canada</a> or the <a href="https://oipc.ab.ca">Office of the Information and Privacy Commissioner of Alberta</a>.</p>
+
+  <h2>Keeping your data safe</h2>
+  <p>We use secure connections (HTTPS) and trusted service providers. Only the people who run Arise can reach our account records, and only when they need to. No system is perfectly safe, so we keep as little of your data as we can.</p>
+
+  <h2>Children</h2>
+  <p>Arise is for people aged 13 and older. In the EU and UK, you must be 16 or older, or have a parent’s or guardian’s consent. To buy Arise Plus, you must be an adult where you live, or have a parent’s or guardian’s permission. If you think a child has given us personal information, email us and we will delete it.</p>
+
+  <h2>Not a medical or crisis service</h2>
+  <p>Arise is not a medical or mental-health service, and it is not for emergencies. If you are in crisis, please use the crisis lines shown in the app, or call your local emergency number.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>If we change this policy, we will update the date at the top. If the change is important, we will tell you in the app or by email (for Plus users) before it takes effect.</p>
+
+  <h2>Contact us</h2>
+  <p>Nezeville Media Inc., Alberta, Canada<br>
+  Email: <a href="mailto:hello@nuuchsystems.com">hello@nuuchsystems.com</a></p>
+
+  <footer>
+    <nav>
+      <a href="terms.html">Terms of Use</a>
+      <a href="index.html">Back to Arise</a>
+    </nav>
+    <p>© 2026 Nezeville Media Inc.</p>
+  </footer>
+</div>
+</body>
+</html>
