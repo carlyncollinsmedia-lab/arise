@@ -15,7 +15,7 @@ rm -rf dist
 mkdir -p dist/assets/companions
 cp index.html reminders.html privacy.html terms.html manifest.webmanifest sw.js dist/
 cp -R assets/icons dist/assets/
-mkdir -p dist/assets/support && cp assets/support/lines.json dist/assets/support/
+mkdir -p dist/assets/support dist/assets/faith && cp assets/support/lines.json dist/assets/support/ && cp assets/faith/quotes.json dist/assets/faith/
 cp -R assets/companions/web dist/assets/companions/
 find dist -name '._*' -delete
 

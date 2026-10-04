@@ -252,6 +252,14 @@
     .wx-grid .s { font-size:13px; color:var(--ink-300); margin-top:2px; }
     .wx-empty { text-align:center; color:var(--ink-300); padding:40px 10px; }
 
+    /* Faith quote card (Plus) */
+    .faith-card { margin-top:14px; background:var(--night-800); border:1px solid var(--line); border-left:4px solid var(--sun-500); border-radius:var(--radius-md); padding:14px 16px; }
+    .faith-card .fq { font-size:18px; font-weight:700; line-height:1.45; margin:0; }
+    .faith-card .fr { font-size:14px; color:var(--sun-500); font-weight:800; margin-top:8px; }
+    .faith-card .ft { font-size:12px; color:var(--ink-500); margin-top:2px; }
+    .faith-card .fx { display:flex; gap:14px; margin-top:8px; }
+    .faith-card .fx button { background:none; border:0; padding:0; color:var(--ink-300); font:inherit; font-size:13px; font-weight:700; cursor:pointer; text-decoration:underline; }
+
     /* Arise Plus */
     .plus-card { background:linear-gradient(160deg,var(--night-700),var(--night-800)); border:1.5px solid rgba(249,196,90,.45); border-radius:var(--radius-lg); padding:22px 20px; margin-top:8px; }
     .plus-card .price { font-size:44px; font-weight:900; line-height:1; }
@@ -505,6 +513,7 @@
         <ul>
           <li>A fresh pep talk each morning, written by Claude for your mood and your note</li>
           <li>One rewrite a day if the words don't land</li>
+          <li>Optional faith quote of the day: Buddhist, Christian, Hindu, Jewish or Muslim, exact words from trusted translations</li>
           <li>Everything in free Arise stays free</li>
         </ul>
       </div>
@@ -563,6 +572,17 @@
         <button class="choice" data-theme-pick="forest"><span class="theme-swatch" style="background:linear-gradient(180deg,#2F5A48,#0D1F18)"></span>Forest morning</button>
         <button class="choice" data-theme-pick="sand"><span class="theme-swatch" style="background:linear-gradient(180deg,#F1D3AE,#F7F0E5)"></span>Warm sand</button>
       </div>
+      <label class="choice-label" for="faith-select">Faith quote of the day <span style="text-transform:none;letter-spacing:0;color:var(--ink-300)">· Arise Plus</span></label>
+      <select id="faith-select" style="width:100%;font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--night-800);color:var(--ink-100)">
+        <option value="">None</option>
+        <option value="buddhist">Buddhist (Dhammapada)</option>
+        <option value="christian">Christian (Bible)</option>
+        <option value="hindu">Hindu (Bhagavad Gita)</option>
+        <option value="jewish">Jewish (Tanakh)</option>
+        <option value="muslim">Muslim (Qur'an)</option>
+        <option value="sikh" disabled>Sikh (Guru Granth Sahib) · coming soon</option>
+      </select>
+      <p style="font-size:13px;margin:6px 0 0" id="faith-note">An encouraging quote from your own faith after each morning pep talk. Exact words from a fixed, reviewed library; the AI never writes or changes them. Your choice stays on this device.</p>
       <div class="choice-label">Wake-up alarm</div>
       <button class="toggle-row" id="open-alarm-from-settings" style="margin-top:0"><span class="txt" id="settings-alarm-line">6:00 AM</span><span class="edit" style="color:var(--sun-500);font-weight:800">Change</span></button>
       <div class="choice-label">Listening</div>
@@ -843,6 +863,43 @@
     e.affirmation = pool[pick]; e.status = 'sample';
     save(data);
   }
+  // ---------- Faith quotes (Plus; assets/faith/quotes.json) ----------
+  // Exact text only, never written or changed by the AI. Never on a crisis morning.
+  // Same quote all day; a hidden ('reported') quote is never shown again on this device.
+  var FAITH = null;
+  fetch('assets/faith/quotes.json').then(function (r) { return r.json(); }).then(function (d) { FAITH = d; }).catch(function () {});
+  function faithQuote(e) {
+    var f = data.settings.faith;
+    if (!f || !FAITH || !FAITH.faiths[f] || FAITH.faiths[f].licence_status !== 'public_domain' || !e || e.status === 'crisis') return null;
+    var hidden = data.settings.hiddenQuotes || [];
+    var pool = FAITH.faiths[f].quotes.filter(function (q) { return hidden.indexOf(q.id) < 0 && q.moods.indexOf(e.morning) >= 0; });
+    if (!pool.length) pool = FAITH.faiths[f].quotes.filter(function (q) { return hidden.indexOf(q.id) < 0; });
+    if (!pool.length) return null;
+    var seed = 0; (e.date + f).split('').forEach(function (ch) { seed = (seed * 31 + ch.charCodeAt(0)) >>> 0; });
+    return { q: pool[seed % pool.length], translation: FAITH.faiths[f].translation };
+  }
+  function renderFaith(e) {
+    var old = document.getElementById('faith-card'); if (old) old.remove();
+    if (!plus.active) return;
+    var fq = faithQuote(e); if (!fq) return;
+    var card = document.createElement('div');
+    card.className = 'faith-card'; card.id = 'faith-card';
+    card.innerHTML = '<p class="fq"></p><div class="fr"></div><div class="ft"></div><div class="fx"><button type="button" id="faith-read">Read it to me</button><button type="button" id="faith-hide">Don\'t show this quote again</button></div>';
+    var text = fq.q.text.replace(/\s*\|\|[^|]*\|\|\s*/g, ' ').trim(); // hide Sikh line markers like ||1||
+    card.querySelector('.fq').textContent = '\u201C' + text + '\u201D';
+    card.querySelector('.fr').textContent = fq.q.ref;
+    card.querySelector('.ft').textContent = fq.translation;
+    card.querySelector('#faith-read').onclick = function () {
+      try { speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(text + '. ' + fq.q.ref)); } catch (x) {}
+    };
+    card.querySelector('#faith-hide').onclick = function () {
+      data.settings.hiddenQuotes = (data.settings.hiddenQuotes || []).concat(fq.q.id); save(data); renderFaith(e);
+    };
+    document.getElementById('aff-bubble').closest('.aff-wrap').insertAdjacentElement('afterend', card);
+  }
+  var faithSel = document.getElementById('faith-select');
+  faithSel.onchange = function () { data.settings.faith = faithSel.value; save(data); };
+
   function showAff(e) {
     var m = MOODS.find(function (x) { return x.key === e.morning; });
     renderMoodChip('aff-mood-chip', e);
@@ -876,6 +933,8 @@
       }
     }
   }
+  var _showAff = showAff;
+  showAff = function (e) { _showAff(e); renderFaith(e); };
   document.getElementById('today-btn').onclick = function () { show('day'); };
 
   // ---------- Mood chip: see and change today's mood ----------
@@ -1577,6 +1636,7 @@
     b.onclick = function () { data.settings.theme = b.dataset.themePick; save(data); applyTheme(); };
   });
   applyTheme();
+  faithSel.value = data.settings.faith || '';
   var settingsName = document.getElementById('settings-name');
   settingsName.value = data.settings.name || '';
   settingsName.addEventListener('input', function () { data.settings.name = settingsName.value.trim().slice(0, 40); save(data); renderHome(); });

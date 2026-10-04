@@ -1,0 +1,1092 @@
+{
+  "version": 1,
+  "generated": "2026-10-03",
+  "review_status": "draft — every quote must be checked by a person of that faith before launch",
+  "faiths": {
+    "buddhist": {
+      "label": "Buddhist",
+      "translation": "Dhammapada, tr. F. Max Müller (Sacred Books of the East vol. X, 1881)",
+      "licence": "Public domain (published 1881; translator d. 1900)",
+      "licence_status": "public_domain",
+      "source_url": "https://www.gutenberg.org/ebooks/2017",
+      "notes": "Text copied from the Project Gutenberg transcription (#2017), which drops diacritics (e.g. Muller, Nirvana). Refs are verse numbers.",
+      "quotes": [
+        {
+          "id": "bud-001",
+          "text": "All that we are is the result of what we have thought: it is founded on our thoughts, it is made up of our thoughts. If a man speaks or acts with a pure thought, happiness follows him, like a shadow that never leaves him.",
+          "ref": "Dhammapada 2",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-002",
+          "text": "For hatred does not cease by hatred at any time: hatred ceases by love, this is an old rule.",
+          "ref": "Dhammapada 5",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-003",
+          "text": "By rousing himself, by earnestness, by restraint and control, the wise man may make for himself an island which no flood can overwhelm.",
+          "ref": "Dhammapada 25",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-004",
+          "text": "It is good to tame the mind, which is difficult to hold in and flighty, rushing wherever it listeth; a tamed mind brings happiness.",
+          "ref": "Dhammapada 35",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-005",
+          "text": "Well-makers lead the water (wherever they like); fletchers bend the arrow; carpenters bend a log of wood; wise people fashion themselves.",
+          "ref": "Dhammapada 80",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-006",
+          "text": "As a solid rock is not shaken by the wind, wise people falter not amidst blame and praise.",
+          "ref": "Dhammapada 81",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-007",
+          "text": "Wise people, after they have listened to the laws, become serene, like a deep, smooth, and still lake.",
+          "ref": "Dhammapada 82",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-008",
+          "text": "If one man conquer in battle a thousand times thousand men, and if another conquer himself, he is the greatest of conquerors.",
+          "ref": "Dhammapada 103",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-009",
+          "text": "Let no man think lightly of good, saying in his heart, It will not come nigh unto me. Even by the falling of water-drops a water-pot is filled; the wise man becomes full of good, even if he gather it little by little.",
+          "ref": "Dhammapada 122",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-010",
+          "text": "Rouse thyself! do not be idle! Follow the law of virtue! The virtuous rests in bliss in this world and in the next.",
+          "ref": "Dhammapada 168",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-011",
+          "text": "He who formerly was reckless and afterwards became sober, brightens up this world, like the moon when freed from clouds.",
+          "ref": "Dhammapada 172",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-012",
+          "text": "Let us live happily then, not hating those who hate us! among men who hate us let us dwell free from hatred!",
+          "ref": "Dhammapada 197",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-013",
+          "text": "Let us live happily then, though we call nothing our own! We shall be like the bright gods, feeding on happiness!",
+          "ref": "Dhammapada 200",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-014",
+          "text": "Health is the greatest of gifts, contentedness the best riches; trust is the best of relationships, Nirvana the highest happiness.",
+          "ref": "Dhammapada 204",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-015",
+          "text": "Let a man overcome anger by love, let him overcome evil by good; let him overcome the greedy by liberality, the liar by truth!",
+          "ref": "Dhammapada 223",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        },
+        {
+          "id": "bud-016",
+          "text": "Rouse thyself by thyself, examine thyself by thyself, thus self-protected and attentive wilt thou live happily, O Bhikshu!",
+          "ref": "Dhammapada 379",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://www.gutenberg.org/cache/epub/2017/pg2017.txt"
+        }
+      ]
+    },
+    "christian": {
+      "label": "Christian",
+      "translation": "World English Bible",
+      "licence": "Public domain (explicitly dedicated by its publishers; the name \"World English Bible\" is a trademark)",
+      "licence_status": "public_domain",
+      "source_url": "https://ebible.org/web/",
+      "notes": "Text copied from the eBible.org engwebp verse-per-line file (WEB, Protestant edition, uses LORD). Verified exact from the downloaded file.",
+      "quotes": [
+        {
+          "id": "chr-001",
+          "text": "I can do all things through Christ who strengthens me.",
+          "ref": "Philippians 4:13",
+          "moods": [
+            "rough",
+            "low",
+            "okay"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-002",
+          "text": "Don’t you be afraid, for I am with you. Don’t be dismayed, for I am your God. I will strengthen you. Yes, I will help you. Yes, I will uphold you with the right hand of my righteousness.",
+          "ref": "Isaiah 41:10",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-003",
+          "text": "They are new every morning. Great is your faithfulness.",
+          "ref": "Lamentations 3:23",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-004",
+          "text": "Peace I leave with you. My peace I give to you; not as the world gives, I give to you. Don’t let your heart be troubled, neither let it be fearful.",
+          "ref": "John 14:27",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-005",
+          "text": "The LORD is near to those who have a broken heart, and saves those who have a crushed spirit.",
+          "ref": "Psalm 34:18",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-006",
+          "text": "He heals the broken in heart, and binds up their wounds.",
+          "ref": "Psalm 147:3",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-007",
+          "text": "but those who wait for the LORD will renew their strength. They will mount up with wings like eagles. They will run, and not be weary. They will walk, and not faint.",
+          "ref": "Isaiah 40:31",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-008",
+          "text": "This is the day that the LORD has made. We will rejoice and be glad in it!",
+          "ref": "Psalm 118:24",
+          "moods": [
+            "okay",
+            "good",
+            "great"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-009",
+          "text": "In everything give thanks, for this is the will of God in Christ Jesus toward you.",
+          "ref": "1 Thessalonians 5:18",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-010",
+          "text": "Now may the God of hope fill you with all joy and peace in believing, that you may abound in hope in the power of the Holy Spirit.",
+          "ref": "Romans 15:13",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-011",
+          "text": "Cast your burden on the LORD and he will sustain you. He will never allow the righteous to be moved.",
+          "ref": "Psalm 55:22",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-012",
+          "text": "You will show me the path of life. In your presence is fullness of joy. In your right hand there are pleasures forever more.",
+          "ref": "Psalm 16:11",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-013",
+          "text": "The LORD is my strength and my shield. My heart has trusted in him, and I am helped. Therefore my heart greatly rejoices. With my song I will thank him.",
+          "ref": "Psalm 28:7",
+          "moods": [
+            "okay",
+            "good",
+            "great"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-014",
+          "text": "Be strong, and let your heart take courage, all you who hope in the LORD.",
+          "ref": "Psalm 31:24",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-015",
+          "text": "The LORD is my strength and song. He has become my salvation.",
+          "ref": "Psalm 118:14",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-016",
+          "text": "You will keep whoever’s mind is steadfast in perfect peace, because he trusts in you.",
+          "ref": "Isaiah 26:3",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-017",
+          "text": "And the peace of God, which surpasses all understanding, will guard your hearts and your thoughts in Christ Jesus.",
+          "ref": "Philippians 4:7",
+          "moods": [
+            "rough",
+            "low",
+            "okay"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        },
+        {
+          "id": "chr-018",
+          "text": "Give thanks to the LORD, for he is good, for his loving kindness endures forever.",
+          "ref": "Psalm 136:1",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://ebible.org/Scriptures/engwebp_vpl.zip"
+        }
+      ]
+    },
+    "hindu": {
+      "label": "Hindu",
+      "translation": "Bhagavad Gita, tr. Annie Besant (4th edition, 1922)",
+      "licence": "Public domain (published 1922, before 1929; translator d. 1933)",
+      "licence_status": "public_domain",
+      "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)",
+      "notes": "Refs are chapter.verse (\"Discourse\" in Besant). Diacritics kept as printed (e.g. Bhârata, Kaunteya).",
+      "quotes": [
+        {
+          "id": "hin-001",
+          "text": "The contacts of matter, O son of Kuntî, giving cold and heat, pleasure and pain, they come and go, impermanent; endure them bravely, O Bhârata.",
+          "ref": "Bhagavad Gita 2.14",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_2"
+        },
+        {
+          "id": "hin-002",
+          "text": "The man whom these torment not, O chief of men, balanced in pain and pleasure, steadfast, he is fitted for immortality.",
+          "ref": "Bhagavad Gita 2.15",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_2"
+        },
+        {
+          "id": "hin-003",
+          "text": "Weapons cleave him not, nor fire burneth him, nor waters wet him, nor wind drieth him away.",
+          "ref": "Bhagavad Gita 2.23",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_2"
+        },
+        {
+          "id": "hin-004",
+          "text": "Thy business is with the action only, never with its fruits; so let not the fruit of action be thy motive, nor be thou to inaction attached.",
+          "ref": "Bhagavad Gita 2.47",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_2"
+        },
+        {
+          "id": "hin-005",
+          "text": "But the disciplined self, moving among sense-objects with senses free from attraction and repulsion, mastered by the Self, goeth to peace.",
+          "ref": "Bhagavad Gita 2.64",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_2"
+        },
+        {
+          "id": "hin-006",
+          "text": "He attaineth Peace, into whom all desires flow as rivers flow into the ocean, which is filled with water, but remaineth unmoved—not he who desireth desires.",
+          "ref": "Bhagavad Gita 2.70",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_2"
+        },
+        {
+          "id": "hin-007",
+          "text": "Therefore, without attachment, constantly perform action which is duty, for, by performing action without attachment, man verily reacheth the Supreme.",
+          "ref": "Bhagavad Gita 3.19",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_3"
+        },
+        {
+          "id": "hin-008",
+          "text": "Verily there is no purifier in this world like wisdom; he that is perfected in yoga finds it in the Self in due season.",
+          "ref": "Bhagavad Gita 4.38",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_4"
+        },
+        {
+          "id": "hin-009",
+          "text": "He, whose self is unattached to external contacts and findeth joy in the Self, having the self harmonised with the Eternal by yoga, enjoys imperishable bliss.",
+          "ref": "Bhagavad Gita 5.21",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_5"
+        },
+        {
+          "id": "hin-010",
+          "text": "The higher Self of him who is Self-controlled and peaceful is uniform in cold and heat, pleasure and pain, as well as in honour and dishonour.",
+          "ref": "Bhagavad Gita 6.7",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_6"
+        },
+        {
+          "id": "hin-011",
+          "text": "As a lamp in a windless place flickereth not, to such is likened the Yogî of subdued thought, absorbed in the yoga of the Self.",
+          "ref": "Bhagavad Gita 6.19",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_6"
+        },
+        {
+          "id": "hin-012",
+          "text": "He who seeth Me everywhere, and seeth everything in Me, of him will I never lose hold, and he shall never lose hold of Me.",
+          "ref": "Bhagavad Gita 6.30",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_6"
+        },
+        {
+          "id": "hin-013",
+          "text": "To those men who worship Me alone thinking of no other, to those ever harmonious, I bring full security.",
+          "ref": "Bhagavad Gita 9.22",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_9"
+        },
+        {
+          "id": "hin-014",
+          "text": "He who offereth to Me with devotion a leaf, a flower, a fruit, water, that I accept from the striving self, offered as it is with devotion.",
+          "ref": "Bhagavad Gita 9.26",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_9"
+        },
+        {
+          "id": "hin-015",
+          "text": "Whatsoever thou doest, whatsoever thou eatest, whatsoever thou offerest, whatsoever thou givest, whatsoever thou doest of austerity, O Kaunteya, do thou that as an offering unto Me.",
+          "ref": "Bhagavad Gita 9.27",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_9"
+        },
+        {
+          "id": "hin-016",
+          "text": "He from whom the world doth not shrink away, who doth not shrink away from the world, freed from the anxieties of joy, anger, and fear, he is dear to me.",
+          "ref": "Bhagavad Gita 12.15",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://en.wikisource.org/wiki/Bhagavad-Gita_(Besant_4th)/Discourse_12"
+        }
+      ]
+    },
+    "jewish": {
+      "label": "Jewish",
+      "translation": "The Holy Scriptures: A New Translation (JPS 1917)",
+      "licence": "Public domain",
+      "licence_status": "public_domain",
+      "source_url": "https://www.sefaria.org/texts/Tanakh",
+      "notes": "Text copied from Sefaria's JPS 1917 version (licence shown there: Public Domain). Psalm verse numbers follow the Hebrew/JPS numbering, which is often one higher than Christian Bibles (e.g. Psalm 46:2 here = Psalm 46:1 in KJV/WEB).",
+      "quotes": [
+        {
+          "id": "jew-001",
+          "text": "Yea, though I walk through the valley of the shadow of death, I will fear no evil, for Thou art with me; Thy rod and Thy staff, they comfort me.",
+          "ref": "Psalm 23:4",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.23.4?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-002",
+          "text": "Surely goodness and mercy shall follow me all the days of my life; And I shall dwell in the house of the LORD for ever.",
+          "ref": "Psalm 23:6",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.23.6?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-003",
+          "text": "Wait on the LORD; Be strong, and let thy heart take courage; Yea, wait thou for the LORD.",
+          "ref": "Psalm 27:14",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.27.14?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-004",
+          "text": "My help cometh from the LORD, Who made heaven and earth.",
+          "ref": "Psalm 121:2",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.121.2?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-005",
+          "text": "The LORD shall guard thy going out and thy coming in, From this time forth and for ever.",
+          "ref": "Psalm 121:8",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.121.8?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-006",
+          "text": "He giveth power to the faint; And to him that hath no might He increaseth strength.",
+          "ref": "Isaiah 40:29",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sefaria.org/Isaiah.40.29?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-007",
+          "text": "But they that wait for the LORD shall renew their strength; They shall mount up with wings as eagles; They shall run, and not be weary; They shall walk, and not faint.",
+          "ref": "Isaiah 40:31",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.sefaria.org/Isaiah.40.31?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-008",
+          "text": "Fear thou not, for I am with thee, Be not dismayed, for I am thy God; I strengthen thee, yea, I help thee; Yea, I uphold thee with My victorious right hand.",
+          "ref": "Isaiah 41:10",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sefaria.org/Isaiah.41.10?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-009",
+          "text": "They are new every morning; Great is Thy faithfulness.",
+          "ref": "Lamentations 3:23",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://www.sefaria.org/Lamentations.3.23?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-010",
+          "text": "The LORD is nigh unto them that are of a broken heart, And saveth such as are of a contrite spirit.",
+          "ref": "Psalm 34:19",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.34.19?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-011",
+          "text": "Who healeth the broken in heart, And bindeth up their wounds.",
+          "ref": "Psalm 147:3",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.147.3?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-012",
+          "text": "Thou makest me to know the path of life; In Thy presence is fulness of joy, In Thy right hand bliss for evermore.",
+          "ref": "Psalm 16:11",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.16.11?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-013",
+          "text": "Be strong, and let your heart take courage, All ye that wait for the LORD.",
+          "ref": "Psalm 31:25",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.31.25?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-014",
+          "text": "God is our refuge and strength, A very present help in trouble.",
+          "ref": "Psalm 46:2",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.46.2?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-015",
+          "text": "Cast thy burden upon the LORD, and He will sustain thee; He will never suffer the righteous to be moved.",
+          "ref": "Psalm 55:23",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.55.23?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-016",
+          "text": "The mind stayed on Thee Thou keepest in perfect peace; Because it trusteth in Thee.",
+          "ref": "Isaiah 26:3",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.sefaria.org/Isaiah.26.3?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-017",
+          "text": "This is the day which the LORD hath made; We will rejoice and be glad in it.",
+          "ref": "Psalm 118:24",
+          "moods": [
+            "okay",
+            "good",
+            "great"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.118.24?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-018",
+          "text": "Serve the LORD with gladness; come before His presence with singing.",
+          "ref": "Psalm 100:2",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.100.2?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        },
+        {
+          "id": "jew-019",
+          "text": "Commit thy way unto the LORD; trust also in Him, and He will bring it to pass.",
+          "ref": "Psalm 37:5",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://www.sefaria.org/Psalms.37.5?ven=The_Holy_Scriptures:_A_New_Translation_(JPS_1917)&lang=en"
+        }
+      ]
+    },
+    "muslim": {
+      "label": "Muslim",
+      "translation": "The Meaning of the Glorious Koran, tr. Marmaduke Pickthall (1930)",
+      "licence": "Public domain (published 1930, so PD in the US from 2026; translator d. 1936, so PD in life+70 countries since 2007). Chosen over Abdullah Yusuf Ali (1934; translator d. 1953), whose status still varies by country. Sahih International not used (not freely licensed).",
+      "licence_status": "public_domain",
+      "source_url": "https://tanzil.net/trans/en.pickthall",
+      "notes": "Text copied from the Tanzil.net Pickthall text file (en.pickthall). Pickthall uses archaic forms (\"Lo!\", \"thee\") — kept as printed. Refs are surah:ayah.",
+      "quotes": [
+        {
+          "id": "mus-001",
+          "text": "Lo! with hardship goeth ease;",
+          "ref": "Qur'an 94:6 (Ash-Sharh)",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/94:6"
+        },
+        {
+          "id": "mus-002",
+          "text": "Thy Lord hath not forsaken thee nor doth He hate thee,",
+          "ref": "Qur'an 93:3 (Ad-Duha)",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/93:3"
+        },
+        {
+          "id": "mus-003",
+          "text": "And verily the latter portion will be better for thee than the former,",
+          "ref": "Qur'an 93:4 (Ad-Duha)",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/93:4"
+        },
+        {
+          "id": "mus-004",
+          "text": "And verily thy Lord will give unto thee so that thou wilt be content.",
+          "ref": "Qur'an 93:5 (Ad-Duha)",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/93:5"
+        },
+        {
+          "id": "mus-005",
+          "text": "O ye who believe! Seek help in steadfastness and prayer. Lo! Allah is with the steadfast.",
+          "ref": "Qur'an 2:153 (Al-Baqarah)",
+          "moods": [
+            "rough",
+            "low",
+            "okay"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/2:153"
+        },
+        {
+          "id": "mus-006",
+          "text": "Therefore remember Me, I will remember you. Give thanks to Me, and reject not Me.",
+          "ref": "Qur'an 2:152 (Al-Baqarah)",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/2:152"
+        },
+        {
+          "id": "mus-007",
+          "text": "And when My servants question thee concerning Me, then surely I am nigh. I answer the prayer of the suppliant when he crieth unto Me. So let them hear My call and let them trust in Me, in order that they may be led aright.",
+          "ref": "Qur'an 2:186 (Al-Baqarah)",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/2:186"
+        },
+        {
+          "id": "mus-008",
+          "text": "Who have believed and whose hearts have rest in the remembrance of Allah. Verily in the remembrance of Allah do hearts find rest!",
+          "ref": "Qur'an 13:28 (Ar-Ra'd)",
+          "moods": [
+            "rough",
+            "low",
+            "okay"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/13:28"
+        },
+        {
+          "id": "mus-009",
+          "text": "And have patience, (O Muhammad), for lo! Allah loseth not the wages of the good.",
+          "ref": "Qur'an 11:115 (Hud)",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/11:115"
+        },
+        {
+          "id": "mus-010",
+          "text": "He said: Fear not. Lo! I am with you twain, Hearing and Seeing.",
+          "ref": "Qur'an 20:46 (Ta-Ha)",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/20:46"
+        },
+        {
+          "id": "mus-011",
+          "text": "We verily created man and We know what his soul whispereth to him, and We are nearer to him than his jugular vein.",
+          "ref": "Qur'an 50:16 (Qaf)",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/50:16"
+        },
+        {
+          "id": "mus-012",
+          "text": "No calamity befalleth save by Allah's leave. And whosoever believeth in Allah, He guideth his heart. And Allah is Knower of all things.",
+          "ref": "Qur'an 64:11 (At-Taghabun)",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/64:11"
+        },
+        {
+          "id": "mus-013",
+          "text": "And will provide for him from (a quarter) whence he hath no expectation. And whosoever putteth his trust in Allah, He will suffice him. Lo! Allah bringeth His command to pass. Allah hath set a measure for all things.",
+          "ref": "Qur'an 65:3 (At-Talaq)",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/65:3"
+        },
+        {
+          "id": "mus-014",
+          "text": "Who say, when a misfortune striketh them: Lo! we are Allah's and lo! unto Him we are returning.",
+          "ref": "Qur'an 2:156 (Al-Baqarah)",
+          "moods": [
+            "rough"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/2:156"
+        },
+        {
+          "id": "mus-015",
+          "text": "Say: O My slaves who have been prodigal to their own hurt! Despair not of the mercy of Allah, Who forgiveth all sins. Lo! He is the Forgiving, the Merciful.",
+          "ref": "Qur'an 39:53 (Az-Zumar)",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://tanzil.net/#trans/en.pickthall/39:53"
+        }
+      ]
+    },
+    "sikh": {
+      "label": "Sikh",
+      "translation": "Sri Guru Granth Sahib, English tr. Dr. Sant Singh Khalsa",
+      "licence": "Unclear — widely shared via SikhiToTheMax / BaniDB / srigranth.org, but no explicit free-reuse licence found for the translation. Get written permission before launch (or switch to a confirmed public-domain translation).",
+      "licence_status": "needs_permission",
+      "source_url": "https://www.sikhitothemax.org/",
+      "notes": "English copied from the BaniDB API field translation.en.ssk (Sant Singh Khalsa). Each quote is one line (pankti) of the original; Gurmukhi included for reviewers. Trailing markers such as ||1|| and ||Pause|| are verse markers from the source, kept for exactness; the app may hide them on display.",
+      "quotes": [
+        {
+          "id": "sik-001",
+          "text": "Your pain shall be sent far away, and peace shall come to your home.",
+          "gurmukhi": "ਦੁਖੁ ਪਰਹਰਿ ਸੁਖੁ ਘਰਿ ਲੈ ਜਾਇ ॥",
+          "ref": "Guru Granth Sahib, Ang 2",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=5&highlight=43",
+          "verified_via": "https://api.banidb.com/v2/angs/2/G"
+        },
+        {
+          "id": "sik-002",
+          "text": "Meditate on the Lord, O Saints; He is the Dispeller of all sorrow.",
+          "gurmukhi": "ਹਰਿ ਧਿਆਵਹੁ ਸੰਤਹੁ ਜੀ ਸਭਿ ਦੂਖ ਵਿਸਾਰਣਹਾਰਾ ॥",
+          "ref": "Guru Granth Sahib, Ang 10",
+          "moods": [
+            "low"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=45&highlight=475",
+          "verified_via": "https://api.banidb.com/v2/angs/10/G"
+        },
+        {
+          "id": "sik-003",
+          "text": "Remembering Him in meditation, a profound peace is obtained. Pain and suffering will not touch you at all.",
+          "gurmukhi": "ਜਿਸੁ ਸਿਮਰਤ ਸੁਖੁ ਹੋਇ ਘਣਾ ਦੁਖੁ ਦਰਦੁ ਨ ਮੂਲੇ ਹੋਇ ॥",
+          "ref": "Guru Granth Sahib, Ang 44",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=130&highlight=1802",
+          "verified_via": "https://api.banidb.com/v2/angs/44/G"
+        },
+        {
+          "id": "sik-004",
+          "text": "You are my Protector everywhere; why should I feel any fear or anxiety? ||1||",
+          "gurmukhi": "ਤੂੰ ਮੇਰਾ ਰਾਖਾ ਸਭਨੀ ਥਾਈ ਤਾ ਭਉ ਕੇਹਾ ਕਾੜਾ ਜੀਉ ॥੧॥",
+          "ref": "Guru Granth Sahib, Ang 103",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=300&highlight=4134",
+          "verified_via": "https://api.banidb.com/v2/angs/103/G"
+        },
+        {
+          "id": "sik-005",
+          "text": "Meditate, meditate, meditate in remembrance of Him, and find peace.",
+          "gurmukhi": "ਸਿਮਰਉ ਸਿਮਰਿ ਸਿਮਰਿ ਸੁਖੁ ਪਾਵਉ ॥",
+          "ref": "Guru Granth Sahib, Ang 262",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=872&highlight=11502",
+          "verified_via": "https://api.banidb.com/v2/angs/262/G"
+        },
+        {
+          "id": "sik-006",
+          "text": "Worry and anguish shall be dispelled from your body.",
+          "gurmukhi": "ਕਲਿ ਕਲੇਸ ਤਨ ਮਾਹਿ ਮਿਟਾਵਉ ॥",
+          "ref": "Guru Granth Sahib, Ang 262",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=872&highlight=11503",
+          "verified_via": "https://api.banidb.com/v2/angs/262/G"
+        },
+        {
+          "id": "sik-007",
+          "text": "Sorrow, pain and fear shall depart from your mind.",
+          "gurmukhi": "ਦੂਖੁ ਦਰਦੁ ਮਨ ਤੇ ਭਉ ਜਾਇ ॥",
+          "ref": "Guru Granth Sahib, Ang 293",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=1066&highlight=13320",
+          "verified_via": "https://api.banidb.com/v2/angs/293/G"
+        },
+        {
+          "id": "sik-008",
+          "text": "Chanting the Naam, the mind becomes peaceful.",
+          "gurmukhi": "ਨਾਮੁ ਜਪਤ ਮਨਿ ਹੋਵਤ ਸੂਖ ॥",
+          "ref": "Guru Granth Sahib, Ang 293",
+          "moods": [
+            "okay"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=1067&highlight=13330",
+          "verified_via": "https://api.banidb.com/v2/angs/293/G"
+        },
+        {
+          "id": "sik-009",
+          "text": "There is peace within the home of one's heart, and there is peace outside as well, when God becomes kind and compassionate.",
+          "gurmukhi": "ਘਰ ਮਹਿ ਸੂਖ ਬਾਹਰਿ ਫੁਨਿ ਸੂਖਾ ਪ੍ਰਭ ਅਪੁਨੇ ਭਏ ਦਇਆਲਾ ॥",
+          "ref": "Guru Granth Sahib, Ang 619",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=2339&highlight=26763",
+          "verified_via": "https://api.banidb.com/v2/angs/619/G"
+        },
+        {
+          "id": "sik-010",
+          "text": "Tranquility, intuitive peace and poise welled up in an instant, and my mind was comforted forever. ||Pause||",
+          "gurmukhi": "ਸਾਂਤਿ ਸਹਜ ਸੁਖ ਖਿਨ ਮਹਿ ਉਪਜੇ ਮਨੁ ਹੋਆ ਸਦਾ ਸੁਖਾਲਾ ॥ ਰਹਾਉ ॥",
+          "ref": "Guru Granth Sahib, Ang 622",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=2355&highlight=26933",
+          "verified_via": "https://api.banidb.com/v2/angs/622/G"
+        },
+        {
+          "id": "sik-011",
+          "text": "O Saints, there is peace everywhere.",
+          "gurmukhi": "ਸੰਤਹੁ ਸੁਖੁ ਹੋਆ ਸਭ ਥਾਈ ॥",
+          "ref": "Guru Granth Sahib, Ang 628",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=2376&highlight=27216",
+          "verified_via": "https://api.banidb.com/v2/angs/628/G"
+        },
+        {
+          "id": "sik-012",
+          "text": "I was anxious, and now I am free of anxiety; I was worried, and now I am free of worry; my grief, greed and emotional attachments are gone.",
+          "gurmukhi": "ਚਿੰਤ ਅਚਿੰਤਾ ਸੋਚ ਅਸੋਚਾ ਸੋਗੁ ਲੋਭੁ ਮੋਹੁ ਥਾਕਾ ॥",
+          "ref": "Guru Granth Sahib, Ang 671",
+          "moods": [
+            "low",
+            "okay"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=2559&highlight=29025",
+          "verified_via": "https://api.banidb.com/v2/angs/671/G"
+        },
+        {
+          "id": "sik-013",
+          "text": "The hot wind does not even touch one who is under the Protection of the Supreme Lord God.",
+          "gurmukhi": "ਤਾਤੀ ਵਾਉ ਨ ਲਗਈ ਪਾਰਬ੍ਰਹਮ ਸਰਣਾਈ ॥",
+          "ref": "Guru Granth Sahib, Ang 819",
+          "moods": [
+            "rough",
+            "low"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=3085&highlight=34821",
+          "verified_via": "https://api.banidb.com/v2/angs/819/G"
+        },
+        {
+          "id": "sik-014",
+          "text": "I have found peace, tranquility and great ecstasy; my hopes have been fulfilled.",
+          "gurmukhi": "ਸਾਂਤਿ ਸਹਜੁ ਆਨਦੁ ਘਨਾ ਪੂਰਨ ਭਈ ਆਸ ॥",
+          "ref": "Guru Granth Sahib, Ang 819",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=3084&highlight=34816",
+          "verified_via": "https://api.banidb.com/v2/angs/819/G"
+        },
+        {
+          "id": "sik-015",
+          "text": "I am in ecstasy, O my mother, for I have found my True Guru.",
+          "gurmukhi": "ਅਨੰਦੁ ਭਇਆ ਮੇਰੀ ਮਾਏ ਸਤਿਗੁਰੂ ਮੈ ਪਾਇਆ ॥",
+          "ref": "Guru Granth Sahib, Ang 917",
+          "moods": [
+            "good",
+            "great"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=333375&highlight=39130",
+          "verified_via": "https://api.banidb.com/v2/angs/917/G"
+        },
+        {
+          "id": "sik-016",
+          "text": "No one is my enemy, and no one is a stranger. I get along with everyone. ||1||",
+          "gurmukhi": "ਨਾ ਕੋ ਬੈਰੀ ਨਹੀ ਬਿਗਾਨਾ ਸਗਲ ਸੰਗਿ ਹਮ ਕਉ ਬਨਿ ਆਈ ॥੧॥",
+          "ref": "Guru Granth Sahib, Ang 1299",
+          "moods": [
+            "okay",
+            "good"
+          ],
+          "source_url": "https://www.sikhitothemax.org/shabad?id=4713&highlight=55530",
+          "verified_via": "https://api.banidb.com/v2/angs/1299/G"
+        }
+      ]
+    }
+  }
+}
