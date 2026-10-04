@@ -599,9 +599,11 @@
     <div class="sheet">
       <h2 id="sheet-title">Get support</h2>
       <p>Arise is for motivation and a morning routine. It is not a health, counselling or crisis service, and entries are not monitored.</p>
-      <p>If you are in Canada and need to talk to someone now, call or text:</p>
-      <p class="line">9-8-8 Suicide Crisis Helpline</p>
-      <p style="font-size:13px">Support country: Canada (test setting). If you are in danger, call your local emergency number.</p>
+      <p>If you need to talk to someone now:</p>
+      <p class="line" id="support-line">Call or text 9-8-8 (Suicide Crisis Helpline, 24/7)</p>
+      <p style="font-size:14px" id="support-emergency">If you are in danger, call your local emergency number.</p>
+      <label class="choice-label" for="support-country">Your country</label>
+      <select id="support-country" style="width:100%;font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--night-800);color:var(--ink-100);margin-bottom:12px"></select>
       <button class="btn btn-secondary" id="close-sheet" style="justify-content:center">Close</button>
     </div>
   </div>
@@ -827,7 +829,7 @@
     if (e.status === 'crisis') {
       bubble.classList.add('crisis');
       bubble.innerHTML = '<p>Thank you for telling Arise how you are. It sounds like things are really hard right now, and you deserve support from a person.</p>' +
-        '<p class="line">Call or text 9-8-8 (Canada)</p><span class="tag">Fixed reviewed message · the rest of the app stays open</span>';
+        '<p class="line">' + esc(supportLine().line_text) + '</p><span class="tag">Fixed reviewed message · the rest of the app stays open</span>';
     } else {
       bubble.classList.remove('crisis');
       bubble.innerHTML = '<p id="aff-text"></p><span class="tag" id="aff-tag"></span>';
@@ -1462,6 +1464,45 @@
     startScreen = 'plus';
   }
   refreshPlus();
+  // ---------- Support lines by country (assets/support/lines.json, checked 3 Oct 2026) ----------
+  var SUPPORT = { lines: { CA: { country: 'Canada', line_text: 'Call or text 9-8-8 (Suicide Crisis Helpline, 24/7)', emergency: '911' } },
+    fallback: { line_text: 'If you are in danger, call your local emergency number.' } };
+  var TZ_COUNTRY = { 'Africa/Lagos':'NG', 'Africa/Accra':'GH', 'Africa/Nairobi':'KE', 'Africa/Johannesburg':'ZA', 'Europe/London':'GB',
+    'Europe/Dublin':'IE', 'Asia/Kolkata':'IN', 'Asia/Calcutta':'IN', 'Pacific/Auckland':'NZ', 'America/Jamaica':'JM',
+    'America/Port_of_Spain':'TT', 'Europe/Paris':'FR', 'Europe/Berlin':'DE' };
+  // Time zone first (where the device is), then the language region (often just a spelling preference).
+  function guessCountry() {
+    var tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+    if (TZ_COUNTRY[tz]) return TZ_COUNTRY[tz];
+    if (/^Australia\//.test(tz)) return 'AU';
+    if (/^America\/(Toronto|Vancouver|Edmonton|Winnipeg|Halifax|Regina|St_Johns|Moncton|Whitehorse|Yellowknife|Iqaluit)$/.test(tz)) return 'CA';
+    if (/^America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Detroit|Boise|Indiana|Kentucky)/.test(tz) || /^Pacific\/Honolulu$/.test(tz)) return 'US';
+    var region = ((navigator.language || '').split('-')[1] || '').toUpperCase();
+    return SUPPORT.lines[region] ? region : '';
+  }
+  // 'OTHER' = the person chose a country not on the list: show the general emergency message.
+  function supportCountry() {
+    var c = data.settings.supportCountry;
+    if (c === 'OTHER') return '';
+    c = c || guessCountry();
+    return SUPPORT.lines[c] ? c : '';
+  }
+  function supportLine() { var c = supportCountry(); return c ? SUPPORT.lines[c] : SUPPORT.fallback; }
+  function renderSupport() {
+    var c = supportCountry(), l = supportLine();
+    document.getElementById('support-line').textContent = l.line_text;
+    document.getElementById('support-emergency').textContent = c && l.emergency ? 'If you are in danger, call ' + l.emergency + '.'
+      : 'To find a free helpline in your country, visit findahelpline.com.';
+    var sel = document.getElementById('support-country');
+    sel.innerHTML = '<option value="OTHER">Other country</option>' + Object.keys(SUPPORT.lines)
+      .sort(function (a, b) { return SUPPORT.lines[a].country.localeCompare(SUPPORT.lines[b].country); })
+      .map(function (k) { return '<option value="' + k + '">' + esc(SUPPORT.lines[k].country) + '</option>'; }).join('');
+    sel.value = c || 'OTHER';
+  }
+  document.getElementById('support-country').onchange = function () { data.settings.supportCountry = this.value; save(data); renderSupport(); };
+  fetch('assets/support/lines.json').then(function (r) { return r.json(); }).then(function (d) { if (d && d.lines) { SUPPORT = d; renderSupport(); } }).catch(function () {});
+  renderSupport();
+
   // ---------- Colour themes ----------
   var THEME_COLOR = { night:'#13224A', plum:'#2B1A45', forest:'#163228', sand:'#F7F0E5' };
   function applyTheme() {

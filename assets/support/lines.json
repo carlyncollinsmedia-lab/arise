@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "checked": "2026-10-03",
+  "review_status": "draft — a person must re-check every number before launch",
+  "fallback": { "line_text": "If you are in danger, call your local emergency number.", "source_url": "https://findahelpline.com" },
+  "lines": {
+    "CA": { "country": "Canada", "line_text": "Call or text 9-8-8 (Suicide Crisis Helpline, 24/7)", "emergency": "911", "source_url": "https://988.ca", "notes": "Verified on 988.ca: call/text 988, 24/7/365." },
+    "US": { "country": "United States", "line_text": "Call or text 988 (988 Lifeline, 24/7)", "emergency": "911", "source_url": "https://988lifeline.org", "notes": "Chat also at chat.988lifeline.org." },
+    "GB": { "country": "United Kingdom", "line_text": "Call Samaritans free on 116 123 (24/7)", "emergency": "999", "source_url": "https://www.samaritans.org/how-we-can-help/contact-samaritan/", "notes": "Welsh-language line 0808 164 0123. No text service listed by Samaritans." },
+    "IE": { "country": "Ireland", "line_text": "Call Samaritans free on 116 123 (24/7)", "emergency": "112 or 999", "source_url": "https://www.samaritans.org/ireland/how-we-can-help/contact-samaritan/", "notes": "" },
+    "AU": { "country": "Australia", "line_text": "Call Lifeline 13 11 14 or text 0477 13 11 14 (24/7)", "emergency": "000", "source_url": "https://www.lifeline.org.au", "notes": "" },
+    "NZ": { "country": "New Zealand", "line_text": "Call or text 1737 (free, 24/7)", "emergency": "111", "source_url": "https://1737.org.nz", "notes": "" },
+    "IN": { "country": "India", "line_text": "Call Tele-MANAS 14416 (free, 24/7)", "emergency": "112", "source_url": "https://findahelpline.com/countries/in", "notes": "Government of India line (telemanas.mohfw.gov.in); official site failed TLS check from here, verified via findahelpline. Alt toll-free 1-800-891-4416 not verified — omitted." },
+    "FR": { "country": "France", "line_text": "Appelez le 3114 (gratuit, 24h/24)", "emergency": "112 (SAMU 15)", "source_url": "https://3114.fr", "notes": "National suicide prevention line run under the Ministry of Health. English version: 'Call 3114 (free, 24/7)'." },
+    "DE": { "country": "Germany", "line_text": "TelefonSeelsorge: 0800 111 0 111 or 116 123 (free, 24/7)", "emergency": "112", "source_url": "https://www.telefonseelsorge.de", "notes": "Also 0800 111 0 222. Chat/email on site." },
+    "ZA": { "country": "South Africa", "line_text": "Call SADAG Suicide Crisis Line 0800 567 567 (free, 24/7)", "emergency": "112 (from mobile); police 10111", "source_url": "https://www.sadag.org/index.php?option=com_content&view=article&id=1904&Itemid=151", "notes": "" },
+    "NG": { "country": "Nigeria", "line_text": "Call SURPIN 0800 078 7746 (toll-free, 24/7)", "emergency": "112", "source_url": "https://lifeline-international.com/member/nigeria-surpin/", "notes": "No government national line. SURPIN is a LifeLine International member; also listed on findahelpline.com/countries/ng. Hausa line +234 814 224 1007. surpin.org did not resolve; official site listed as surpinng.com." },
+    "GH": { "country": "Ghana", "line_text": "Call Mental Health Authority 0800 678 678 (toll-free)", "emergency": "112", "source_url": "https://findahelpline.com/countries/gh", "notes": "National Mental Health and Suicide Prevention Helpline; confirmed in Ghana News Agency/Graphic reports (Sep 2026). Hours NOT confirmed — do not claim 24/7. findahelpline lists 193 (ambulance) as emergency." },
+    "KE": { "country": "Kenya", "line_text": "Befrienders Kenya: call/text/WhatsApp +254 722 178 177 (Mon–Fri 9–5)", "emergency": "999 or 112", "source_url": "https://befrienders.org/find-support-now/befrienders-kenya/", "notes": "Not 24/7 — weekdays only. Kenya Red Cross 1199 is commonly cited as 24/7 but was not verified on an official page; consider adding after a human check." },
+    "JM": { "country": "Jamaica", "line_text": "Call 888-NEW-LIFE (888-639-5433), free, 24/7", "emergency": "119 (police) / 110 (ambulance)", "source_url": "https://findahelpline.com/countries/jm", "notes": "Ministry of Health & Wellness Mental Health and Suicide Prevention Helpline (moh.gov.jm). Youth text line: SUPPORT to 876-838-4897 (U-Matter, ages 16–24)." },
+    "TT": { "country": "Trinidad and Tobago", "line_text": "Call Lifeline 800-5588 (free, 24/7)", "emergency": "999 (police) / 811 (ambulance)", "source_url": "https://findcarett.com/lifeline/", "notes": "Also 866-5433 (toll-free) or 220-3636. Lifeline TT site: lifelinett.com. findcarett is the Ministry of Health's FindCareTT directory." }
+  }
+}
