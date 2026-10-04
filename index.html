@@ -300,10 +300,12 @@
       #screen-home #justday-btn { grid-area:day; max-width:440px; align-self:start; }
 
       /* Check-in and pep talk: a centred reading column */
-      #screen-mood, #screen-aff { width:100%; max-width:760px; margin:0 auto; }
+      #screen-mood, #screen-aff, #screen-evening { width:100%; max-width:760px; margin:0 auto; }
+      #screen-evening .q { font-size:40px; margin-top:48px; }
+      #screen-evening .btn-primary { max-width:440px; }
       #screen-mood .q { font-size:40px; margin-top:48px; }
       #screen-mood .mood .face { width:56px; height:56px; }
-      #screen-mood .spacer, #screen-aff .spacer { flex:0 0 28px; }
+      #screen-mood .spacer, #screen-aff .spacer, #screen-evening .spacer { flex:0 0 28px; }
       #screen-aff h1.title { font-size:44px; margin-top:48px; }
       #screen-mood .btn-primary, #screen-aff .btn-primary { max-width:440px; }
 
@@ -446,7 +448,7 @@
         </div>
       </div>
       <div class="card" id="next-reminder-card"><div class="row"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C3CCE0" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="time" id="next-rem-time"></span><span id="next-rem-text"></span></div></div>
-      <div class="evening"><svg width="18" height="18" viewBox="0 0 24 24" fill="#C3CCE0"><path d="M20 15A8 8 0 1 1 9 4a7 7 0 0 0 11 11z"/></svg>Your evening check-in is at 8:00 PM.</div>
+      <button class="evening" id="evening-btn" type="button" style="background:none;border:0;cursor:pointer;font:inherit"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 15A8 8 0 1 1 9 4a7 7 0 0 0 11 11z"/></svg><span id="evening-line">Your evening check-in is at 8:00 PM.</span></button>
       <button class="support-link" id="support-link">Get support</button>
     </section>
 
@@ -466,6 +468,24 @@
       </div>
       <button class="btn btn-secondary" id="rem-window-btn" style="justify-content:center;margin-top:12px">Open reminders in their own window</button>
       <div class="list" id="rem-list"></div>
+    </section>
+
+    <!-- EVENING CHECK-IN (same as the phone app) -->
+    <section class="screen" id="screen-evening" aria-label="Evening check-in">
+      <div class="q">How did your day go?</div>
+      <p class="date" style="margin-top:-6px">One tap. It saves straight away.</p>
+      <div class="moods" role="group" aria-label="Evening mood" id="evening-moods"></div>
+      <div id="evening-intention" hidden>
+        <div class="choice-label">Your intention: <span id="evening-intention-text" style="text-transform:none;letter-spacing:0;color:var(--ink-100)"></span></div>
+        <div class="choices" id="evening-outcomes">
+          <button class="choice" data-outcome="done">Done</button>
+          <button class="choice" data-outcome="partly">Partly</button>
+          <button class="choice" data-outcome="not_done">Not done</button>
+        </div>
+        <p class="date" style="font-size:14px;margin-top:8px">This is not a score. Leave it blank if you like.</p>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" id="evening-done" style="justify-content:center;margin-top:18px"><span class="main" style="font-size:19px">Done</span></button>
     </section>
 
     <!-- WEATHER (owner request, 3 Oct 2026: "this should look like a weather app too") -->
@@ -700,7 +720,7 @@
   }
 
   // ---------- Navigation ----------
-  var screens = { home:'screen-home', mood:'screen-mood', aff:'screen-aff', day:'screen-day', reminders:'screen-reminders', history:'screen-history', plus:'screen-plus', weather:'screen-weather' };
+  var screens = { home:'screen-home', mood:'screen-mood', aff:'screen-aff', day:'screen-day', reminders:'screen-reminders', history:'screen-history', plus:'screen-plus', weather:'screen-weather', evening:'screen-evening' };
   var trail = [];
   function show(name, push) {
     Object.keys(screens).forEach(function (k) { document.getElementById(screens[k]).classList.toggle('active', k === name); });
@@ -709,6 +729,7 @@
     if (push !== false) trail.push(name);
     document.getElementById('back-btn').hidden = (name === 'home' || name === 'reminders' || name === 'history' || name === 'plus' || name === 'weather');
     if (name === 'weather') renderWeatherPage();
+    if (name === 'evening') renderEvening();
     if (name === 'plus') renderPlus();
     if (name === 'day') renderDay();
     if (name === 'reminders') { renderReminders(); renderNotifCard(); }
@@ -960,6 +981,7 @@
   // ---------- Day ----------
   function fmtTime(t) { var p = t.split(':'), h = +p[0], m = p[1]; return ((h % 12) || 12) + ':' + m + ' ' + (h < 12 ? 'AM' : 'PM'); }
   function renderDay() {
+    if (typeof renderEveningLine === 'function') renderEveningLine();
     document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-CA', { weekday:'long', day:'numeric', month:'long' });
     var e = entryToday();
     renderMoodChip('day-mood-chip', e);
@@ -1504,6 +1526,44 @@
   document.getElementById('support-country').onchange = function () { data.settings.supportCountry = this.value; save(data); renderSupport(); };
   fetch('assets/support/lines.json').then(function (r) { return r.json(); }).then(function (d) { if (d && d.lines) { SUPPORT = d; renderSupport(); } }).catch(function () {});
   renderSupport();
+
+  // ---------- Evening check-in ----------
+  var EVENING_HOUR = 20; // 8:00 PM, as on the phone app
+  function renderEvening() {
+    var e = ensureToday();
+    var box = document.getElementById('evening-moods');
+    box.innerHTML = MOODS.map(function (m) {
+      return '<button class="mood" data-mood="' + m.key + '" aria-pressed="' + (e.evening === m.key) + '">' + face(m) + m.label + '</button>';
+    }).join('');
+    box.querySelectorAll('.mood').forEach(function (b) {
+      b.onclick = function () { e.evening = b.dataset.mood; save(data); renderEvening(); };
+    });
+    document.getElementById('evening-intention').hidden = !e.intention;
+    document.getElementById('evening-intention-text').textContent = e.intention || '';
+    document.querySelectorAll('[data-outcome]').forEach(function (b) {
+      b.setAttribute('aria-pressed', e.outcome === b.dataset.outcome);
+      b.onclick = function () { e.outcome = e.outcome === b.dataset.outcome ? null : b.dataset.outcome; save(data); renderEvening(); };
+    });
+  }
+  function renderEveningLine() {
+    var e = entryToday(), late = new Date().getHours() >= 17;
+    document.getElementById('evening-line').innerHTML = e && e.evening ? "Evening check-in saved. Tap to change."
+      : late ? 'How did your day go? <span class="edit" style="color:var(--sun-500);font-weight:800">Check in</span>'
+      : 'Your evening check-in is at 8:00 PM. <span class="edit" style="color:var(--sun-500);font-weight:800">Check in early</span>';
+  }
+  document.getElementById('evening-btn').onclick = function () { show('evening'); };
+  document.getElementById('evening-done').onclick = function () { trail = []; show('home'); };
+  // While Arise is open at 8 PM, a gentle nudge (once a day).
+  function checkEvening() {
+    var now = new Date(), day = iso(now);
+    if (now.getHours() !== EVENING_HOUR || data.settings.lastEveningNudge === day) return;
+    var e = data.entries.find(function (x) { return x.date === day; });
+    if (e && e.evening) return;
+    data.settings.lastEveningNudge = day; save(data);
+    fireReminder({ id: 'evening-' + day, text: 'How did your day go? Your evening check-in is ready.' });
+  }
+  setInterval(checkEvening, 60000);
+  renderEveningLine();
 
   // ---------- Colour themes ----------
   var THEME_COLOR = { night:'#13224A', plum:'#2B1A45', forest:'#163228', sand:'#F7F0E5' };
