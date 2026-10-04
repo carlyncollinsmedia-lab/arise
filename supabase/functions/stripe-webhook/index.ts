@@ -28,7 +28,13 @@ async function saveSubscription(s: Stripe.Subscription, fallbackUserId?: string 
 
 Deno.serve(async (req) => {
   const key = Deno.env.get("STRIPE_SECRET_KEY");
-  const secret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+  // Signing secret: a saved Supabase secret if there is one, otherwise the one
+  // setup-stripe stored when it created this webhook through Stripe's API.
+  let secret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+  if (!secret) {
+    const { data } = await admin.from("stripe_config").select("webhook_signing_secret").maybeSingle();
+    secret = data?.webhook_signing_secret;
+  }
   if (!key || !secret) return new Response("Payments not set up", { status: 503 });
   const signature = req.headers.get("Stripe-Signature");
   if (!signature) return new Response("Not signed", { status: 400 });
