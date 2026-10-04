@@ -252,6 +252,16 @@
     .wx-grid .s { font-size:13px; color:var(--ink-300); margin-top:2px; }
     .wx-empty { text-align:center; color:var(--ink-300); padding:40px 10px; }
 
+    /* Get the app */
+    .get-card { background:var(--night-800); border:1px solid var(--line); border-radius:var(--radius-lg); padding:18px; margin-top:12px; }
+    .get-card.mine { border:1.5px solid var(--sun-500); box-shadow:0 0 0 3px rgba(249,196,90,.15); }
+    .get-card h2 { margin:0 0 4px; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .get-card h2 .tag { font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; background:var(--sun-500); color:var(--ink-on-sun); border-radius:999px; padding:3px 8px; }
+    .get-card p, .get-card ol { color:var(--ink-300); font-size:15px; margin:6px 0 0; }
+    .get-card ol { padding-left:20px; display:grid; gap:4px; }
+    .get-card .btn { margin-top:12px; }
+    .get-app-top { display:none; }
+
     /* Faith quote card (Plus) */
     .faith-card { margin-top:14px; background:var(--night-800); border:1px solid var(--line); border-left:4px solid var(--sun-500); border-radius:var(--radius-md); padding:14px 16px; }
     .faith-card .fq { font-size:18px; font-weight:700; line-height:1.45; margin:0; }
@@ -347,6 +357,14 @@
       #screen-plus > * { grid-column:1; }
       #screen-plus .plus-side { grid-column:2; grid-row:1 / span 6; margin-top:40px; }
 
+      .get-app-home { display:none; }
+      .get-app-top { display:inline-flex; align-items:center; gap:6px; margin-right:6px; border:1.5px solid var(--sun-500); color:var(--sun-500);
+        background:none; border-radius:999px; padding:7px 14px; font:inherit; font-size:15px; font-weight:800; cursor:pointer; }
+      .get-app-top:hover { background:rgba(249,196,90,.12); }
+      #screen-getapp { width:100%; max-width:1080px; margin:0 auto; }
+      #screen-getapp h1.title { font-size:44px; margin-top:40px; }
+      #getapp-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+
       /* Sheets become centred windows */
       .sheet-bg { position:fixed; align-items:center; justify-content:center; }
       .sheet { width:min(560px,92vw); max-height:88vh; overflow:auto; border-radius:24px; border:1px solid var(--line); }
@@ -370,6 +388,7 @@
       <svg viewBox="0 0 56 34" fill="none" aria-hidden="true"><path d="M14 30a14 14 0 0 1 28 0" fill="#F9C45A"/><g stroke="#F9C45A" stroke-width="3" stroke-linecap="round"><line x1="28" y1="3" x2="28" y2="10"/><line x1="12" y1="10" x2="16" y2="14"/><line x1="44" y1="10" x2="40" y2="14"/><line x1="4" y1="24" x2="9" y2="24"/><line x1="47" y1="24" x2="52" y2="24"/></g><line x1="2" y1="31" x2="54" y2="31" stroke="#F5F7FC" stroke-width="2" stroke-linecap="round"/></svg>
       <span>arise</span>
     </div>
+    <button class="get-app-top" id="get-app-top" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>Get the app</button>
     <button class="icon-btn gear" id="settings-btn" aria-label="Settings">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
     </button>
@@ -392,6 +411,14 @@
       <button class="btn btn-secondary" id="justday-btn"><span>Just show my day</span>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
       </button>
+      <button class="btn-text get-app-home" id="get-app-home" type="button">Get the Arise app</button>
+    </section>
+
+    <!-- GET THE APP -->
+    <section class="screen" id="screen-getapp" aria-label="Get the app">
+      <h1 class="title">Get the Arise app</h1>
+      <p class="date">Put Arise on your phone or computer, with its own icon. It opens full screen and works without internet.</p>
+      <div id="getapp-cards"></div>
     </section>
 
     <!-- 2. MOOD CHECK-IN -->
@@ -548,6 +575,7 @@
     <span>Arise · your morning companion. Not a medical service.</span>
     <nav aria-label="More">
       <a href="reminders.html">Reminders window</a>
+      <a href="#get-app" id="footer-getapp">Get the app</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
     </nav>
@@ -740,7 +768,7 @@
   }
 
   // ---------- Navigation ----------
-  var screens = { home:'screen-home', mood:'screen-mood', aff:'screen-aff', day:'screen-day', reminders:'screen-reminders', history:'screen-history', plus:'screen-plus', weather:'screen-weather', evening:'screen-evening' };
+  var screens = { home:'screen-home', mood:'screen-mood', aff:'screen-aff', day:'screen-day', reminders:'screen-reminders', history:'screen-history', plus:'screen-plus', weather:'screen-weather', evening:'screen-evening', getapp:'screen-getapp' };
   var trail = [];
   function show(name, push) {
     Object.keys(screens).forEach(function (k) { document.getElementById(screens[k]).classList.toggle('active', k === name); });
@@ -750,6 +778,7 @@
     document.getElementById('back-btn').hidden = (name === 'home' || name === 'reminders' || name === 'history' || name === 'plus' || name === 'weather');
     if (name === 'weather') renderWeatherPage();
     if (name === 'evening') renderEvening();
+    if (name === 'getapp') renderGetApp();
     if (name === 'plus') renderPlus();
     if (name === 'day') renderDay();
     if (name === 'reminders') { renderReminders(); renderNotifCard(); }
@@ -1670,6 +1699,48 @@
       installPrompt.userChoice.then(function () { installPrompt = null; document.getElementById('install-block').hidden = true; });
     };
   }
+
+  // ---------- Get the app ----------
+  // iPhone apps can only come from the App Store or TestFlight (Apple Developer account).
+  // Until then: install this web app (Android/computers: one button; iPhone: Add to Home Screen).
+  var APP_STORE_URL = ''; // fill in when Arise is on the App Store or TestFlight
+  var ua = navigator.userAgent;
+  var device = /iphone|ipad|ipod/i.test(ua) ? 'iphone' : /android/i.test(ua) ? 'android' : 'computer';
+  function renderGetApp() {
+    var installed = standalone;
+    var installBtn = installPrompt
+      ? '<button class="btn btn-primary getapp-install" type="button" style="justify-content:center"><span class="main" style="font-size:18px">Install Arise</span></button>'
+      : '';
+    var cards = {
+      iphone: '<div class="get-card' + (device === 'iphone' ? ' mine' : '') + '"><h2>iPhone' + (device === 'iphone' ? ' <span class="tag">Your device</span>' : '') + '</h2>' +
+        (APP_STORE_URL ? '<a class="btn btn-primary" href="' + APP_STORE_URL + '" style="justify-content:center;text-decoration:none"><span class="main" style="font-size:18px">Download on the App Store</span></a>' :
+        '<p>Add Arise to your Home Screen in Safari:</p><ol><li>Tap the <b>Share</b> button (the square with an arrow).</li><li>Scroll and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>. Arise now has its own icon.</li></ol>' +
+        '<p style="margin-top:10px"><b>Coming soon:</b> the full Arise iPhone app with the wake-up alarm that rings even when your phone is locked.</p>') + '</div>',
+      android: '<div class="get-card' + (device === 'android' ? ' mine' : '') + '"><h2>Android' + (device === 'android' ? ' <span class="tag">Your device</span>' : '') + '</h2>' +
+        (device === 'android' && installBtn ? '<p>One tap and Arise goes on your home screen.</p>' + installBtn :
+        '<p>In Chrome, open this page, tap the <b>⋮</b> menu, then <b>Install app</b> (or <b>Add to Home screen</b>).</p>') + '</div>',
+      computer: '<div class="get-card' + (device === 'computer' ? ' mine' : '') + '"><h2>Computer' + (device === 'computer' ? ' <span class="tag">Your device</span>' : '') + '</h2>' +
+        (device === 'computer' && installBtn ? '<p>Install Arise as its own app in your Dock or Start menu, with reminders on your screen.</p>' + installBtn :
+        '<p>In Chrome or Edge, click the <b>install</b> icon at the right end of the address bar, then <b>Install</b>. On a Mac with Safari: <b>File → Add to Dock</b>.</p>') + '</div>'
+    };
+    var order = [device].concat(['iphone', 'android', 'computer'].filter(function (d) { return d !== device; }));
+    document.getElementById('getapp-cards').innerHTML = (installed
+      ? '<div class="get-card mine"><h2>✓ You\'re using the Arise app</h2><p>Arise is installed on this device. Open it any time from its icon.</p></div>' : '') +
+      order.map(function (d) { return cards[d]; }).join('');
+    document.querySelectorAll('.getapp-install').forEach(function (b) {
+      b.onclick = function () {
+        if (!installPrompt) return;
+        installPrompt.prompt();
+        installPrompt.userChoice.then(function (c) { installPrompt = null; renderGetApp(); });
+      };
+    });
+  }
+  window.addEventListener('beforeinstallprompt', function () { setTimeout(function () { if (document.getElementById('screen-getapp').classList.contains('active')) renderGetApp(); }, 0); });
+  window.addEventListener('appinstalled', function () { standalone = true; renderGetApp(); });
+  document.getElementById('get-app-top').onclick = function () { trail = []; show('getapp'); };
+  document.getElementById('get-app-home').onclick = function () { show('getapp'); };
+  document.getElementById('footer-getapp').onclick = function (ev) { ev.preventDefault(); trail = []; show('getapp'); };
+  if (/#get-app/.test(location.hash)) show('getapp');
 })();
 </script>
 </body>
