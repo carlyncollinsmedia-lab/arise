@@ -352,7 +352,6 @@
 <body>
 <div id="wallpaper" aria-hidden="true"></div>
 <div class="phone">
-  <div class="test-banner" id="test-banner">PROTOTYPE · TEST DATA ONLY · NOTHING IS SENT ANYWHERE</div>
   <header class="top">
     <button class="icon-btn left" id="back-btn" aria-label="Back" hidden>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
@@ -1460,8 +1459,6 @@
   refreshWeather();
   document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshWeather(); });
 
-  // Honest banner: with the AI connected, the mood and note do leave this computer.
-  if (window.ARISE_CONFIG) document.getElementById('test-banner').textContent = 'PROTOTYPE · TEST DATA · MOOD AND NOTE SENT TO CLAUDE FOR THE PEP TALK';
   save(data);
   setSwitch('speak-toggle', !!data.settings.speak);
   renderAlarmPill();
