@@ -504,7 +504,6 @@
       <p class="date">Newest first. Only you can see this.</p>
       <div class="week" id="week-line"></div>
       <div class="list" id="history-list"></div>
-      <button class="btn-text" id="reset-demo" style="margin-top:14px">Reset test data</button>
     </section>
   </main>
 
@@ -679,25 +678,14 @@
   // Device-local date (PRD: the entry date is the phone's local date, never UTC).
   function iso(d) { var m = d.getMonth() + 1, day = d.getDate(); return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day; }
   var today = iso(new Date());
-  function seed() {
-    var d = new Date(), days = [];
-    var sample = [['good','okay','Finish the budget'],['low','good',''],['okay',null,'Call Mum'],['rough','okay','Take a walk at lunch']];
-    for (var i = 1; i <= 4; i++) {
-      var dt = new Date(d); dt.setDate(d.getDate() - i);
-      var s = sample[i-1];
-      days.push({ date: iso(dt), morning: s[0], evening: s[1], note: '', intention: s[2], affirmation: AFF[s[0]][0], status: 'sample' });
-    }
-    var tmr = new Date(d); tmr.setDate(d.getDate() + 1);
-    return {
-      entries: days,
-      reminders: [
-        { id: 1, text: 'School pick-up', date: today, time: '15:30', fired: new Date(today + 'T15:30') <= new Date() },
-        { id: 2, text: 'Pay the hydro bill', date: iso(tmr), time: '09:00' }
-      ],
-      lastAff: {}
-    };
-  }
+  // A new visitor starts with an empty history and no reminders.
+  function seed() { return { entries: [], reminders: [], lastAff: {} }; }
   var data = load() || seed();
+  // Remove the demo days and demo reminders that earlier versions of the site added.
+  data.entries = (data.entries || []).filter(function (e) { return e.status !== 'sample'; });
+  data.reminders = (data.reminders || []).filter(function (r) {
+    return !((r.id === 1 && r.text === 'School pick-up') || (r.id === 2 && r.text === 'Pay the hydro bill'));
+  });
   // Arise Plus state. 'active' is only ever true after the server confirms a paid subscription.
   var plus = { active: false, token: null, email: null, status: '' };
   function entryToday() { return data.entries.find(function (e) { return e.date === today; }); }
@@ -1083,7 +1071,8 @@
     var evenings = week.filter(function (e) { return e.evening; }).length;
     var both = week.filter(function (e) { return e.morning && e.evening; });
     var higher = both.filter(function (e) { return rank(e.evening) > rank(e.morning); }).length;
-    document.getElementById('week-line').textContent = 'This week: ' + mornings + ' mornings checked in, ' + evenings + ' evenings. Ended higher than you started on ' + higher + ' of the ' + both.length + ' days with both.';
+    document.getElementById('week-line').textContent = !week.length ? 'Your week will show here after your first morning check-in.'
+      : 'This week: ' + mornings + ' mornings checked in, ' + evenings + ' evenings.' + (both.length ? ' Ended higher than you started on ' + higher + ' of the ' + both.length + ' days with both.' : '');
     var el = document.getElementById('history-list');
     var list = data.entries.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
     el.innerHTML = list.length ? list.map(function (e) {
@@ -1098,7 +1087,6 @@
       b.onclick = function () { data.entries = data.entries.filter(function (e) { return e.date !== b.dataset.deldate; }); save(data); renderHistory(); };
     });
   }
-  document.getElementById('reset-demo').onclick = function () { var st = data.settings; data = seed(); data.settings = st; save(data); renderHistory(); };
 
   // ---------- Support ----------
   var sheet = document.getElementById('sheet');
