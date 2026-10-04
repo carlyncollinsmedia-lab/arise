@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Arise</title>
   <meta name="description" content="Arise Phase 1 prototype: the morning routine with test data only. Opens locally in a browser." />
+  <script>
+    // Apply the saved colour theme before the page draws, so it never flashes blue first.
+    try { var t = (JSON.parse(localStorage.getItem('arise-prototype-v1')) || {}).settings; if (t && t.theme) document.documentElement.dataset.theme = t.theme; } catch (e) {}
+  </script>
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#13224A" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
@@ -26,6 +30,19 @@
       --radius-lg:22px; --radius-md:16px; --radius-pill:999px;
       --font:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
     }
+    /* Colour themes (owner approved all four, 30 Sept 2026; same values as the phone app). */
+    :root { --overlay:rgba(11,21,48,.65); --switch-off:#3A4A78; --crisis-bg:#23305A; }
+    html[data-theme="plum"] { --night-900:#1C1030; --night-800:#2B1A45; --night-700:#3A2459; --dawn-600:#5A3A7E;
+      --ink-100:#F8F3FC; --ink-300:#D4C6E7; --ink-500:#A897C0; --ink-on-sun:#241338;
+      --overlay:rgba(28,16,48,.65); --switch-off:#56407A; --crisis-bg:#3A2459; }
+    html[data-theme="forest"] { --night-900:#0D1F18; --night-800:#163228; --night-700:#1E4235; --dawn-600:#2F5A48;
+      --sun-500:#F2B84B; --sun-600:#DCA136; --ink-100:#F2F8F4; --ink-300:#C3DACE; --ink-500:#8FAE9F; --ink-on-sun:#10231B;
+      --overlay:rgba(13,31,24,.65); --switch-off:#35604F; --crisis-bg:#1E4235; }
+    html[data-theme="sand"] { --night-900:#F7F0E5; --night-800:#FFFFFF; --night-700:#FCE9DA; --dawn-600:#F1D3AE;
+      --sun-500:#B4531F; --sun-600:#9A4418; --ink-100:#2A1E14; --ink-300:#6B5A48; --ink-500:#8C7A66; --ink-on-sun:#FFFFFF;
+      --line:rgba(60,40,20,.16); --line-strong:rgba(60,40,20,.32);
+      --overlay:rgba(255,255,255,.78); --switch-off:#D8C8B4; --crisis-bg:#FCE9DA; }
+    .theme-swatch { display:block; width:100%; height:34px; border-radius:10px; border:1px solid rgba(0,0,0,.15); margin-bottom:6px; }
     * { box-sizing:border-box; }
     html,body { margin:0; height:100%; }
     body { font-family:var(--font); color:var(--ink-100); background:#4a6a9e; -webkit-font-smoothing:antialiased;
@@ -46,7 +63,7 @@
       background:linear-gradient(180deg,var(--dawn-600) 0%,var(--night-800) 42%,var(--night-900) 100%); display:flex; flex-direction:column; }
     @media (min-width:520px){ body{ padding:28px 0; } .phone{ min-height:880px; border-radius:44px; box-shadow:0 30px 80px rgba(0,0,0,.45), 0 0 0 10px #0d1326; } }
 
-    .test-banner { background:rgba(11,21,48,.7); color:var(--ink-300); font-size:12px; font-weight:700; text-align:center; padding:6px 10px; letter-spacing:.04em; }
+    .test-banner { background:var(--overlay); color:var(--ink-300); font-size:12px; font-weight:700; text-align:center; padding:6px 10px; letter-spacing:.04em; }
     header.top { display:flex; align-items:center; justify-content:center; position:relative; padding:14px 20px 4px; }
     .logo { display:flex; flex-direction:column; align-items:center; }
     .logo svg { width:46px; height:28px; }
@@ -74,7 +91,7 @@
     @keyframes rise { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
     @media (prefers-reduced-motion:reduce){ .scene .companion{animation:none;} }
 
-    .pill { align-self:center; display:inline-flex; align-items:center; gap:10px; background:rgba(11,21,48,.6); border:1px solid var(--line);
+    .pill { align-self:center; display:inline-flex; align-items:center; gap:10px; background:var(--overlay); border:1px solid var(--line);
       color:var(--ink-300); border-radius:var(--radius-pill); padding:10px 20px; font-size:15px; font-weight:600; margin:14px 0 16px; }
     .pill strong { color:var(--ink-100); }
 
@@ -104,7 +121,7 @@
     .field label { display:block; font-size:15px; font-weight:700; margin-bottom:8px; }
     .field label em { font-style:normal; color:var(--ink-500); font-weight:600; }
     textarea, input[type=text], input[type=email], input[type=time], input[type=date] { width:100%; font-family:var(--font); font-size:17px; color:var(--ink-100);
-      background:rgba(19,34,74,.85); border:1.5px solid var(--line); border-radius:var(--radius-md); padding:13px 15px; }
+      background:var(--night-800); border:1.5px solid var(--line); border-radius:var(--radius-md); padding:13px 15px; }
     textarea { resize:none; min-height:84px; }
     textarea::placeholder, input::placeholder { color:var(--ink-500); }
     .hint { display:flex; justify-content:space-between; font-size:13px; color:var(--ink-500); margin-top:6px; }
@@ -117,7 +134,7 @@
     .bubble { background:var(--night-800); border:1px solid var(--line); border-radius:var(--radius-lg); border-top-left-radius:6px; padding:18px 20px; }
     .bubble p { margin:0; font-size:20px; font-weight:600; line-height:1.45; }
     .tag { display:inline-block; margin-top:12px; font-size:12px; font-weight:700; color:var(--ink-500); letter-spacing:.03em; }
-    .crisis { background:#23305a; border:1.5px solid var(--sun-500); }
+    .crisis { background:var(--crisis-bg); border:1.5px solid var(--sun-500); }
     .crisis p { font-size:18px; }
     .crisis .line { margin-top:12px; font-size:19px; font-weight:800; color:var(--sun-500); }
 
@@ -128,7 +145,7 @@
       -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18%); mask-image:linear-gradient(90deg,transparent 0,#000 18%); }
     .day-scene .bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 55%; }
     .day-scene .companion { position:absolute; left:50%; bottom:0; height:96%; translate:-50% 0; }
-    .weather-card { background:linear-gradient(160deg,var(--sky-400),var(--sky-500)); border-radius:var(--radius-lg); padding:18px 20px; display:flex; align-items:center; gap:18px; box-shadow:0 14px 34px rgba(20,40,90,.35); }
+    .weather-card { color:#F5F7FC; background:linear-gradient(160deg,var(--sky-400),var(--sky-500)); border-radius:var(--radius-lg); padding:18px 20px; display:flex; align-items:center; gap:18px; box-shadow:0 14px 34px rgba(20,40,90,.35); }
     .weather-card svg { width:78px; height:78px; flex:none; }
     .weather-card .city { font-size:17px; font-weight:700; }
     .weather-card .temp { font-size:48px; font-weight:900; line-height:1; }
@@ -196,7 +213,7 @@
     .toggle-row { display:flex; align-items:center; gap:12px; margin-top:14px; padding:12px 14px; background:var(--night-900); border:1.5px solid var(--line); border-radius:14px; cursor:pointer; width:100%; color:var(--ink-100); font:inherit; text-align:left; }
     .toggle-row .txt { flex:1; font-size:15px; font-weight:700; line-height:1.3; }
     .toggle-row .txt small { display:block; color:var(--ink-300); font-weight:600; font-size:13px; }
-    .switch { width:48px; height:28px; border-radius:999px; background:#3a4a78; position:relative; flex:none; transition:background .15s; }
+    .switch { width:48px; height:28px; border-radius:999px; background:var(--switch-off); position:relative; flex:none; transition:background .15s; }
     .switch::after { content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; transition:left .15s; }
     .toggle-row[aria-checked="true"] .switch { background:var(--sun-500); }
     .toggle-row[aria-checked="true"] .switch::after { left:23px; }
@@ -208,14 +225,14 @@
        ============================================================ */
     .site-footer { display:none; }
     /* Weather page */
-    .wx-hero { position:relative; margin:8px -20px 0; height:300px; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+    .wx-hero { color:#F5F7FC; position:relative; margin:8px -20px 0; height:300px; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
     .wx-hero img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 55%; filter:brightness(.62); }
     .wx-hero > div { position:relative; text-shadow:0 2px 14px rgba(0,0,0,.45); }
     .wx-hero .place { font-size:22px; font-weight:800; }
     .wx-hero .big { font-size:96px; font-weight:900; line-height:1; margin:4px 0; }
     .wx-hero .cond { font-size:19px; font-weight:700; }
     .wx-hero .hl { font-size:16px; font-weight:700; color:var(--ink-300); margin-top:4px; }
-    .wx-card { background:rgba(19,34,74,.85); border:1px solid var(--line); border-radius:var(--radius-lg); padding:14px 16px; margin-top:14px; }
+    .wx-card { background:var(--night-800); border:1px solid var(--line); border-radius:var(--radius-lg); padding:14px 16px; margin-top:14px; }
     .wx-card h2 { font-size:13px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-500); margin:0 0 10px; }
     .wx-hours { display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.25) transparent; }
     .wx-hour { flex:0 0 64px; display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 0; border-radius:14px; font-weight:700; }
@@ -236,7 +253,7 @@
     .wx-empty { text-align:center; color:var(--ink-300); padding:40px 10px; }
 
     /* Arise Plus */
-    .plus-card { background:linear-gradient(160deg,#2A3F78,var(--night-800)); border:1.5px solid rgba(249,196,90,.45); border-radius:var(--radius-lg); padding:22px 20px; margin-top:8px; }
+    .plus-card { background:linear-gradient(160deg,var(--night-700),var(--night-800)); border:1.5px solid rgba(249,196,90,.45); border-radius:var(--radius-lg); padding:22px 20px; margin-top:8px; }
     .plus-card .price { font-size:44px; font-weight:900; line-height:1; }
     .plus-card .price small { font-size:16px; font-weight:700; color:var(--ink-300); }
     .plus-card ul { list-style:none; padding:0; margin:16px 0 4px; display:grid; gap:10px; }
@@ -518,6 +535,13 @@
         <button class="choice" data-companion="woman"><img src="assets/companions/web/woman-light.webp" alt="" />Woman</button>
         <button class="choice" data-companion="man"><img src="assets/companions/web/man-light.webp" alt="" />Man</button>
         <button class="choice" data-companion="none"><span class="noimg"></span>No companion</button>
+      </div>
+      <div class="choice-label">Colours</div>
+      <div class="choices" id="theme-choices" style="grid-template-columns:repeat(4,1fr)">
+        <button class="choice" data-theme-pick="night"><span class="theme-swatch" style="background:linear-gradient(180deg,#3A5A8C,#0B1530)"></span>Night sky</button>
+        <button class="choice" data-theme-pick="plum"><span class="theme-swatch" style="background:linear-gradient(180deg,#5A3A7E,#1C1030)"></span>Plum dawn</button>
+        <button class="choice" data-theme-pick="forest"><span class="theme-swatch" style="background:linear-gradient(180deg,#2F5A48,#0D1F18)"></span>Forest morning</button>
+        <button class="choice" data-theme-pick="sand"><span class="theme-swatch" style="background:linear-gradient(180deg,#F1D3AE,#F7F0E5)"></span>Warm sand</button>
       </div>
       <div class="choice-label">Wake-up alarm</div>
       <button class="toggle-row" id="open-alarm-from-settings" style="margin-top:0"><span class="txt" id="settings-alarm-line">6:00 AM</span><span class="edit" style="color:var(--sun-500);font-weight:800">Change</span></button>
@@ -1417,6 +1441,18 @@
     startScreen = 'plus';
   }
   refreshPlus();
+  // ---------- Colour themes ----------
+  var THEME_COLOR = { night:'#13224A', plum:'#2B1A45', forest:'#163228', sand:'#F7F0E5' };
+  function applyTheme() {
+    var t = THEME_COLOR[data.settings.theme] ? data.settings.theme : 'night';
+    if (t === 'night') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t;
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', THEME_COLOR[t]);
+    document.querySelectorAll('[data-theme-pick]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.themePick === t); });
+  }
+  document.querySelectorAll('[data-theme-pick]').forEach(function (b) {
+    b.onclick = function () { data.settings.theme = b.dataset.themePick; save(data); applyTheme(); };
+  });
+  applyTheme();
   var settingsName = document.getElementById('settings-name');
   settingsName.value = data.settings.name || '';
   settingsName.addEventListener('input', function () { data.settings.name = settingsName.value.trim().slice(0, 40); save(data); renderHome(); });

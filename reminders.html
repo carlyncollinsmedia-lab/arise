@@ -6,6 +6,9 @@
   <title>Arise Reminders</title>
   <meta name="description" content="Arise reminders in their own small window. Shares the same list as the Arise app." />
   <meta name="theme-color" content="#13224A" />
+  <script>
+    try { var t = (JSON.parse(localStorage.getItem('arise-prototype-v1')) || {}).settings; if (t && t.theme && t.theme !== 'night') document.documentElement.dataset.theme = t.theme; } catch (e) {}
+  </script>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,6 +22,12 @@
       --line:rgba(255,255,255,.16); --radius-md:16px; --radius-pill:999px;
       --font:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
     }
+    /* Follows the colour theme picked in Arise (same values as index.html). */
+    html[data-theme="plum"] { --night-900:#1C1030; --night-800:#2B1A45; --dawn-600:#5A3A7E; --ink-100:#F8F3FC; --ink-300:#D4C6E7; --ink-500:#A897C0; --ink-on-sun:#241338; }
+    html[data-theme="forest"] { --night-900:#0D1F18; --night-800:#163228; --dawn-600:#2F5A48; --sun-500:#F2B84B; --sun-600:#DCA136; --ink-100:#F2F8F4; --ink-300:#C3DACE; --ink-500:#8FAE9F; --ink-on-sun:#10231B; }
+    html[data-theme="sand"] { --night-900:#F7F0E5; --night-800:#FFFFFF; --dawn-600:#F1D3AE; --sun-500:#B4531F; --sun-600:#9A4418; --ink-100:#2A1E14; --ink-300:#6B5A48; --ink-500:#8C7A66; --ink-on-sun:#FFFFFF; --line:rgba(60,40,20,.16); }
+    html[data-theme="sand"] input { color-scheme:light; background:#FFFFFF; }
+    html[data-theme="sand"] .btn-secondary { border-color:rgba(60,40,20,.32); }
     * { box-sizing:border-box; }
     html,body { margin:0; min-height:100%; }
     body { font-family:var(--font); color:var(--ink-100); -webkit-font-smoothing:antialiased;
