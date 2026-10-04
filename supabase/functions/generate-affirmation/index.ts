@@ -3,8 +3,11 @@
 // sits on the phone. If anything goes wrong, it returns a reviewed fallback
 // for that mood instead, so the user always gets something within 8 seconds.
 // See HANDOFF.md section 6.5 for why it is built this way.
+// Arise Plus (Oct 3 2026): Claude writes the pep talk only for signed-in Plus
+// subscribers. Everyone else gets the reviewed affirmation for their mood.
 
 import Anthropic from "npm:@anthropic-ai/sdk";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const MODEL = "claude-opus-5"; // Model choice is an open owner decision (HANDOFF section 8).
 const TIMEOUT_MS = 8000; // PRD section 6: fallback must appear within eight seconds.
@@ -81,6 +84,21 @@ function fallback(mood: Mood, reason: string) {
   return json({ source: "fallback", mood, affirmation: FALLBACKS[mood], reason });
 }
 
+// Is the caller a signed-in Plus subscriber? The public key alone never is.
+async function callerIsPlus(req: Request): Promise<boolean> {
+  const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+  if (!token) return false;
+  try {
+    const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const { data: { user } } = await admin.auth.getUser(token);
+    if (!user) return false;
+    const { data } = await admin.rpc("is_plus", { uid: user.id });
+    return data === true;
+  } catch {
+    return false;
+  }
+}
+
 // Counts this call against today's cap. If the counter can't be reached, play safe and say no.
 async function claimAiCall(): Promise<boolean> {
   const url = Deno.env.get("SUPABASE_URL");
@@ -126,6 +144,9 @@ Deno.serve(async (req) => {
 
   const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
   if (!apiKey) return fallback(mood, "no_key");
+  if (!(await callerIsPlus(req))) {
+    return json({ source: "free", mood, affirmation: FALLBACKS[mood] });
+  }
   if (!(await claimAiCall())) return fallback(mood, "daily_cap");
 
   const client = new Anthropic({ apiKey, maxRetries: 0, timeout: TIMEOUT_MS });
