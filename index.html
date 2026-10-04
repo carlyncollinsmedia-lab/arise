@@ -201,6 +201,79 @@
     .toggle-row[aria-checked="true"] .switch { background:var(--sun-500); }
     .toggle-row[aria-checked="true"] .switch::after { left:23px; }
     .sheet { max-height:92%; overflow-y:auto; }
+    /* ============================================================
+       Website layout on computers (900px and wider). Owner request (Uche, 3 Oct 2026):
+       on a computer Arise should look like a full website, not a phone in the middle.
+       Phones and small tablets keep the app layout above.
+       ============================================================ */
+    .site-footer { display:none; }
+    @media (min-width:900px) {
+      body { padding:0; display:block; background:var(--night-900); }
+      #wallpaper { display:none; }
+      .phone { max-width:none; min-height:100vh; border-radius:0; box-shadow:none; overflow:visible;
+        display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto 1fr auto;
+        grid-template-areas:"banner" "bar" "main" "foot";
+        background:linear-gradient(180deg,var(--dawn-600) 0,var(--night-800) 520px,var(--night-900) 100%); }
+      .test-banner { grid-area:banner; }
+      /* Top bar: logo left, page links in the middle, settings and support right */
+      header.top { grid-area:bar; justify-content:flex-start; gap:6px; padding:18px 48px; }
+      .logo { flex-direction:row; gap:10px; margin-right:auto; }
+      .logo span { margin-top:0; font-size:24px; }
+      header.top .icon-btn { position:static; }
+      header.top .icon-btn.left { display:none; }
+      nav.tabbar { grid-area:bar; justify-self:center; align-self:center; z-index:2; display:flex; align-items:center; gap:6px; background:none; border:0; padding:0; }
+      .tab { flex-direction:row; gap:8px; font-size:16px; padding:10px 18px; border-radius:var(--radius-pill); }
+      .tab svg { width:20px; height:20px; }
+      .tab:hover { background:rgba(255,255,255,.07); color:var(--ink-100); }
+      .tab[aria-current="page"] { background:rgba(249,196,90,.14); }
+      .tab[aria-current="page"]::after { display:none; }
+      main { grid-area:main; width:100%; max-width:1280px; margin:0 auto; padding:8px 48px 56px; }
+
+      /* Home: big hero, words on the left, scene on the right */
+      #screen-home.active { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); column-gap:64px; align-content:center;
+        grid-template-areas:"hello scene" "sub scene" "pill scene" "begin scene" "day scene"; grid-template-rows:auto auto auto auto 1fr; }
+      #screen-home .hello { grid-area:hello; text-align:left; font-size:60px; margin:56px 0 12px; }
+      #screen-home .sub { grid-area:sub; text-align:left; font-size:21px; }
+      #screen-home .scene { grid-area:scene; margin:24px 0 0; height:min(640px,70vh); min-height:460px; border-radius:32px; -webkit-mask-image:none; mask-image:none; box-shadow:0 30px 70px rgba(0,0,0,.4); }
+      #screen-home .pill { grid-area:pill; justify-self:start; margin:28px 0 22px; }
+      #screen-home #begin-btn { grid-area:begin; max-width:440px; }
+      #screen-home #justday-btn { grid-area:day; max-width:440px; align-self:start; }
+
+      /* Check-in and pep talk: a centred reading column */
+      #screen-mood, #screen-aff { width:100%; max-width:760px; margin:0 auto; }
+      #screen-mood .q { font-size:40px; margin-top:48px; }
+      #screen-mood .mood .face { width:56px; height:56px; }
+      #screen-mood .spacer, #screen-aff .spacer { flex:0 0 28px; }
+      #screen-aff h1.title { font-size:44px; margin-top:48px; }
+      #screen-mood .btn-primary, #screen-aff .btn-primary { max-width:440px; }
+
+      /* Your day: dashboard, scene on the left, details on the right */
+      #screen-day.active { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); column-gap:40px; align-content:start; }
+      #screen-day > * { grid-column:2; }
+      #screen-day .day-hero { grid-column:1; grid-row:1 / span 8; flex-direction:column; align-items:stretch; margin:0; }
+      #screen-day .day-hero .title { font-size:48px; margin-top:40px; }
+      #screen-day .day-scene { width:100%; height:520px; border-radius:32px; margin-top:16px; -webkit-mask-image:none; mask-image:none; }
+      #screen-day .weather-card { margin-top:40px; }
+      #screen-day .support-link { justify-self:start; }
+
+      /* Reminders and history: wide pages with two-column lists */
+      #screen-reminders, #screen-history { width:100%; max-width:980px; margin:0 auto; }
+      #screen-reminders h1.title, #screen-history h1.title { font-size:44px; margin-top:40px; }
+      #screen-reminders.active { display:grid; grid-template-columns:minmax(0,420px) minmax(0,1fr); column-gap:48px; align-content:start; }
+      #screen-reminders > * { grid-column:1; }
+      #screen-reminders #rem-list { grid-column:2; grid-row:1 / span 6; grid-template-columns:minmax(0,1fr); margin-top:40px; align-content:start; }
+      .list { grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+      /* Sheets become centred windows */
+      .sheet-bg { position:fixed; align-items:center; justify-content:center; }
+      .sheet { width:min(560px,92vw); max-height:88vh; overflow:auto; border-radius:24px; border:1px solid var(--line); }
+
+      .site-footer { grid-area:foot; display:flex; flex-wrap:wrap; gap:8px 28px; align-items:center; justify-content:space-between;
+        max-width:1280px; width:100%; margin:0 auto; padding:28px 48px 36px; border-top:1px solid var(--line); color:var(--ink-500); font-size:14px; }
+      .site-footer a { color:var(--ink-300); font-weight:700; text-decoration:none; }
+      .site-footer a:hover { color:var(--sun-500); }
+      .site-footer nav { display:flex; gap:22px; }
+    }
   </style>
 </head>
 <body>
@@ -339,6 +412,15 @@
     <button class="tab" data-tab="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 20V10M12 20V4M18 20v-7"/></svg>History</button>
   </nav>
 
+  <footer class="site-footer">
+    <span>Arise · your morning companion. A class project for Qubators AI Foundry. Not a medical service.</span>
+    <nav aria-label="More">
+      <a href="reminders.html" target="arise-reminders">Reminders window</a>
+      <a href="design.html">Design</a>
+      <a href="https://github.com/carlyncollinsmedia-lab/arise" rel="noopener">GitHub</a>
+    </nav>
+  </footer>
+
   <div class="sheet-bg" id="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settings-title">
     <div class="sheet">
       <h2 id="settings-title">Settings</h2>
@@ -354,8 +436,8 @@
       <div class="choice-label">Listening</div>
       <button class="toggle-row" id="speak-toggle" role="switch" aria-checked="false" style="margin-top:0"><span class="txt">Read my pep talk out loud<small>It plays by itself each morning. Helpful if you can't see the screen well.</small></span><span class="switch" aria-hidden="true"></span></button>
       <div id="install-block" hidden>
-        <div class="choice-label">On your phone</div>
-        <button class="toggle-row" id="install-btn" style="margin-top:0" hidden><span class="txt">Add Arise to your home screen<small>Opens full screen like an app, even without internet.</small></span><span class="edit" style="color:var(--sun-500);font-weight:800">Add</span></button>
+        <div class="choice-label">Install Arise</div>
+        <button class="toggle-row" id="install-btn" style="margin-top:0" hidden><span class="txt">Add Arise to your home screen or Dock<small>Opens in its own window, even without internet.</small></span><span class="edit" style="color:var(--sun-500);font-weight:800">Add</span></button>
         <p id="install-ios" hidden style="font-size:14px">On iPhone: tap the Share button <span aria-hidden="true">(the square with an arrow)</span>, then <b>Add to Home Screen</b>.</p>
       </div>
       <div class="choice-label">Your town or city</div>
