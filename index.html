@@ -299,7 +299,7 @@
   <main>
     <!-- 1. WAKE GENTLY -->
     <section class="screen active" id="screen-home" aria-label="Home">
-      <h1 class="hello" id="hello">A fresh start, Uche.</h1>
+      <h1 class="hello" id="hello">A fresh start.</h1>
       <p class="sub">Take this morning one step at a time.</p>
       <div class="scene"><img class="bg" id="home-bg" src="assets/companions/web/bg-sunrise.jpg" alt="" /><img class="companion" id="home-companion" src="assets/companions/web/woman-light.webp" alt="Your Arise companion saying good morning" /></div>
       <button class="pill" id="alarm-pill" aria-label="Wake-up alarm. Tap to change."><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M5 3 2 6M19 3l3 3"/></svg><span id="alarm-when">Next alarm · <strong>Tomorrow, 6:00 AM</strong></span><span class="edit">Change</span></button>
@@ -425,6 +425,8 @@
     <div class="sheet">
       <h2 id="settings-title">Settings</h2>
       <p>Choose who greets you each morning. You can change this any time.</p>
+      <label class="choice-label" for="settings-name">Your name</label>
+      <input type="text" id="settings-name" maxlength="40" autocomplete="given-name" placeholder="Your first name" />
       <div class="choice-label">Your companion</div>
       <div class="choices" id="companion-choices">
         <button class="choice" data-companion="woman"><img src="assets/companions/web/woman-light.webp" alt="" />Woman</button>
@@ -466,6 +468,10 @@
     <div class="sheet">
       <h2 id="alarm-title">Your wake-up alarm</h2>
       <p id="alarm-intro">What time should Arise wake you up?</p>
+      <div id="welcome-name" hidden>
+        <label class="choice-label" for="name-input">What should we call you?</label>
+        <input type="text" id="name-input" maxlength="40" autocomplete="given-name" placeholder="Your first name" />
+      </div>
       <label class="choice-label" for="alarm-time">Time</label>
       <input type="time" id="alarm-time" class="alarm-time" value="06:00" />
       <div class="choice-label">Which days?</div>
@@ -610,7 +616,8 @@
   // ---------- Home ----------
   function renderHome() {
     var e = entryToday();
-    document.getElementById('hello').textContent = 'A fresh start, Uche.';
+    var nm = (data.settings.name || '').trim();
+    document.getElementById('hello').textContent = nm ? 'A fresh start, ' + nm + '.' : 'A fresh start.';
     var done = e && e.morning && e.affirmation;
     document.getElementById('begin-main').textContent = done ? 'Continue my morning' : 'Begin my morning';
     document.getElementById('begin-sub').textContent = done ? "Today's check-in is saved" : 'A two-minute check-in';
@@ -788,12 +795,15 @@
     var a = data.settings.alarm;
     draft = { time: a.time, days: a.days.slice(), on: a.on, speak: !!data.settings.speak };
     document.getElementById('alarm-title').textContent = first ? 'Welcome to Arise' : 'Your wake-up alarm';
-    document.getElementById('alarm-intro').textContent = first ? "First, let's set your alarm. What time should Arise wake you up?" : 'What time should Arise wake you up?';
+    document.getElementById('alarm-intro').textContent = first ? "Let's get you set up. It takes less than a minute." : 'What time should Arise wake you up?';
+    document.getElementById('welcome-name').hidden = !first;
+    document.querySelector('#save-alarm .main').textContent = first ? 'Get started' : 'Save alarm';
+    document.getElementById('name-input').value = data.settings.name || '';
     document.getElementById('alarm-time').value = draft.time;
     setSwitch('alarm-on', draft.on); setSwitch('alarm-speak', draft.speak);
     renderDraftDays();
     settings.classList.remove('open');
-    alarmSheet.classList.add('open'); document.getElementById('alarm-time').focus();
+    alarmSheet.classList.add('open'); document.getElementById(first ? 'name-input' : 'alarm-time').focus();
   }
   document.querySelectorAll('[data-quick]').forEach(function (b) {
     b.onclick = function () { draft.days = { weekdays:[1,2,3,4,5], everyday:[0,1,2,3,4,5,6], weekends:[0,6] }[b.dataset.quick].slice(); renderDraftDays(); };
@@ -802,7 +812,9 @@
   document.getElementById('alarm-speak').onclick = function () { draft.speak = !draft.speak; setSwitch('alarm-speak', draft.speak); };
   document.getElementById('save-alarm').onclick = function () {
     data.settings.alarm = { time: document.getElementById('alarm-time').value || '06:00', days: draft.days, on: draft.on };
+    if (!document.getElementById('welcome-name').hidden) data.settings.name = document.getElementById('name-input').value.trim().slice(0, 40);
     data.settings.speak = draft.speak; data.settings.alarmSet = true; save(data);
+    document.getElementById('settings-name').value = data.settings.name || ''; renderHome();
     setSwitch('speak-toggle', draft.speak);
     alarmSheet.classList.remove('open'); renderAlarmPill();
   };
@@ -1110,6 +1122,9 @@
   document.getElementById('close-settings').onclick = function () { settings.classList.remove('open'); };
   settings.addEventListener('click', function (ev) { if (ev.target === settings) settings.classList.remove('open'); });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') settings.classList.remove('open'); });
+  var settingsName = document.getElementById('settings-name');
+  settingsName.value = data.settings.name || '';
+  settingsName.addEventListener('input', function () { data.settings.name = settingsName.value.trim().slice(0, 40); save(data); renderHome(); });
   applyLook();
   refreshWeather();
   document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshWeather(); });
