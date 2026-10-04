@@ -1,6 +1,7 @@
 #!/bin/sh
 # Builds the web version of Arise into dist/ for Netlify.
-# Only the web pages and their pictures go out; docs, the phone app and
+# Only the customer-facing pages and their pictures go out; docs, design.html
+# (Lesson 6 design sheet), the phone app and
 # database files stay in the repo.
 # The Claude key never ships: the page only gets the address of the
 # generate-affirmation function and Supabase's public (publishable) key.
@@ -12,7 +13,7 @@ set -e
 cd "$(dirname "$0")/.."
 rm -rf dist
 mkdir -p dist/assets/companions
-cp index.html design.html reminders.html manifest.webmanifest sw.js dist/
+cp index.html reminders.html manifest.webmanifest sw.js dist/
 cp -R assets/icons dist/assets/
 cp -R assets/companions/web dist/assets/companions/
 find dist -name '._*' -delete
