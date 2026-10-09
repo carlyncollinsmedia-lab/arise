@@ -1,0 +1,34 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Exact alarms. USE_EXACT_ALARM is for apps whose main job is an alarm clock (Android 13+);
+         SCHEDULE_EXACT_ALARM covers Android 12. -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED" />
+
+    <application>
+        <receiver android:name="expo.modules.arisealarm.AlarmReceiver" android:exported="false" android:directBootAware="true" />
+        <!-- Put the alarms back after a restart, an app update, or a clock/time-zone change. -->
+        <receiver android:name="expo.modules.arisealarm.RescheduleReceiver" android:exported="true" android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <service android:name="expo.modules.arisealarm.AlarmService" android:exported="false"
+            android:foregroundServiceType="systemExempted" android:directBootAware="true" />
+        <activity android:name="expo.modules.arisealarm.AlarmActivity" android:exported="false"
+            android:showWhenLocked="true" android:turnScreenOn="true" android:launchMode="singleInstance"
+            android:excludeFromRecents="true" android:directBootAware="true" android:taskAffinity="com.nuuchsystems.arise.alarm"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
+    </application>
+</manifest>

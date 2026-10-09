@@ -1,6 +1,9 @@
 {
-  "platforms": ["apple"],
+  "platforms": ["apple", "android"],
   "apple": {
     "modules": ["AriseAlarmModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.arisealarm.AriseAlarmModule"]
   }
 }
