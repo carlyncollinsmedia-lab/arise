@@ -1,0 +1,831 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Arise Demo Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0}html,body{height:100%;background:#000;overflow:hidden}
+.slide{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden}
+.slide:not(.on){display:none!important}.slide>*:not([style*="position:absolute"]){position:relative;z-index:1}
+.slide p,.slide h1,.slide h2,.slide h3{margin:0}.slide a{color:inherit}
+.slide hr{border:none}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:34vh;overflow:auto;background:#fffbe6;color:#222;font:20px/1.45 Arial,sans-serif;padding:16px 24px;display:none;z-index:9}
+#bar{position:fixed;right:12px;bottom:10px;color:#888;font:14px Arial;z-index:10}
+@media print{@page{size:1920px 1080px;margin:0}html,body{overflow:visible;background:none;height:auto}.slide,.slide:not(.on){position:relative;display:flex!important;transform:none!important;page-break-after:always;break-after:page}#notes,#bar{display:none!important}}
+</style></head><body>
+<section class="slide" id="cover" data-transition="fade" style="background:#111a3b">
+  <img src="images/bg-sunrise.jpg" alt="Arise sunrise scene over hills and water" style="position:absolute; top:0; left:1040px; width:880px; height:1080px; opacity:0.9">
+  <div style="position:absolute; top:0; left:880px; width:360px; height:1080px; display:flex; flex-direction:column; background:linear-gradient(90deg, #111a3b 0%, #111a3b00 100%)">
+  </div>
+  <img src="images/woman-light.png" alt="The Arise companion waving good morning" data-build-in="rise 1" style="position:absolute; top:260px; left:1240px; width:540px; height:805px; object-fit:contain">
+  <div id="p90f011925b8fr0-3b912cd8" style="position:absolute; top:174px; left:128px; width:1664px; height:96px; display:flex; flex-direction:row; gap:24px; align-items:center">
+    <img src="images/icon-512.png" alt="Arise sunrise logo" style="width:96px; height:96px; border-radius:24px; object-fit:contain">
+    <p style="font-family:Nunito, Arial, sans-serif; font-size:32px; font-weight:800; letter-spacing:8px; text-transform:uppercase; color:#f6b93b">Demo Week</p>
+  </div>
+  <h1 id="p90f011925b8fr1-3b912cd8" style="position:absolute; top:302px; left:128px; width:1664px; font-family:Nunito, Arial, sans-serif; font-size:200px; font-weight:900; line-height:1; letter-spacing:-4px; color:#f4f1ea">Arise</h1>
+  <p id="p90f011925b8fr2-3b912cd8" style="position:absolute; top:534px; left:128px; width:860px; font-family:Nunito, Arial, sans-serif; font-size:56px; font-weight:700; line-height:1.2; color:#f4f1ea">Start the day on purpose, not by accident.</p>
+  <p id="p90f011925b8fr3-3b912cd8" style="position:absolute; top:700px; left:128px; width:820px; font-family:'Nunito Sans', Arial, sans-serif; font-size:32px; line-height:1.4; color:#c9d3ee">A wake-up alarm with a companion who asks how you feel, gives you words for that mood, and tells you what to wear.</p>
+  <p id="p90f011925b8fr4-3b912cd8" style="position:absolute; bottom:128px; left:128px; width:820px; font-family:'Nunito Sans', Arial, sans-serif; font-size:28px; line-height:1.4; color:#c9d3ee">Uche Azuike · Nuuch Systems · Qubators AI Foundry 2.0, Cohort 2 · 12 October 2026</p>
+  
+</section>
+
+<section class="slide" id="problem" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:20px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">The problem</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;color:#1C2340;width:1500px">The first minutes of the day happen by accident, and they set the mood for the rest of it.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:32px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:24px;padding:40px">
+<p style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:900;color:#B5551D">6:00</p>
+<h3 style="font-size:36px;font-weight:700;color:#1C2340">The alarm goes off</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A5068">You're half awake and reach for the phone.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:24px;padding:40px">
+<p style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:900;color:#B5551D">6:02</p>
+<h3 style="font-size:36px;font-weight:700;color:#1C2340">Whatever is on the screen</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A5068">News, messages, social media, your to-do list. Nobody chose it.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#1C2340;border-radius:24px;padding:40px">
+<p style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:900;color:#F6B93B">All day</p>
+<h3 style="font-size:36px;font-weight:700;color:#F4F1EA">The tone is already set</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D3EE">Stressed, rushed, or wearing the wrong coat in the rain.</p>
+</div>
+</div>
+
+</section>
+
+<section class="slide" id="survey-wake" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:row;gap:80px;align-items:stretch">
+<div style="width:560px;display:flex;flex-direction:column;gap:28px;justify-content:center">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">Evidence · My survey</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1">I asked 18 people about their mornings.</h2>
+<div style="display:flex;flex-direction:row;align-items:baseline;gap:20px">
+<p style="font-family:'Nunito', Arial, sans-serif;font-size:160px;font-weight:900;line-height:1;color:#B5551D">13</p>
+<p style="font-size:36px;font-weight:700;color:#1C2340">of 18</p>
+</div>
+<p style="font-size:32px;line-height:1.4;color:#4A5068">wake between 5:00 and 6:30 am. That early window is exactly when Arise rings.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px;justify-content:flex-end">
+<p style="font-size:28px;font-weight:700;color:#1C2340">"What time do you usually wake up?" (number of people)</p>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:flex-end;height:620px;border-bottom:3px solid #1C2340">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px"><p style="font-size:36px;font-weight:800;color:#1C2340">2</p><div style="width:100%;height:168px;background:#D9CFBF;border-radius:12px 12px 0 0"></div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px"><p style="font-size:36px;font-weight:800;color:#1C2340">5</p><div style="width:100%;height:420px;background:#F6B93B;border-radius:12px 12px 0 0"></div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px"><p style="font-size:36px;font-weight:800;color:#1C2340">3</p><div style="width:100%;height:252px;background:#F6B93B;border-radius:12px 12px 0 0"></div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px"><p style="font-size:36px;font-weight:800;color:#1C2340">4</p><div style="width:100%;height:336px;background:#F6B93B;border-radius:12px 12px 0 0"></div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px"><p style="font-size:36px;font-weight:800;color:#1C2340">2</p><div style="width:100%;height:168px;background:#D9CFBF;border-radius:12px 12px 0 0"></div></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:12px"><p style="font-size:36px;font-weight:800;color:#1C2340">2</p><div style="width:100%;height:168px;background:#D9CFBF;border-radius:12px 12px 0 0"></div></div>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px">
+<p style="flex:1;font-size:26px;text-align:center;color:#4A5068">Before 5</p>
+<p style="flex:1;font-size:26px;text-align:center;color:#1C2340;font-weight:700">5:00</p>
+<p style="flex:1;font-size:26px;text-align:center;color:#1C2340;font-weight:700">5:30</p>
+<p style="flex:1;font-size:26px;text-align:center;color:#1C2340;font-weight:700">6:00</p>
+<p style="flex:1;font-size:26px;text-align:center;color:#4A5068">6:30–6:45</p>
+<p style="flex:1;font-size:26px;text-align:center;color:#4A5068">7 or later</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B6F85">Source: "Your Mornings" survey, 18 responses, 22–27 September 2026. The survey did not mention Arise. Gold bars = 5:00 to 6:00 answers.</p>
+
+</section>
+
+<section class="slide" id="survey-mind" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">Evidence · My survey</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1">People wake up with a to-do list, and their mood changes day to day.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:72px;flex:1">
+<div style="flex:1;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:30px;font-weight:700;color:#1C2340">"What's on your mind in the first few minutes?"</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">My to-do list</p><div style="width:400px;height:52px;background:#F6B93B;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">9</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">My phone</p><div style="width:133px;height:52px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">3</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">Money</p><div style="width:133px;height:52px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">3</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">Work or school stress</p><div style="width:89px;height:52px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">2</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">How tired I feel</p><div style="width:89px;height:52px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">2</p></div>
+<p style="font-size:28px;line-height:1.4;color:#4A5068;font-weight:600">→ Arise adds a one-line intention and daytime reminders.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:30px;font-weight:700;color:#1C2340">"How do you usually feel when you wake up?"</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">It depends on the day</p><div style="width:311px;height:52px;background:#F6B93B;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">7</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">Calm</p><div style="width:178px;height:52px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">4</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">Energised</p><div style="width:133px;height:52px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">3</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">Groggy</p><div style="width:89px;height:52px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">2</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:300px;font-size:28px;color:#1C2340">Low, stressed</p><div style="width:89px;height:52px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">2</p></div>
+<p style="font-size:28px;line-height:1.4;color:#4A5068;font-weight:600">→ Arise asks how you feel every single morning.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B6F85">Source: "Your Mornings" survey, 18 responses. Left question allowed more than one answer.</p>
+
+</section>
+
+<section class="slide" id="survey-habits" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">Evidence · My survey</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1">Every feature answers a real habit.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:64px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:30px;font-weight:700">"Before you leave the house, what do you usually do?"</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:330px;font-size:28px">Pray or meditate</p><div style="width:483px;height:48px;background:#F6B93B;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">15</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:330px;font-size:28px">Choose an outfit</p><div style="width:354px;height:48px;background:#F6B93B;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">11</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:330px;font-size:28px">Check messages</p><div style="width:354px;height:48px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">11</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:330px;font-size:28px">Music or a podcast</p><div style="width:322px;height:48px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">10</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:330px;font-size:28px">Eat breakfast</p><div style="width:258px;height:48px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">8</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:330px;font-size:28px">Scroll social media</p><div style="width:225px;height:48px;background:#D9CFBF;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">7</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px"><p style="width:330px;font-size:28px">Check the weather</p><div style="width:193px;height:48px;background:#F6B93B;border-radius:0 10px 10px 0"></div><p style="font-size:30px;font-weight:800">6</p></div>
+</div>
+<div style="width:620px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;font-weight:700">What Arise gives them</p>
+<div style="display:flex;flex-direction:column;gap:6px;background:#1C2340;border-radius:20px;padding:28px 32px">
+<p style="font-size:28px;font-weight:700;color:#F6B93B">Outfit + weather → day brief</p>
+<p style="font-size:26px;line-height:1.35;color:#C9D3EE">Live weather, what to wear, and whether to take an umbrella.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;background:#1C2340;border-radius:20px;padding:28px 32px">
+<p style="font-size:28px;font-weight:700;color:#F6B93B">Pray or meditate → faith quote</p>
+<p style="font-size:26px;line-height:1.35;color:#C9D3EE">A quote from your own faith each day, in Arise Plus.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;background:#1C2340;border-radius:20px;padding:28px 32px">
+<p style="font-size:28px;font-weight:700;color:#F6B93B">11 of 18 tried affirmations</p>
+<p style="font-size:26px;line-height:1.35;color:#C9D3EE">A pep talk for today's mood. 10 of 18 have tried a new alarm app.</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B6F85">Source: "Your Mornings" survey, 18 responses; more than one answer allowed. Gold bars = habits Arise supports directly.</p>
+
+</section>
+
+<section class="slide" id="survey-fail" data-transition="fade" style="background:#111A3B;color:#F4F1EA;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#F6B93B">Evidence · Why routines stop</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1;color:#F4F1EA">When a morning routine failed, people told me why. Each reason became a design rule.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#1B2652;border-radius:24px;padding:44px">
+<p style="font-size:30px;color:#C9D3EE">"It got repetitive"</p>
+<p style="font-family:'Nunito', Arial, sans-serif;font-size:96px;font-weight:900;line-height:1;color:#F6B93B">3</p>
+<hr style="border-top:2px solid #3A4675;width:100%">
+<h3 style="font-size:36px;font-weight:700;color:#F4F1EA">Rule: the words change every day</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D3EE">Never the same pep talk twice in a row.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#1B2652;border-radius:24px;padding:44px">
+<p style="font-size:30px;color:#C9D3EE">"I kept forgetting"</p>
+<p style="font-family:'Nunito', Arial, sans-serif;font-size:96px;font-weight:900;line-height:1;color:#F6B93B">2</p>
+<hr style="border-top:2px solid #3A4675;width:100%">
+<h3 style="font-size:36px;font-weight:700;color:#F4F1EA">Rule: the alarm starts it</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D3EE">You can't forget a routine that wakes you up.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#1B2652;border-radius:24px;padding:44px">
+<p style="font-size:30px;color:#C9D3EE">"Lost motivation" or "too much time"</p>
+<p style="font-family:'Nunito', Arial, sans-serif;font-size:96px;font-weight:900;line-height:1;color:#F6B93B">3</p>
+<hr style="border-top:2px solid #3A4675;width:100%">
+<h3 style="font-size:36px;font-weight:700;color:#F4F1EA">Rule: two minutes or less</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D3EE">One tap for your mood. Typing is optional.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#9AA6C8">Source: "Your Mornings" survey, 18 responses. On the good side, 8 of 18 said they noticed a difference when a routine stuck.</p>
+
+</section>
+
+<section class="slide" id="design" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">Solution design</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1">One routine, from the alarm to bedtime.</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<p style="font-size:28px;font-weight:700;color:#B5551D">The morning · under two minutes</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:16px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2340;border-radius:20px;padding:28px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:48px;height:48px;color:#F6B93B">
+  <circle cx="12" cy="12" r="10" />
+  <polyline points="12 6 12 12 16 14" />
+</svg>
+<h3 style="font-size:30px;font-weight:700;color:#F4F1EA">Alarm rings</h3><p style="font-size:24px;line-height:1.35;color:#C9D3EE">Even locked or restarted</p></div>
+<svg viewBox="0 0 10 5" preserveAspectRatio="none" style="flex:none;width:44px;height:24px"><path d="M0 1.5H6V0L10 2.5L6 5V3.5H0Z" fill="#D9CFBF"/></svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2340;border-radius:20px;padding:28px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:48px;height:48px;color:#F6B93B">
+  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+  <circle cx="9" cy="7" r="4" />
+  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+</svg>
+<h3 style="font-size:30px;font-weight:700;color:#F4F1EA">Companion greets you</h3><p style="font-size:24px;line-height:1.35;color:#C9D3EE">A face you chose</p></div>
+<svg viewBox="0 0 10 5" preserveAspectRatio="none" style="flex:none;width:44px;height:24px"><path d="M0 1.5H6V0L10 2.5L6 5V3.5H0Z" fill="#D9CFBF"/></svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2340;border-radius:20px;padding:28px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:48px;height:48px;color:#F6B93B">
+  <path d="M7 10v12" />
+  <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" />
+</svg>
+<h3 style="font-size:30px;font-weight:700;color:#F4F1EA">Mood in one tap</h3><p style="font-size:24px;line-height:1.35;color:#C9D3EE">Five smiley faces</p></div>
+<svg viewBox="0 0 10 5" preserveAspectRatio="none" style="flex:none;width:44px;height:24px"><path d="M0 1.5H6V0L10 2.5L6 5V3.5H0Z" fill="#D9CFBF"/></svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2340;border-radius:20px;padding:28px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:48px;height:48px;color:#F6B93B">
+  <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+</svg>
+<h3 style="font-size:30px;font-weight:700;color:#F4F1EA">Pep talk</h3><p style="font-size:24px;line-height:1.35;color:#C9D3EE">For that mood, read aloud</p></div>
+<svg viewBox="0 0 10 5" preserveAspectRatio="none" style="flex:none;width:44px;height:24px"><path d="M0 1.5H6V0L10 2.5L6 5V3.5H0Z" fill="#D9CFBF"/></svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2340;border-radius:20px;padding:28px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:48px;height:48px;color:#F6B93B">
+  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+</svg>
+<h3 style="font-size:30px;font-weight:700;color:#F4F1EA">Day brief</h3><p style="font-size:24px;line-height:1.35;color:#C9D3EE">Weather, outfit, umbrella</p></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<p style="font-size:28px;font-weight:700;color:#B5551D">The rest of the day</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:16px">
+<div style="flex:1;display:flex;flex-direction:row;align-items:center;gap:20px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:20px;padding:28px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:44px;height:44px;color:#B5551D">
+  <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+  <path d="M9 18h6" />
+  <path d="M10 22h4" />
+</svg>
+<h3 style="font-size:30px;font-weight:700">Today's intention</h3></div>
+<svg viewBox="0 0 10 5" preserveAspectRatio="none" style="flex:none;width:44px;height:24px"><path d="M0 1.5H6V0L10 2.5L6 5V3.5H0Z" fill="#D9CFBF"/></svg>
+<div style="flex:1;display:flex;flex-direction:row;align-items:center;gap:20px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:20px;padding:28px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:44px;height:44px;color:#B5551D">
+  <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
+</svg>
+<h3 style="font-size:30px;font-weight:700">Reminders</h3></div>
+<svg viewBox="0 0 10 5" preserveAspectRatio="none" style="flex:none;width:44px;height:24px"><path d="M0 1.5H6V0L10 2.5L6 5V3.5H0Z" fill="#D9CFBF"/></svg>
+<div style="flex:1;display:flex;flex-direction:row;align-items:center;gap:20px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:20px;padding:28px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:44px;height:44px;color:#B5551D">
+  <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+</svg>
+<h3 style="font-size:30px;font-weight:700">Evening check-in</h3></div>
+<svg viewBox="0 0 10 5" preserveAspectRatio="none" style="flex:none;width:44px;height:24px"><path d="M0 1.5H6V0L10 2.5L6 5V3.5H0Z" fill="#D9CFBF"/></svg>
+<div style="flex:1;display:flex;flex-direction:row;align-items:center;gap:20px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:20px;padding:28px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:44px;height:44px;color:#B5551D">
+  <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+  <path d="M18 17V9" />
+  <path d="M13 17V5" />
+  <path d="M8 17v-3" />
+</svg>
+<h3 style="font-size:30px;font-weight:700">History</h3></div>
+</div>
+</div>
+
+</section>
+
+<section class="slide" id="screens1" data-transition="fade" style="background:#111A3B;color:#F4F1EA;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:row;gap:72px;align-items:center">
+<div style="flex:1;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#F6B93B">Solution · Real screens</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1;color:#F4F1EA">The morning check-in, one tap at a time.</h2>
+<p style="font-size:30px;line-height:1.45;color:#C9D3EE">Your companion greets you by name. One tap tells Arise how you feel, and it saves straight away. Then you get words for that mood, with a button to hear them read aloud.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:36px">
+<div style="width:300px;display:flex;flex-direction:column;gap:16px"><img src="images/a1-home.jpg" alt="Arise home screen: A fresh start, Uche, with the companion waving and the next alarm" style="width:300px;height:650px;object-fit:cover;border-radius:36px;border:6px solid #3A4675"><p style="font-size:26px;line-height:1.3;color:#F4F1EA"><b>Home.</b> Your companion and your next alarm.</p></div>
+<div style="width:300px;display:flex;flex-direction:column;gap:16px"><img src="images/a3-mood-picked.jpg" alt="How are you this morning? Five smiley faces, Good selected, Saved" style="width:300px;height:650px;object-fit:cover;border-radius:36px;border:6px solid #3A4675"><p style="font-size:26px;line-height:1.3;color:#F4F1EA"><b>Mood.</b> Five smiley faces, one tap.</p></div>
+<div style="width:300px;display:flex;flex-direction:column;gap:16px"><img src="images/a4-peptalk.jpg" alt="For this morning: a pep talk for a good mood, with a Read it to me button" style="width:300px;height:650px;object-fit:cover;border-radius:36px;border:6px solid #F6B93B"><p style="font-size:26px;line-height:1.3;color:#F4F1EA"><b>Pep talk.</b> Words for that mood.</p></div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#9AA6C8">Screenshots of the live Arise app at phone size, taken 11 October 2026. The Android APK runs the same journey in the live demo.</p>
+
+</section>
+
+<section class="slide" id="screens2" data-transition="fade" style="background:#111A3B;color:#F4F1EA;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:row;gap:72px;align-items:center">
+<div style="flex:1;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#F6B93B">Solution · Real screens</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1;color:#F4F1EA">It knows it's 0° in Calgary, so the companion wears a winter coat.</h2>
+<p style="font-size:30px;line-height:1.45;color:#C9D3EE">The day brief turns live weather into plain advice: what to wear and whether you need an umbrella. Help is always one tap away.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:36px">
+<div style="width:300px;display:flex;flex-direction:column;gap:16px"><img src="images/a5-day.jpg" alt="Ready for your day: Calgary 0 degrees, dress for winter, no umbrella needed, companion in a winter coat" style="width:300px;height:650px;object-fit:cover;border-radius:36px;border:6px solid #F6B93B"><p style="font-size:26px;line-height:1.3;color:#F4F1EA"><b>Day brief.</b> Dress for winter, no umbrella.</p></div>
+<div style="width:300px;display:flex;flex-direction:column;gap:16px"><img src="images/a6-weather.jpg" alt="Weather tab: Calgary 0 degrees, next 24 hours and 7-day forecast" style="width:300px;height:650px;object-fit:cover;border-radius:36px;border:6px solid #3A4675"><p style="font-size:26px;line-height:1.3;color:#F4F1EA"><b>Weather.</b> Next 24 hours and 7 days.</p></div>
+<div style="width:300px;display:flex;flex-direction:column;gap:16px"><img src="images/a9-support.jpg" alt="Get support sheet: Arise is not a crisis service; call or text 9-8-8 in Canada" style="width:300px;height:650px;object-fit:cover;border-radius:36px;border:6px solid #3A4675"><p style="font-size:26px;line-height:1.3;color:#F4F1EA"><b>Get support.</b> The help line for your country.</p></div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#9AA6C8">Screenshots of the live Arise app, 11 October 2026, 10:04 pm. Weather from Open-Meteo, live.</p>
+
+</section>
+
+<section class="slide" id="alarm-proof" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">Working app · Proof</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1">I tested the alarm first, before building anything else.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:24px;padding:40px">
+<h3 style="font-size:34px;font-weight:700">iPhone 14 Pro Max · iOS 26.7 · 30 Sep</h3>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:44px;height:44px;color:#2F7A4F">
+  <circle cx="12" cy="12" r="10" />
+  <path d="m9 12 2 2 4-4" />
+</svg>
+<p style="flex:1;font-size:30px">Phone locked, app closed</p><p style="font-size:28px;font-weight:800;color:#2F7A4F">Passed</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:44px;height:44px;color:#2F7A4F">
+  <circle cx="12" cy="12" r="10" />
+  <path d="m9 12 2 2 4-4" />
+</svg>
+<p style="flex:1;font-size:30px">After a restart</p><p style="font-size:28px;font-weight:800;color:#2F7A4F">Passed</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:44px;height:44px;color:#2F7A4F">
+  <circle cx="12" cy="12" r="10" />
+  <path d="m9 12 2 2 4-4" />
+</svg>
+<p style="flex:1;font-size:30px">Airplane mode, no network</p><p style="font-size:28px;font-weight:800;color:#2F7A4F">Passed</p></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:44px;height:44px;color:#2F7A4F">
+  <circle cx="12" cy="12" r="10" />
+  <path d="m9 12 2 2 4-4" />
+</svg>
+<p style="flex:1;font-size:30px">Do Not Disturb on</p><p style="font-size:28px;font-weight:800;color:#2F7A4F">Passed</p></div>
+</div>
+<div style="width:640px;display:flex;flex-direction:column;gap:20px;background:#1C2340;border-radius:24px;padding:40px">
+<h3 style="font-size:34px;font-weight:700;color:#F4F1EA">Samsung A04e · Android 14 · 8 Oct</h3>
+<p style="font-family:'Nunito', Arial, sans-serif;font-size:72px;font-weight:900;line-height:1;color:#F6B93B">Passed</p>
+<p style="font-size:28px;line-height:1.45;color:#C9D3EE">Rang on the minute using Android's alarm clock, opened the full-screen alarm with "I'm up" and Snooze, then set itself for the next day.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B6F85">Source: docs/TECHNICAL-NOTES.md, alarm spike test report, in the GitHub repo. Why first: one survey answer to "a bad morning" was "the alarm didn't ring".</p>
+
+</section>
+
+<section class="slide" id="demo" data-transition="fade" style="background:#F6B93B;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<img src="images/man-light.png" alt="The male Arise companion, ready for the demo" style="position:absolute;left:1300px;top:180px;width:600px;height:900px;object-fit:contain">
+<p style="font-size:30px;font-weight:800;letter-spacing:6px;text-transform:uppercase;color:#1C2340">Live demo</p>
+<h1 style="font-family:'Nunito', Arial, sans-serif;font-size:120px;font-weight:900;line-height:1;color:#1C2340;width:1100px">The Android APK, on my Samsung.</h1>
+<div style="display:flex;flex-direction:column;gap:14px;width:1080px">
+<p style="font-size:36px;line-height:1.3;color:#1C2340"><b>1.</b> Set a real alarm for one minute from now</p>
+<p style="font-size:36px;line-height:1.3;color:#1C2340"><b>2.</b> Tap my mood and get my pep talk</p>
+<p style="font-size:36px;line-height:1.3;color:#1C2340"><b>3.</b> The alarm rings: "I'm up" or Snooze</p>
+<p style="font-size:36px;line-height:1.3;color:#1C2340"><b>4.</b> Weather, what to wear, and History</p>
+</div>
+
+</section>
+
+<section class="slide" id="built" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">How it's built</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1">Your feelings stay on your phone. The server only holds what it must.</h2>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1C2340;border-radius:24px;padding:36px">
+
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:48px;height:48px;color:#F6B93B">
+  <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+</svg>
+
+<h3 style="font-size:34px;font-weight:700;color:#F4F1EA">On your phone</h3>
+<p style="font-size:26px;line-height:1.4;color:#C9D3EE">Android APK (React Native, Kotlin alarm). iPhone (Apple AlarmKit). Installable web app.</p>
+<p style="font-size:26px;line-height:1.4;color:#F6B93B;font-weight:700">Moods, notes, history and reminders are stored here only.</p>
+</div>
+<svg viewBox="0 0 10 5" preserveAspectRatio="none" style="flex:none;width:64px;height:32px"><path d="M0 1.5H6V0L10 2.5L6 5V3.5H0Z" fill="#B5551D"/></svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:24px;padding:36px">
+
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:48px;height:48px;color:#B5551D">
+  <ellipse cx="12" cy="5" rx="9" ry="3" />
+  <path d="M3 5V19A9 3 0 0 0 21 19V5" />
+  <path d="M3 12A9 3 0 0 0 21 12" />
+</svg>
+
+<h3 style="font-size:34px;font-weight:700">Supabase server</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5068">Sign-in by email link. Whether you pay for Plus. A daily cap of 300 AI calls.</p>
+<p style="font-size:26px;line-height:1.4;color:#4A5068">The AI key lives here, never in the app.</p>
+</div>
+<svg viewBox="0 0 10 5" preserveAspectRatio="none" style="flex:none;width:64px;height:32px"><path d="M0 1.5H6V0L10 2.5L6 5V3.5H0Z" fill="#B5551D"/></svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:24px;padding:36px">
+
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:48px;height:48px;color:#B5551D">
+  <circle cx="12" cy="12" r="10" />
+  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+  <path d="M2 12h20" />
+</svg>
+
+<h3 style="font-size:34px;font-weight:700">Services</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5068"><b>Claude</b> writes pep talks. <b>Stripe</b> takes payments. <b>Open-Meteo</b> gives weather. Email from <b>hello@nuuchsystems.com</b>.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B6F85">Built with Claude Code from my PRD (the product bible). Hosting: Netlify. Code: github.com/carlyncollinsmedia-lab/arise</p>
+
+</section>
+
+<section class="slide" id="proof-build" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">Proof · Built and tested step by step</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1">67 commits on GitHub, one for every working step.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:56px">
+<img src="images/gh-commits.jpg" alt="GitHub commit history for the Arise repository, newest commits first" style="width:860px;height:604px;object-fit:cover;border-radius:16px;border:2px solid #E8DFD1;background:#FFFFFF">
+<div style="flex:1;display:flex;flex-direction:column;gap:22px">
+<p style="font-size:28px;font-weight:700">Tests with real results</p>
+<div style="display:flex;flex-direction:row;gap:18px;align-items:flex-start">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:40px;height:40px;color:#2F7A4F">
+  <circle cx="12" cy="12" r="10" />
+  <path d="m9 12 2 2 4-4" />
+</svg>
+<p style="flex:1;font-size:28px;line-height:1.35"><b>Claude pep talk</b> tested live, 30 Sep: answered in 6.0 and 8.2 seconds</p></div>
+<div style="display:flex;flex-direction:row;gap:18px;align-items:flex-start">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:40px;height:40px;color:#2F7A4F">
+  <circle cx="12" cy="12" r="10" />
+  <path d="m9 12 2 2 4-4" />
+</svg>
+<p style="flex:1;font-size:28px;line-height:1.35"><b>Free pep talk</b> checked 11 Oct: 1.4 seconds</p></div>
+<div style="display:flex;flex-direction:row;gap:18px;align-items:flex-start">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:40px;height:40px;color:#2F7A4F">
+  <circle cx="12" cy="12" r="10" />
+  <path d="m9 12 2 2 4-4" />
+</svg>
+<p style="flex:1;font-size:28px;line-height:1.35"><b>Stripe test payment</b> worked: subscription active until 4 Nov</p></div>
+<div style="display:flex;flex-direction:row;gap:18px;align-items:flex-start">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:40px;height:40px;color:#2F7A4F">
+  <circle cx="12" cy="12" r="10" />
+  <path d="m9 12 2 2 4-4" />
+</svg>
+<p style="flex:1;font-size:28px;line-height:1.35"><b>10 of 10</b> database tables locked so people see only their own rows</p></div>
+<div style="display:flex;flex-direction:row;gap:18px;align-items:flex-start">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:40px;height:40px;color:#B5551D">
+  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+</svg>
+<p style="flex:1;font-size:28px;line-height:1.35"><b>Bug found and fixed</b> 11 Oct while making these slides</p></div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B6F85">Commits by day: 18 Sep 1 · 26 Sep 14 · 30 Sep 20 · 3 Oct 30 · 8 Oct 1 · 11 Oct 1. Test log: docs/integration-test-log.md.</p>
+
+</section>
+
+<section class="slide" id="safety" data-transition="fade" style="background:#111A3B;color:#F4F1EA;font-family:'Nunito Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#F6B93B">Safety and privacy</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1;color:#F4F1EA">A mood app will one day hear something serious. Arise is ready for it.</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+<div style="display:flex;flex-direction:row;gap:28px;background:#1B2652;border-radius:24px;padding:36px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:52px;height:52px;color:#F6B93B">
+  <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+  <path d="M12 9v4" />
+  <path d="M12 17h.01" />
+</svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px"><h3 style="font-size:34px;font-weight:700;color:#F4F1EA">Honest from day one</h3><p style="font-size:28px;line-height:1.4;color:#C9D3EE">Setup says Arise is for motivation. It is not therapy or a crisis service.</p></div></div>
+<div style="display:flex;flex-direction:row;gap:28px;background:#1B2652;border-radius:24px;padding:36px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:52px;height:52px;color:#F6B93B">
+  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+  <path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66" />
+  <path d="m18 15-2-2" />
+  <path d="m15 18-2-2" />
+</svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px"><h3 style="font-size:34px;font-weight:700;color:#F4F1EA">Crisis words get a person</h3><p style="font-size:28px;line-height:1.4;color:#C9D3EE">Arise skips the pep talk and shows a calm message with a help line. Lines for 15 countries.</p></div></div>
+<div style="display:flex;flex-direction:row;gap:28px;background:#1B2652;border-radius:24px;padding:36px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:52px;height:52px;color:#F6B93B">
+  <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+  <path d="m9 12 2 2 4-4" />
+</svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px"><h3 style="font-size:34px;font-weight:700;color:#F4F1EA">The AI never makes up a number</h3><p style="font-size:28px;line-height:1.4;color:#C9D3EE">Phone numbers come from a checked list, and a note can't change what the AI may say.</p></div></div>
+<div style="display:flex;flex-direction:row;gap:28px;background:#1B2652;border-radius:24px;padding:36px">
+<svg
+ 
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+ style="flex:none;width:52px;height:52px;color:#F6B93B">
+  <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+</svg>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px"><h3 style="font-size:34px;font-weight:700;color:#F4F1EA">Private by default</h3><p style="font-size:28px;line-height:1.4;color:#C9D3EE">Feelings stay on your phone. Privacy policy and terms are written, ready for a lawyer's review.</p></div></div>
+</div>
+
+</section>
+
+<section class="slide" id="plus" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:row;gap:96px;align-items:center">
+<img src="images/a8-plus.jpg" alt="Arise Plus page: 4.99 CAD a month with the list of Plus features" style="width:330px;height:715px;object-fit:cover;border-radius:36px;border:6px solid #1C2340">
+<div style="flex:1;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">Business model</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:64px;font-weight:800;line-height:1.1">Free to start. Arise Plus pays for the AI.</h2>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:24px;padding:36px">
+<h3 style="font-size:36px;font-weight:700">Free</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A5068">Alarm, mood check-in, reviewed pep talks, weather and outfit, reminders, history.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2340;border-radius:24px;padding:36px">
+<h3 style="font-size:36px;font-weight:700;color:#F6B93B">Plus · $4.99 CAD a month</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D3EE">A pep talk written by Claude each morning, one rewrite a day, and a faith quote for your own faith.</p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4A5068">Payments run through Stripe in test mode. My test purchase created a real subscription record, active until 4 November.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B6F85">Cost control: short AI answers, two AI calls per Plus member a day, and a cap of 300 AI calls a day for the whole app.</p>
+
+</section>
+
+<section class="slide" id="next" data-transition="fade" style="background:#FBF6EE;color:#1C2340;font-family:'Nunito Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:36px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B5551D">Roadmap</p>
+<h2 style="font-family:'Nunito', Arial, sans-serif;font-size:60px;font-weight:800;line-height:1.1">Where Arise goes next, phase by phase.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;background:#1C2340;border-radius:24px;padding:36px">
+<p style="font-size:26px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#F6B93B">Phase 1 · Done</p>
+<div style="display:flex;flex-direction:column;gap:4px"><h3 style="font-size:30px;font-weight:700;color:#F4F1EA">Android APK</h3><p style="font-size:24px;line-height:1.35;color:#C9D3EE">Real alarm, signed and ready for Google Play</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><h3 style="font-size:30px;font-weight:700;color:#F4F1EA">iPhone alarm tested</h3><p style="font-size:24px;line-height:1.35;color:#C9D3EE">Passed all 4 tests</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><h3 style="font-size:30px;font-weight:700;color:#F4F1EA">Live web app</h3><p style="font-size:24px;line-height:1.35;color:#C9D3EE">Installs on any phone or computer</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><h3 style="font-size:30px;font-weight:700;color:#F4F1EA">Arise Plus</h3><p style="font-size:24px;line-height:1.35;color:#C9D3EE">Payments working in test mode</p></div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:24px;padding:36px">
+<p style="font-size:26px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#B5551D">Phase 2 · Next</p>
+<div style="display:flex;flex-direction:column;gap:4px"><h3 style="font-size:30px;font-weight:700">Google Play and App Store</h3><p style="font-size:24px;line-height:1.35;color:#4A5068">12 testers for 14 days, then iPhone, with real payments</p></div>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FDF0D5;border:2px solid #F6B93B;border-radius:16px;padding:18px 20px"><h3 style="font-size:30px;font-weight:700">Rhapsody of Realities</h3><p style="font-size:24px;line-height:1.35;color:#4A5068">Today's devotional for Christian users in Plus. I'll ask Christ Embassy (LoveWorld) for permission; until then, a button opens the official Rhapsody app.</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><h3 style="font-size:30px;font-weight:700">Lock-screen widget</h3><p style="font-size:24px;line-height:1.35;color:#4A5068">Today's words and weather without opening the app</p></div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;background:#FFFFFF;border:2px solid #E8DFD1;border-radius:24px;padding:36px">
+<p style="font-size:26px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#B5551D">Phase 3 · Plus grows</p>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FDF0D5;border:2px solid #F6B93B;border-radius:16px;padding:18px 20px"><h3 style="font-size:30px;font-weight:700">Pep talks in your language</h3><p style="font-size:24px;line-height:1.35;color:#4A5068">The AI speaks your morning words in languages like Igbo, Yoruba, Hausa or French</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><h3 style="font-size:30px;font-weight:700">A companion that talks</h3><p style="font-size:24px;line-height:1.35;color:#4A5068">A real voice greets you, plus more voices and companions</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><h3 style="font-size:30px;font-weight:700">Send a morning</h3><p style="font-size:24px;line-height:1.35;color:#4A5068">Share today's encouragement with a friend</p></div>
+</div>
+</div>
+<p style="font-size:26px;color:#4A5068"><b style="color:#1C2340">Later:</b> choose your pep-talk tone (gentle, practical or uplifting) · a calendar-aware day brief · more faiths in the quote library</p>
+
+</section>
+
+<section class="slide" id="thanks" data-transition="fade" style="background:#111A3B;color:#F4F1EA;font-family:'Nunito Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:36px">
+<img src="images/bg-sunrise.jpg" alt="" style="position:absolute;left:1040px;top:0px;width:880px;height:1080px;object-fit:cover;opacity:0.9">
+<div style="position:absolute;left:880px;top:0px;width:360px;height:1080px;background:linear-gradient(90deg, #111A3B 0%, rgba(17,26,59,0) 100%)"></div>
+<img src="images/woman-light.png" alt="The Arise companion waving" style="position:absolute;left:1240px;top:260px;width:540px;height:805px;object-fit:contain">
+<h1 style="font-family:'Nunito', Arial, sans-serif;font-size:160px;font-weight:900;line-height:1;color:#F4F1EA">Thank you.</h1>
+<p style="font-family:'Nunito', Arial, sans-serif;font-size:56px;font-weight:700;color:#F6B93B">Questions?</p>
+<div style="display:flex;flex-direction:column;gap:14px;width:900px">
+<p style="font-size:30px;color:#C9D3EE"><b style="color:#F4F1EA">Android APK:</b> <a href="https://github.com/carlyncollinsmedia-lab/arise/releases/tag/v1.0.0">github.com/carlyncollinsmedia-lab/arise/releases</a></p>
+<p style="font-size:30px;color:#C9D3EE"><b style="color:#F4F1EA">Try it on the web:</b> <a href="https://arise-morning.netlify.app">arise-morning.netlify.app</a></p>
+<p style="font-size:30px;color:#C9D3EE"><b style="color:#F4F1EA">Code:</b> <a href="https://github.com/carlyncollinsmedia-lab/arise">github.com/carlyncollinsmedia-lab/arise</a></p>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#F4F1EA;width:900px"><b style="color:#F6B93B">What I learned:</b> the AI builds exactly what you describe, so clear planning is the real work. Test the riskiest part first.</p>
+<p style="font-size:28px;color:#C9D3EE">Uche Azuike · Nuuch Systems · hello@nuuchsystems.com</p>
+
+</section>
+
+<div id="notes"></div><div id="bar">← → to move · N for notes · F for full screen</div>
+<script>
+var S=[].slice.call(document.querySelectorAll('.slide')),N=["Good morning. My name is Uche Azuike and this is Arise. I'll cover three things you're grading: the problem, the solution design, and the working Android APK, which I'll demo live.","Most of us pick up our phone within minutes of waking. I do: I wake at six, and I'm on my phone straight away. Whatever shows up sets the mood for the day, and none of us chose it. That's the problem Arise solves.","Before building anything, I ran a survey called Your Mornings. 18 people answered, and the survey never mentioned Arise, so the answers weren't biased. 13 of 18 wake between 5 and 6:30, the exact window Arise is built for.","Half the people, 9 of 18, said their first thought is their to-do list. And the most common answer to how you feel was \"it depends on the day\". So Arise asks your mood every morning instead of assuming it, and gives you a one-line intention for the day.","15 of 18 pray or meditate before leaving. 11 choose an outfit and 6 check the weather. 11 have tried affirmations and 10 have tried a new alarm app. So every part of Arise answers something people already do.","The reasons routines failed were \"it got repetitive\", \"I kept forgetting\" and \"I lost motivation\". So: the words change every day, the alarm starts the routine so you can't forget it, and the whole thing takes two minutes or less.","Here's the design. The alarm rings, the companion greets you, you tap your mood, you get a pep talk for that mood, and you see the weather and what to wear. All under two minutes. During the day there's an intention and reminders, in the evening a short check-in, and History shows your week.","These are real screenshots, taken last night. Home greets me by name, one tap for my mood, and then a pep talk written for that mood, which it can read out loud.","Last night it was 0 degrees in Calgary, so the companion is in a winter coat and the app says dress for winter, no umbrella needed. The weather tab has the next 24 hours and 7 days. And Get support is always one tap away, with the right help line for your country.","The alarm is the riskiest part. If it fails once, the user is gone. So I tested it before building anything else. On iPhone it passed four tests: locked, after a restart, in airplane mode and on Do Not Disturb. On my Samsung it rang on the minute and opened the full-screen alarm. The full report is in the GitHub repo.","Now the live demo. You're seeing my real phone screen. First I'll set a real alarm for one minute from now: Settings, test alarm. While we wait, I'll tap my mood and get my pep talk. When the alarm rings I'll show the full-screen alarm and press I'm up. Then the weather and History. If the alarm doesn't ring: it passed on this phone on 8 October and the iPhone version passed four tests. Move on.","I followed the course method: PRD first, then building with Claude Code. The design choice I'm proudest of: your moods and notes stay on your own phone. The server only keeps your sign-in email, whether you pay, and a count of AI uses. The Claude key stays on the server, never inside the app.","The course asks for version history, so every working step is its own commit: 67 so far. The tests have real results: the Claude pep talk answered in 6 and 8 seconds, the Stripe test payment created a real subscription record, and all 10 database tables are locked so people only see their own rows. While making these slides I even found a bug, where the website's History lost free users' mornings, and fixed it the same night.","Someone will eventually type something serious into a mood app. Arise says plainly it is not therapy. If a note sounds like a crisis, it skips the pep talk and shows a help line for your country. The AI is never allowed to make up a phone number. And your feelings stay on your phone.","Arise is free to start. Arise Plus is 4.99 Canadian a month and pays for the AI: a pep talk written by Claude each morning and a faith quote, since 15 of 18 people in my survey pray or meditate. Payments go through Stripe in test mode, and my test purchase worked.","Phase 1 is done: the Android APK, the tested iPhone alarm, the live web app and Arise Plus in test mode. Phase 2: Google Play and the App Store, and Rhapsody of Realities for Christian users in Plus. I haven't spoken to Christ Embassy yet, so I'll ask LoveWorld for permission; until then a button opens the official Rhapsody app, and nothing is copied. Also a lock-screen widget. Phase 3 grows Plus: the AI speaks your pep talk in your own language, like Igbo, Yoruba, Hausa or French, a companion that talks with a real voice, and sending a morning to a friend.","Thank you. I'm happy to take questions. The prep page has short answers to the likely ones: did you write the code, what if the AI says something harmful, where is the data stored, and why it isn't in the stores yet."],i=0,showN=false;
+try{i=Math.max(0,Math.min(S.length-1,(+location.hash.slice(1)||1)-1))}catch(e){}
+function fit(){var k=Math.min(innerWidth/1920,innerHeight/1080),x=(innerWidth-1920*k)/2,y=(innerHeight-1080*k)/2;S.forEach(function(s){s.style.transform='translate('+x+'px,'+y+'px) scale('+k+')'})}
+function go(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach(function(s,j){s.classList.toggle('on',j===i)});document.getElementById('notes').textContent=N[i];document.getElementById('bar').textContent=(i+1)+' / '+S.length+'  ·  ← → move · N notes · F full screen';history.replaceState(null,'','#'+(i+1))}
+addEventListener('keydown',function(e){if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key)>=0)go(i+1);else if(['ArrowLeft','PageUp','Backspace'].indexOf(e.key)>=0)go(i-1);else if(e.key==='n'||e.key==='N'){showN=!showN;document.getElementById('notes').style.display=showN?'block':'none'}else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}else if(e.key==='Home')go(0);else if(e.key==='End')go(S.length-1)});
+addEventListener('click',function(e){if(e.target.closest('a'))return;go(e.clientX<innerWidth/3?i-1:i+1)});
+addEventListener('resize',fit);fit();go(i);
+</script></body></html>
