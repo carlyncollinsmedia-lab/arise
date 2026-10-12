@@ -33,6 +33,7 @@ Arise is a mobile alarm app. When the alarm rings, an avatar greets the user, as
 ## Session start checklist
 
 - Read this file and `PRD.md`.
+- Read `docs/STATUS.md`: where the project stands and what is open.
 - Read the last five lines of `docs/DECISIONS.md`.
 - Run `git log --oneline -10` and state which build step is current.
 - State what you plan to do this session in three lines, then wait for a go-ahead.
