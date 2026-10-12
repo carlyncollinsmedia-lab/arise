@@ -889,7 +889,7 @@
     var choices = pool.map(function (_, i) { return i; }).filter(function (i) { return i !== last; });
     var pick = choices[Math.floor(Math.random() * choices.length)];
     data.lastAff[e.morning] = pick;
-    e.affirmation = pool[pick]; e.status = 'sample';
+    e.affirmation = pool[pick]; e.status = 'reviewed';
     save(data);
   }
   // ---------- Faith quotes (Plus; assets/faith/quotes.json) ----------
