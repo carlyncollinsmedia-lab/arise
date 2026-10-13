@@ -1,12 +1,12 @@
 # Arise: where things stand
 
-The latest state of the project, written for whichever Claude session (or Mac) picks up next. Update this file at the end of every session. Last updated: **11 October 2026, night.**
+The latest state of the project, written for whichever Claude session (or Mac) picks up next. Update this file at the end of every session. Last updated: **12 October 2026, evening.**
 
 ## Right now
 
 - **Demo Week presentation: Monday 12 October 2026, 9:00 am** (booked by the owner on Calendly). Graded on problem statement, solution design and a working APK. Demo is mandatory for graduation.
 - Slides: `presentation/` (PDF, slide show with speaker notes, images). Talk, demo steps and likely questions: the owner's prep page on claude.ai (private, he has the link).
-- **First thing next session: ask Uche how the presentation went**, and note any teacher feedback in `docs/DECISIONS.md`.
+- **Done 12 Oct:** the presentation went well (owner's words). If the teachers send written feedback or a grade, add it to `docs/DECISIONS.md`.
 
 ## What exists and works
 
