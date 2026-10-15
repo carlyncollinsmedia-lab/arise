@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_supabase_migrations_20260930122000_seed_fallback_affirmations_sql", "label": "20260930122000_seed_fallback_affirmations.sql", "file_type": "code", "source_file": "supabase/migrations/20260930122000_seed_fallback_affirmations.sql", "source_location": null}], "edges": []}

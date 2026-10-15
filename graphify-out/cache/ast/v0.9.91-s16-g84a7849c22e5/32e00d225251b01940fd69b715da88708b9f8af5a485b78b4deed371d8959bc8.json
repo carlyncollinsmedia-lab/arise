@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_supabase_migrations_20260930121000_lock_down_handle_new_user_sql", "label": "20260930121000_lock_down_handle_new_user.sql", "file_type": "code", "source_file": "supabase/migrations/20260930121000_lock_down_handle_new_user.sql", "source_location": null}], "edges": []}

@@ -56,3 +56,11 @@ spike/AlarmTest/build/
 *.xcuserstate
 xcuserdata/
 config.local.js
+
+# graphify: machine-specific / temp files
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+graphify-out/.graphify_extract.json
+graphify-out/.graphify_detect.json
+graphify-out/.graphify_chunk_*
+graphify-out/20*/
